@@ -1,0 +1,8393 @@
+{
+  "meters": [
+    {
+      "id": "0101-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0101-ZE01-70"
+    },
+    {
+      "id": "0101-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0101-ZE02-70"
+    },
+    {
+      "id": "0102-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0102-ZE01-71"
+    },
+    {
+      "id": "0103-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0103-ZE01-70"
+    },
+    {
+      "id": "0104-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0104-ZE01-70"
+    },
+    {
+      "id": "0104-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0104-ZE01-71"
+    },
+    {
+      "id": "0104-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0104-ZE02-70"
+    },
+    {
+      "id": "0121-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0121-ZE01-70"
+    },
+    {
+      "id": "0123-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0123-ZE01-70"
+    },
+    {
+      "id": "0123-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0123-ZE01-71"
+    },
+    {
+      "id": "0124-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0124-ZE01-70"
+    },
+    {
+      "id": "0126-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0126-ZE01-70"
+    },
+    {
+      "id": "0127-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0127-ZE01-71"
+    },
+    {
+      "id": "0131-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0131-ZE01-70"
+    },
+    {
+      "id": "0131-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0131-ZE02-70"
+    },
+    {
+      "id": "0132-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0132-ZE01-70"
+    },
+    {
+      "id": "0141-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0141-ZE01-70"
+    },
+    {
+      "id": "0142-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0142-ZE01-70"
+    },
+    {
+      "id": "0144-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0144-ZE01-70"
+    },
+    {
+      "id": "0144-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0144-ZE02-70"
+    },
+    {
+      "id": "0144-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0144-ZE03-70"
+    },
+    {
+      "id": "0145-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0145-ZE01-70"
+    },
+    {
+      "id": "0145-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0145-ZE02-70"
+    },
+    {
+      "id": "0151-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0151-ZE01-71"
+    },
+    {
+      "id": "0151-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0151-ZE02-70"
+    },
+    {
+      "id": "0151-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0151-ZE03-70"
+    },
+    {
+      "id": "0152-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0152-ZE01-70"
+    },
+    {
+      "id": "0210-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0210-ZE01-70"
+    },
+    {
+      "id": "0211-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0211-ZE01-70"
+    },
+    {
+      "id": "0211-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0211-ZE02-70"
+    },
+    {
+      "id": "0213-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0213-ZE01-71"
+    },
+    {
+      "id": "0214-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0214-ZE01-70"
+    },
+    {
+      "id": "0221-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0221-ZE01-70"
+    },
+    {
+      "id": "0221-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0221-ZE01-71"
+    },
+    {
+      "id": "0222-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0222-ZE01-70"
+    },
+    {
+      "id": "0222-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0222-ZE01-71"
+    },
+    {
+      "id": "0223-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0223-ZE01-71"
+    },
+    {
+      "id": "0223-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0223-ZE02-71"
+    },
+    {
+      "id": "0228-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0228-ZE01-71"
+    },
+    {
+      "id": "0229-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0229-ZE01-70"
+    },
+    {
+      "id": "0230-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0230-ZE01-70"
+    },
+    {
+      "id": "0232-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0232-ZE01-71"
+    },
+    {
+      "id": "0234-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0234-ZE01-70"
+    },
+    {
+      "id": "0235-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0235-ZE01-70"
+    },
+    {
+      "id": "0237-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0237-ZE01-70"
+    },
+    {
+      "id": "0238-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0238-ZE01-70"
+    },
+    {
+      "id": "0240-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0240-ZE01-70"
+    },
+    {
+      "id": "0240-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0240-ZE02-70"
+    },
+    {
+      "id": "0240-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0240-ZE03-70"
+    },
+    {
+      "id": "0241-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0241-ZE01-70"
+    },
+    {
+      "id": "0242-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0242-ZE01-70"
+    },
+    {
+      "id": "0243-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0243-ZE01-70"
+    },
+    {
+      "id": "0243-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0243-ZE01-71"
+    },
+    {
+      "id": "0243-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0243-ZE02-70"
+    },
+    {
+      "id": "0244-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0244-ZE01-70"
+    },
+    {
+      "id": "0244-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0244-ZE02-70"
+    },
+    {
+      "id": "0245-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0245-ZE01-70"
+    },
+    {
+      "id": "0245-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0245-ZE01-71"
+    },
+    {
+      "id": "0245-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0245-ZE02-70"
+    },
+    {
+      "id": "0245-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0245-ZE02-71"
+    },
+    {
+      "id": "0246-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0246-ZE01-71"
+    },
+    {
+      "id": "0248-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0248-ZE01-70"
+    },
+    {
+      "id": "0248-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0248-ZE01-71"
+    },
+    {
+      "id": "0248-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0248-ZE02-70"
+    },
+    {
+      "id": "0252-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0252-ZE01-70"
+    },
+    {
+      "id": "0252-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0252-ZE02-70"
+    },
+    {
+      "id": "0255-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0255-ZE01-68"
+    },
+    {
+      "id": "0255-ZE01-69",
+      "url": "/rest/eASiMOV/visualization/0255-ZE01-69"
+    },
+    {
+      "id": "0255-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0255-ZE01-70"
+    },
+    {
+      "id": "0255-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0255-ZE02-70"
+    },
+    {
+      "id": "0255-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0255-ZE03-70"
+    },
+    {
+      "id": "0255-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0255-ZE04-70"
+    },
+    {
+      "id": "0255-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0255-ZE05-70"
+    },
+    {
+      "id": "0255-ZE06-70",
+      "url": "/rest/eASiMOV/visualization/0255-ZE06-70"
+    },
+    {
+      "id": "0256-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0256-ZE01-70"
+    },
+    {
+      "id": "0257-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0257-ZE01-70"
+    },
+    {
+      "id": "0263-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0263-ZE01-71"
+    },
+    {
+      "id": "0264-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0264-ZE01-70"
+    },
+    {
+      "id": "0266-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0266-ZE01-68"
+    },
+    {
+      "id": "0266-ZE01-69",
+      "url": "/rest/eASiMOV/visualization/0266-ZE01-69"
+    },
+    {
+      "id": "0266-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0266-ZE01-70"
+    },
+    {
+      "id": "0266-ZE02-68",
+      "url": "/rest/eASiMOV/visualization/0266-ZE02-68"
+    },
+    {
+      "id": "0266-ZE02-69",
+      "url": "/rest/eASiMOV/visualization/0266-ZE02-69"
+    },
+    {
+      "id": "0267-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0267-ZE01-70"
+    },
+    {
+      "id": "0272-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0272-ZE01-68"
+    },
+    {
+      "id": "0272-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0272-ZE01-70"
+    },
+    {
+      "id": "0272-ZE02-68",
+      "url": "/rest/eASiMOV/visualization/0272-ZE02-68"
+    },
+    {
+      "id": "0272-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0272-ZE02-70"
+    },
+    {
+      "id": "0272-ZE03-68",
+      "url": "/rest/eASiMOV/visualization/0272-ZE03-68"
+    },
+    {
+      "id": "0272-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0272-ZE03-70"
+    },
+    {
+      "id": "0272-ZE04-68",
+      "url": "/rest/eASiMOV/visualization/0272-ZE04-68"
+    },
+    {
+      "id": "0272-ZE05-68",
+      "url": "/rest/eASiMOV/visualization/0272-ZE05-68"
+    },
+    {
+      "id": "0273-ZE01-31",
+      "url": "/rest/eASiMOV/visualization/0273-ZE01-31"
+    },
+    {
+      "id": "0273-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0273-ZE01-70"
+    },
+    {
+      "id": "0276-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0276-ZE01-70"
+    },
+    {
+      "id": "0277-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0277-ZE01-70"
+    },
+    {
+      "id": "0301-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0301-ZE01-70"
+    },
+    {
+      "id": "0301-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0301-ZE02-70"
+    },
+    {
+      "id": "0301-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0301-ZE03-70"
+    },
+    {
+      "id": "0303-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0303-ZE01-70"
+    },
+    {
+      "id": "0304-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0304-ZE01-70"
+    },
+    {
+      "id": "0304-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0304-ZE02-70"
+    },
+    {
+      "id": "0307-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0307-ZE01-70"
+    },
+    {
+      "id": "0307-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0307-ZE02-70"
+    },
+    {
+      "id": "0308-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0308-ZE01-70"
+    },
+    {
+      "id": "0308-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0308-ZE02-70"
+    },
+    {
+      "id": "0310-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0310-ZE01-70"
+    },
+    {
+      "id": "0311-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0311-ZE01-70"
+    },
+    {
+      "id": "0311-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0311-ZE03-70"
+    },
+    {
+      "id": "0311-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0311-ZE04-70"
+    },
+    {
+      "id": "0313-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0313-ZE01-70"
+    },
+    {
+      "id": "0315-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0315-ZE01-70"
+    },
+    {
+      "id": "0316-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0316-ZE01-70"
+    },
+    {
+      "id": "0319-ZE11-71",
+      "url": "/rest/eASiMOV/visualization/0319-ZE11-71"
+    },
+    {
+      "id": "0319-ZE12-71",
+      "url": "/rest/eASiMOV/visualization/0319-ZE12-71"
+    },
+    {
+      "id": "0320-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0320-ZE01-70"
+    },
+    {
+      "id": "0321-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0321-ZE01-70"
+    },
+    {
+      "id": "0321-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0321-ZE02-70"
+    },
+    {
+      "id": "0322-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0322-ZE01-70"
+    },
+    {
+      "id": "0322-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0322-ZE03-70"
+    },
+    {
+      "id": "0323-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0323-ZE01-70"
+    },
+    {
+      "id": "0327-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0327-ZE01-70"
+    },
+    {
+      "id": "0327-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0327-ZE02-70"
+    },
+    {
+      "id": "0329-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0329-ZE01-70"
+    },
+    {
+      "id": "0330-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0330-ZE01-70"
+    },
+    {
+      "id": "0330-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0330-ZE02-70"
+    },
+    {
+      "id": "0330-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0330-ZE03-70"
+    },
+    {
+      "id": "0341-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0341-ZE01-70"
+    },
+    {
+      "id": "0342-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0342-ZE01-70"
+    },
+    {
+      "id": "0343-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0343-ZE01-70"
+    },
+    {
+      "id": "0345-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0345-ZE01-70"
+    },
+    {
+      "id": "0348-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0348-ZE01-68"
+    },
+    {
+      "id": "0348-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0348-ZE01-70"
+    },
+    {
+      "id": "0348-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0348-ZE01-71"
+    },
+    {
+      "id": "0348-ZE02-68",
+      "url": "/rest/eASiMOV/visualization/0348-ZE02-68"
+    },
+    {
+      "id": "0348-ZE03-68",
+      "url": "/rest/eASiMOV/visualization/0348-ZE03-68"
+    },
+    {
+      "id": "0348-ZE04-68",
+      "url": "/rest/eASiMOV/visualization/0348-ZE04-68"
+    },
+    {
+      "id": "0348-ZE05-68",
+      "url": "/rest/eASiMOV/visualization/0348-ZE05-68"
+    },
+    {
+      "id": "0348-ZE06-68",
+      "url": "/rest/eASiMOV/visualization/0348-ZE06-68"
+    },
+    {
+      "id": "0351-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE01-70"
+    },
+    {
+      "id": "0351-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0351-ZE01-71"
+    },
+    {
+      "id": "0351-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE02-70"
+    },
+    {
+      "id": "0351-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE03-70"
+    },
+    {
+      "id": "0351-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE04-70"
+    },
+    {
+      "id": "0351-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE05-70"
+    },
+    {
+      "id": "0351-ZE06-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE06-70"
+    },
+    {
+      "id": "0351-ZE07-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE07-70"
+    },
+    {
+      "id": "0351-ZE10-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE10-70"
+    },
+    {
+      "id": "0351-ZE11-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE11-70"
+    },
+    {
+      "id": "0351-ZE12-70",
+      "url": "/rest/eASiMOV/visualization/0351-ZE12-70"
+    },
+    {
+      "id": "0352-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0352-ZE01-70"
+    },
+    {
+      "id": "0353-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0353-ZE01-70"
+    },
+    {
+      "id": "0353-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0353-ZE02-70"
+    },
+    {
+      "id": "0353-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0353-ZE03-70"
+    },
+    {
+      "id": "0353-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0353-ZE04-70"
+    },
+    {
+      "id": "0353-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0353-ZE05-70"
+    },
+    {
+      "id": "0400-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0400-ZE01-70"
+    },
+    {
+      "id": "0401-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0401-ZE01-70"
+    },
+    {
+      "id": "0401-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0401-ZE02-70"
+    },
+    {
+      "id": "0402-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0402-ZE01-70"
+    },
+    {
+      "id": "0402-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0402-ZE02-70"
+    },
+    {
+      "id": "0403-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0403-ZE01-70"
+    },
+    {
+      "id": "0404-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0404-ZE01-70"
+    },
+    {
+      "id": "0405-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0405-ZE01-70"
+    },
+    {
+      "id": "0406-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0406-ZE01-68"
+    },
+    {
+      "id": "0406-ZE01-69",
+      "url": "/rest/eASiMOV/visualization/0406-ZE01-69"
+    },
+    {
+      "id": "0406-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0406-ZE01-70"
+    },
+    {
+      "id": "0406-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0406-ZE01-72"
+    },
+    {
+      "id": "0406-ZE02-68",
+      "url": "/rest/eASiMOV/visualization/0406-ZE02-68"
+    },
+    {
+      "id": "0406-ZE02-69",
+      "url": "/rest/eASiMOV/visualization/0406-ZE02-69"
+    },
+    {
+      "id": "0406-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0406-ZE02-70"
+    },
+    {
+      "id": "0406-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0406-ZE03-70"
+    },
+    {
+      "id": "0406-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0406-ZE03-71"
+    },
+    {
+      "id": "0406-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0406-ZE05-70"
+    },
+    {
+      "id": "0406-ZE06-70",
+      "url": "/rest/eASiMOV/visualization/0406-ZE06-70"
+    },
+    {
+      "id": "0409-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0409-ZE01-68"
+    },
+    {
+      "id": "0409-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0409-ZE01-70"
+    },
+    {
+      "id": "0410-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0410-ZE01-70"
+    },
+    {
+      "id": "0413-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0413-ZE01-70"
+    },
+    {
+      "id": "0413-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0413-ZE03-70"
+    },
+    {
+      "id": "0414-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0414-ZE01-70"
+    },
+    {
+      "id": "0415-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0415-ZE01-70"
+    },
+    {
+      "id": "0415-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0415-ZE03-70"
+    },
+    {
+      "id": "0415-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0415-ZE04-70"
+    },
+    {
+      "id": "0415-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0415-ZE05-70"
+    },
+    {
+      "id": "0415-ZE06-70",
+      "url": "/rest/eASiMOV/visualization/0415-ZE06-70"
+    },
+    {
+      "id": "0416-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0416-ZE01-70"
+    },
+    {
+      "id": "0418-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0418-ZE01-70"
+    },
+    {
+      "id": "0419-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0419-ZE01-70"
+    },
+    {
+      "id": "0421-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE01-71"
+    },
+    {
+      "id": "0421-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0421-ZE02-70"
+    },
+    {
+      "id": "0421-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE02-71"
+    },
+    {
+      "id": "0421-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE03-71"
+    },
+    {
+      "id": "0421-ZE04-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE04-71"
+    },
+    {
+      "id": "0421-ZE05-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE05-71"
+    },
+    {
+      "id": "0421-ZE06-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE06-71"
+    },
+    {
+      "id": "0421-ZE07-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE07-71"
+    },
+    {
+      "id": "0421-ZE08-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE08-71"
+    },
+    {
+      "id": "0421-ZE09-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE09-71"
+    },
+    {
+      "id": "0421-ZE10-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE10-71"
+    },
+    {
+      "id": "0421-ZE11-71",
+      "url": "/rest/eASiMOV/visualization/0421-ZE11-71"
+    },
+    {
+      "id": "0422-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0422-ZE01-70"
+    },
+    {
+      "id": "0423-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0423-ZE01-70"
+    },
+    {
+      "id": "0423-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0423-ZE02-70"
+    },
+    {
+      "id": "0423-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0423-ZE03-70"
+    },
+    {
+      "id": "0425-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0425-ZE01-70"
+    },
+    {
+      "id": "0425-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0425-ZE02-70"
+    },
+    {
+      "id": "0425-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0425-ZE03-70"
+    },
+    {
+      "id": "0425-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0425-ZE04-70"
+    },
+    {
+      "id": "0425-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0425-ZE05-70"
+    },
+    {
+      "id": "0426-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0426-ZE01-70"
+    },
+    {
+      "id": "0426-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0426-ZE02-70"
+    },
+    {
+      "id": "0427-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0427-ZE01-70"
+    },
+    {
+      "id": "0428-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0428-ZE01-70"
+    },
+    {
+      "id": "0428-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0428-ZE02-70"
+    },
+    {
+      "id": "0428-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0428-ZE03-70"
+    },
+    {
+      "id": "0428-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0428-ZE04-70"
+    },
+    {
+      "id": "0428-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0428-ZE05-70"
+    },
+    {
+      "id": "0429-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0429-ZE01-70"
+    },
+    {
+      "id": "0429-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0429-ZE02-70"
+    },
+    {
+      "id": "0429-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0429-ZE03-70"
+    },
+    {
+      "id": "0430-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0430-ZE01-70"
+    },
+    {
+      "id": "0432-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0432-ZE01-72"
+    },
+    {
+      "id": "0432-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0432-ZE02-72"
+    },
+    {
+      "id": "0433-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0433-ZE01-70"
+    },
+    {
+      "id": "0434-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0434-ZE01-70"
+    },
+    {
+      "id": "0434-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0434-ZE01-71"
+    },
+    {
+      "id": "0434-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0434-ZE02-71"
+    },
+    {
+      "id": "0435-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0435-ZE01-70"
+    },
+    {
+      "id": "0435-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0435-ZE01-71"
+    },
+    {
+      "id": "0435-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0435-ZE01-72"
+    },
+    {
+      "id": "0435-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0435-ZE02-71"
+    },
+    {
+      "id": "0435-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0435-ZE03-71"
+    },
+    {
+      "id": "0435-ZE04-71",
+      "url": "/rest/eASiMOV/visualization/0435-ZE04-71"
+    },
+    {
+      "id": "0435-ZE05-71",
+      "url": "/rest/eASiMOV/visualization/0435-ZE05-71"
+    },
+    {
+      "id": "0436-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0436-ZE01-70"
+    },
+    {
+      "id": "0436-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0436-ZE01-72"
+    },
+    {
+      "id": "0437-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0437-ZE01-71"
+    },
+    {
+      "id": "0438-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0438-ZE01-70"
+    },
+    {
+      "id": "0439-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0439-ZE01-70"
+    },
+    {
+      "id": "0439-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0439-ZE01-72"
+    },
+    {
+      "id": "0439-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0439-ZE02-70"
+    },
+    {
+      "id": "0440-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0440-ZE01-70"
+    },
+    {
+      "id": "0441-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE01-70"
+    },
+    {
+      "id": "0441-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0441-ZE01-71"
+    },
+    {
+      "id": "0441-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE02-70"
+    },
+    {
+      "id": "0441-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0441-ZE02-71"
+    },
+    {
+      "id": "0441-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE03-70"
+    },
+    {
+      "id": "0441-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0441-ZE03-71"
+    },
+    {
+      "id": "0441-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE04-70"
+    },
+    {
+      "id": "0441-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE05-70"
+    },
+    {
+      "id": "0441-ZE06-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE06-70"
+    },
+    {
+      "id": "0441-ZE07-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE07-70"
+    },
+    {
+      "id": "0441-ZE08-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE08-70"
+    },
+    {
+      "id": "0441-ZE09-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE09-70"
+    },
+    {
+      "id": "0441-ZE10-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE10-70"
+    },
+    {
+      "id": "0441-ZE11-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE11-70"
+    },
+    {
+      "id": "0441-ZE12-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE12-70"
+    },
+    {
+      "id": "0441-ZE13-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE13-70"
+    },
+    {
+      "id": "0441-ZE14-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE14-70"
+    },
+    {
+      "id": "0441-ZE15-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE15-70"
+    },
+    {
+      "id": "0441-ZE16-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE16-70"
+    },
+    {
+      "id": "0441-ZE23-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE23-70"
+    },
+    {
+      "id": "0441-ZE24-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE24-70"
+    },
+    {
+      "id": "0441-ZE25-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE25-70"
+    },
+    {
+      "id": "0441-ZE26-70",
+      "url": "/rest/eASiMOV/visualization/0441-ZE26-70"
+    },
+    {
+      "id": "0442-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0442-ZE01-70"
+    },
+    {
+      "id": "0442-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0442-ZE02-70"
+    },
+    {
+      "id": "0442-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0442-ZE03-70"
+    },
+    {
+      "id": "0442-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0442-ZE04-70"
+    },
+    {
+      "id": "0442-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0442-ZE05-70"
+    },
+    {
+      "id": "0442-ZE06-70",
+      "url": "/rest/eASiMOV/visualization/0442-ZE06-70"
+    },
+    {
+      "id": "0442-ZE07-70",
+      "url": "/rest/eASiMOV/visualization/0442-ZE07-70"
+    },
+    {
+      "id": "0442-ZE08-70",
+      "url": "/rest/eASiMOV/visualization/0442-ZE08-70"
+    },
+    {
+      "id": "0443-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0443-ZE01-70"
+    },
+    {
+      "id": "0444-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0444-ZE01-70"
+    },
+    {
+      "id": "0444-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0444-ZE01-72"
+    },
+    {
+      "id": "0445-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0445-ZE01-70"
+    },
+    {
+      "id": "0445-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0445-ZE01-71"
+    },
+    {
+      "id": "0445-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0445-ZE02-70"
+    },
+    {
+      "id": "0445-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0445-ZE02-71"
+    },
+    {
+      "id": "0445-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0445-ZE03-71"
+    },
+    {
+      "id": "0445-ZE04-71",
+      "url": "/rest/eASiMOV/visualization/0445-ZE04-71"
+    },
+    {
+      "id": "0445-ZE05-71",
+      "url": "/rest/eASiMOV/visualization/0445-ZE05-71"
+    },
+    {
+      "id": "0445-ZE06-71",
+      "url": "/rest/eASiMOV/visualization/0445-ZE06-71"
+    },
+    {
+      "id": "0445-ZE07-71",
+      "url": "/rest/eASiMOV/visualization/0445-ZE07-71"
+    },
+    {
+      "id": "0445-ZE08-71",
+      "url": "/rest/eASiMOV/visualization/0445-ZE08-71"
+    },
+    {
+      "id": "0445-ZE09-71",
+      "url": "/rest/eASiMOV/visualization/0445-ZE09-71"
+    },
+    {
+      "id": "0448-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0448-ZE01-70"
+    },
+    {
+      "id": "0448-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0448-ZE02-70"
+    },
+    {
+      "id": "0448-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0448-ZE03-70"
+    },
+    {
+      "id": "0448-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0448-ZE04-70"
+    },
+    {
+      "id": "0449-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0449-ZE01-68"
+    },
+    {
+      "id": "0449-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0449-ZE01-70"
+    },
+    {
+      "id": "0449-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0449-ZE02-70"
+    },
+    {
+      "id": "0451-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0451-ZE01-70"
+    },
+    {
+      "id": "0451-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0451-ZE01-71"
+    },
+    {
+      "id": "0451-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0451-ZE02-70"
+    },
+    {
+      "id": "0451-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0451-ZE03-70"
+    },
+    {
+      "id": "0451-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0451-ZE03-71"
+    },
+    {
+      "id": "0453-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0453-ZE01-70"
+    },
+    {
+      "id": "0454-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0454-ZE01-72"
+    },
+    {
+      "id": "0456-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0456-ZE01-70"
+    },
+    {
+      "id": "0456-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0456-ZE02-70"
+    },
+    {
+      "id": "0456-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0456-ZE03-70"
+    },
+    {
+      "id": "0460-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0460-ZE01-70"
+    },
+    {
+      "id": "0500-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0500-ZE01-70"
+    },
+    {
+      "id": "0500-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0500-ZE02-70"
+    },
+    {
+      "id": "0500-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0500-ZE03-70"
+    },
+    {
+      "id": "0500-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0500-ZE04-70"
+    },
+    {
+      "id": "0506-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0506-ZE01-70"
+    },
+    {
+      "id": "0510-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0510-ZE01-70"
+    },
+    {
+      "id": "0511-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0511-ZE01-70"
+    },
+    {
+      "id": "0512-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0512-ZE01-71"
+    },
+    {
+      "id": "0513-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0513-ZE01-71"
+    },
+    {
+      "id": "0515-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0515-ZE01-70"
+    },
+    {
+      "id": "0519-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0519-ZE01-70"
+    },
+    {
+      "id": "0521-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0521-ZE01-70"
+    },
+    {
+      "id": "0521-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0521-ZE02-70"
+    },
+    {
+      "id": "0522-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0522-ZE01-70"
+    },
+    {
+      "id": "0522-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0522-ZE02-70"
+    },
+    {
+      "id": "0522-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0522-ZE03-70"
+    },
+    {
+      "id": "0522-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0522-ZE04-70"
+    },
+    {
+      "id": "0522-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0522-ZE05-70"
+    },
+    {
+      "id": "0522-ZE06-70",
+      "url": "/rest/eASiMOV/visualization/0522-ZE06-70"
+    },
+    {
+      "id": "0523-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0523-ZE01-70"
+    },
+    {
+      "id": "0526-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0526-ZE01-70"
+    },
+    {
+      "id": "0527-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0527-ZE01-70"
+    },
+    {
+      "id": "0527-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0527-ZE01-72"
+    },
+    {
+      "id": "0529-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0529-ZE01-70"
+    },
+    {
+      "id": "0530-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0530-ZE01-70"
+    },
+    {
+      "id": "0531-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0531-ZE01-70"
+    },
+    {
+      "id": "0531-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0531-ZE01-72"
+    },
+    {
+      "id": "0536-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0536-ZE01-72"
+    },
+    {
+      "id": "0536-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0536-ZE02-70"
+    },
+    {
+      "id": "0536-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0536-ZE02-72"
+    },
+    {
+      "id": "0536-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0536-ZE03-70"
+    },
+    {
+      "id": "0536-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0536-ZE04-70"
+    },
+    {
+      "id": "0540-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0540-ZE01-70"
+    },
+    {
+      "id": "0541-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0541-ZE01-70"
+    },
+    {
+      "id": "0543-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0543-ZE01-70"
+    },
+    {
+      "id": "0543-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0543-ZE01-72"
+    },
+    {
+      "id": "0543-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0543-ZE02-70"
+    },
+    {
+      "id": "0544-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0544-ZE01-70"
+    },
+    {
+      "id": "0544-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0544-ZE01-71"
+    },
+    {
+      "id": "0544-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0544-ZE02-70"
+    },
+    {
+      "id": "0545-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0545-ZE01-70"
+    },
+    {
+      "id": "0545-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0545-ZE01-72"
+    },
+    {
+      "id": "0545-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0545-ZE02-72"
+    },
+    {
+      "id": "0546-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0546-ZE01-70"
+    },
+    {
+      "id": "0546-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0546-ZE01-72"
+    },
+    {
+      "id": "0546-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0546-ZE02-72"
+    },
+    {
+      "id": "0546-ZE03-72",
+      "url": "/rest/eASiMOV/visualization/0546-ZE03-72"
+    },
+    {
+      "id": "0546-ZE04-72",
+      "url": "/rest/eASiMOV/visualization/0546-ZE04-72"
+    },
+    {
+      "id": "0547-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0547-ZE01-70"
+    },
+    {
+      "id": "0547-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0547-ZE01-72"
+    },
+    {
+      "id": "0547-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0547-ZE02-70"
+    },
+    {
+      "id": "0547-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0547-ZE03-70"
+    },
+    {
+      "id": "0548-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0548-ZE01-70"
+    },
+    {
+      "id": "0548-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0548-ZE01-72"
+    },
+    {
+      "id": "0548-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0548-ZE02-72"
+    },
+    {
+      "id": "0548-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0548-ZE03-70"
+    },
+    {
+      "id": "0549-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0549-ZE01-70"
+    },
+    {
+      "id": "0549-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0549-ZE02-70"
+    },
+    {
+      "id": "0551-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0551-ZE01-70"
+    },
+    {
+      "id": "0551-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0551-ZE01-72"
+    },
+    {
+      "id": "0551-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0551-ZE03-70"
+    },
+    {
+      "id": "0551-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0551-ZE04-70"
+    },
+    {
+      "id": "0551-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0551-ZE05-70"
+    },
+    {
+      "id": "0554-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0554-ZE01-71"
+    },
+    {
+      "id": "0556-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0556-ZE01-70"
+    },
+    {
+      "id": "0557-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0557-ZE01-70"
+    },
+    {
+      "id": "0559-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0559-ZE01-71"
+    },
+    {
+      "id": "0563-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0563-ZE01-70"
+    },
+    {
+      "id": "0563-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0563-ZE01-72"
+    },
+    {
+      "id": "0566-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0566-ZE01-70"
+    },
+    {
+      "id": "0566-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0566-ZE02-70"
+    },
+    {
+      "id": "0570-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0570-ZE01-70"
+    },
+    {
+      "id": "0572-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0572-ZE01-72"
+    },
+    {
+      "id": "0572-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0572-ZE03-70"
+    },
+    {
+      "id": "0574-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0574-ZE01-70"
+    },
+    {
+      "id": "0575-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0575-ZE01-70"
+    },
+    {
+      "id": "0601-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0601-ZE01-68"
+    },
+    {
+      "id": "0601-ZE02-68",
+      "url": "/rest/eASiMOV/visualization/0601-ZE02-68"
+    },
+    {
+      "id": "0601-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0601-ZE02-70"
+    },
+    {
+      "id": "0601-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0601-ZE02-71"
+    },
+    {
+      "id": "0602-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0602-ZE01-70"
+    },
+    {
+      "id": "0603-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0603-ZE01-71"
+    },
+    {
+      "id": "0604-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0604-ZE01-70"
+    },
+    {
+      "id": "0604-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0604-ZE02-70"
+    },
+    {
+      "id": "0605-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0605-ZE01-70"
+    },
+    {
+      "id": "0605-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0605-ZE02-70"
+    },
+    {
+      "id": "0605-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0605-ZE03-70"
+    },
+    {
+      "id": "0606-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0606-ZE01-70"
+    },
+    {
+      "id": "0607-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0607-ZE01-70"
+    },
+    {
+      "id": "0608-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0608-ZE01-70"
+    },
+    {
+      "id": "0610-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0610-ZE01-70"
+    },
+    {
+      "id": "0611-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0611-ZE01-70"
+    },
+    {
+      "id": "0612-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0612-ZE01-68"
+    },
+    {
+      "id": "0612-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0612-ZE01-71"
+    },
+    {
+      "id": "0614-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0614-ZE01-70"
+    },
+    {
+      "id": "0615-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0615-ZE01-70"
+    },
+    {
+      "id": "0615-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0615-ZE02-70"
+    },
+    {
+      "id": "0616-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0616-ZE01-70"
+    },
+    {
+      "id": "0618-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0618-ZE01-70"
+    },
+    {
+      "id": "0618-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0618-ZE01-72"
+    },
+    {
+      "id": "0620-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0620-ZE01-70"
+    },
+    {
+      "id": "0620-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0620-ZE02-70"
+    },
+    {
+      "id": "0630-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0630-ZE01-70"
+    },
+    {
+      "id": "0630-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0630-ZE01-72"
+    },
+    {
+      "id": "0630-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0630-ZE02-72"
+    },
+    {
+      "id": "0631-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0631-ZE01-70"
+    },
+    {
+      "id": "0631-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0631-ZE01-71"
+    },
+    {
+      "id": "0631-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0631-ZE01-72"
+    },
+    {
+      "id": "0631-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0631-ZE02-70"
+    },
+    {
+      "id": "0631-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0631-ZE02-72"
+    },
+    {
+      "id": "0631-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0631-ZE03-70"
+    },
+    {
+      "id": "0631-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0631-ZE03-71"
+    },
+    {
+      "id": "0631-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0631-ZE04-70"
+    },
+    {
+      "id": "0631-ZE04-71",
+      "url": "/rest/eASiMOV/visualization/0631-ZE04-71"
+    },
+    {
+      "id": "0631-ZE05-71",
+      "url": "/rest/eASiMOV/visualization/0631-ZE05-71"
+    },
+    {
+      "id": "0631-ZE07-71",
+      "url": "/rest/eASiMOV/visualization/0631-ZE07-71"
+    },
+    {
+      "id": "0631-ZE08-70",
+      "url": "/rest/eASiMOV/visualization/0631-ZE08-70"
+    },
+    {
+      "id": "0631-ZE08-71",
+      "url": "/rest/eASiMOV/visualization/0631-ZE08-71"
+    },
+    {
+      "id": "0631-ZE09-70",
+      "url": "/rest/eASiMOV/visualization/0631-ZE09-70"
+    },
+    {
+      "id": "0631-ZE09-71",
+      "url": "/rest/eASiMOV/visualization/0631-ZE09-71"
+    },
+    {
+      "id": "0631-ZE10-70",
+      "url": "/rest/eASiMOV/visualization/0631-ZE10-70"
+    },
+    {
+      "id": "0631-ZE10-71",
+      "url": "/rest/eASiMOV/visualization/0631-ZE10-71"
+    },
+    {
+      "id": "0631-ZE11-71",
+      "url": "/rest/eASiMOV/visualization/0631-ZE11-71"
+    },
+    {
+      "id": "0640-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0640-ZE01-70"
+    },
+    {
+      "id": "0640-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0640-ZE02-70"
+    },
+    {
+      "id": "0650-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0650-ZE01-70"
+    },
+    {
+      "id": "0660-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0660-ZE01-68"
+    },
+    {
+      "id": "0660-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0660-ZE01-70"
+    },
+    {
+      "id": "0660-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE01-71"
+    },
+    {
+      "id": "0660-ZE02-68",
+      "url": "/rest/eASiMOV/visualization/0660-ZE02-68"
+    },
+    {
+      "id": "0660-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0660-ZE02-70"
+    },
+    {
+      "id": "0660-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE02-71"
+    },
+    {
+      "id": "0660-ZE03-68",
+      "url": "/rest/eASiMOV/visualization/0660-ZE03-68"
+    },
+    {
+      "id": "0660-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0660-ZE03-70"
+    },
+    {
+      "id": "0660-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE03-71"
+    },
+    {
+      "id": "0660-ZE04-68",
+      "url": "/rest/eASiMOV/visualization/0660-ZE04-68"
+    },
+    {
+      "id": "0660-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0660-ZE04-70"
+    },
+    {
+      "id": "0660-ZE04-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE04-71"
+    },
+    {
+      "id": "0660-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0660-ZE05-70"
+    },
+    {
+      "id": "0660-ZE05-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE05-71"
+    },
+    {
+      "id": "0660-ZE06-70",
+      "url": "/rest/eASiMOV/visualization/0660-ZE06-70"
+    },
+    {
+      "id": "0660-ZE06-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE06-71"
+    },
+    {
+      "id": "0660-ZE07-70",
+      "url": "/rest/eASiMOV/visualization/0660-ZE07-70"
+    },
+    {
+      "id": "0660-ZE07-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE07-71"
+    },
+    {
+      "id": "0660-ZE08-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE08-71"
+    },
+    {
+      "id": "0660-ZE09-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE09-71"
+    },
+    {
+      "id": "0660-ZE10-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE10-71"
+    },
+    {
+      "id": "0660-ZE11-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE11-71"
+    },
+    {
+      "id": "0660-ZE12-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE12-71"
+    },
+    {
+      "id": "0660-ZE13-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE13-71"
+    },
+    {
+      "id": "0660-ZE14-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE14-71"
+    },
+    {
+      "id": "0660-ZE15-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE15-71"
+    },
+    {
+      "id": "0660-ZE16-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE16-71"
+    },
+    {
+      "id": "0660-ZE17-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE17-71"
+    },
+    {
+      "id": "0660-ZE18-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE18-71"
+    },
+    {
+      "id": "0660-ZE19-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE19-71"
+    },
+    {
+      "id": "0660-ZE20-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE20-71"
+    },
+    {
+      "id": "0660-ZE21-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE21-71"
+    },
+    {
+      "id": "0660-ZE22-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE22-71"
+    },
+    {
+      "id": "0660-ZE23-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE23-71"
+    },
+    {
+      "id": "0660-ZE24-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE24-71"
+    },
+    {
+      "id": "0660-ZE25-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE25-71"
+    },
+    {
+      "id": "0660-ZE26-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE26-71"
+    },
+    {
+      "id": "0660-ZE27-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE27-71"
+    },
+    {
+      "id": "0660-ZE28-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE28-71"
+    },
+    {
+      "id": "0660-ZE29-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE29-71"
+    },
+    {
+      "id": "0660-ZE30-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE30-71"
+    },
+    {
+      "id": "0660-ZE31-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE31-71"
+    },
+    {
+      "id": "0660-ZE32-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE32-71"
+    },
+    {
+      "id": "0660-ZE34-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE34-71"
+    },
+    {
+      "id": "0660-ZE35-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE35-71"
+    },
+    {
+      "id": "0660-ZE36-71",
+      "url": "/rest/eASiMOV/visualization/0660-ZE36-71"
+    },
+    {
+      "id": "0664-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0664-ZE01-68"
+    },
+    {
+      "id": "0664-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0664-ZE01-70"
+    },
+    {
+      "id": "0664-ZE02-68",
+      "url": "/rest/eASiMOV/visualization/0664-ZE02-68"
+    },
+    {
+      "id": "0670-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0670-ZE01-70"
+    },
+    {
+      "id": "0670-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0670-ZE02-70"
+    },
+    {
+      "id": "0670-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0670-ZE03-70"
+    },
+    {
+      "id": "0670-ZE10-70",
+      "url": "/rest/eASiMOV/visualization/0670-ZE10-70"
+    },
+    {
+      "id": "0675-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0675-ZE01-70"
+    },
+    {
+      "id": "0681-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0681-ZE01-70"
+    },
+    {
+      "id": "0681-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0681-ZE02-70"
+    },
+    {
+      "id": "0681-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0681-ZE03-70"
+    },
+    {
+      "id": "0681-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0681-ZE04-70"
+    },
+    {
+      "id": "0681-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0681-ZE05-70"
+    },
+    {
+      "id": "0681-ZE06-70",
+      "url": "/rest/eASiMOV/visualization/0681-ZE06-70"
+    },
+    {
+      "id": "0681-ZE07-70",
+      "url": "/rest/eASiMOV/visualization/0681-ZE07-70"
+    },
+    {
+      "id": "0681-ZE08-70",
+      "url": "/rest/eASiMOV/visualization/0681-ZE08-70"
+    },
+    {
+      "id": "0685-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0685-ZE01-70"
+    },
+    {
+      "id": "0686-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0686-ZE01-70"
+    },
+    {
+      "id": "0686-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0686-ZE02-72"
+    },
+    {
+      "id": "0686-ZE03-72",
+      "url": "/rest/eASiMOV/visualization/0686-ZE03-72"
+    },
+    {
+      "id": "0686-ZE04-72",
+      "url": "/rest/eASiMOV/visualization/0686-ZE04-72"
+    },
+    {
+      "id": "0686-ZE05-72",
+      "url": "/rest/eASiMOV/visualization/0686-ZE05-72"
+    },
+    {
+      "id": "0686-ZE06-72",
+      "url": "/rest/eASiMOV/visualization/0686-ZE06-72"
+    },
+    {
+      "id": "0687-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0687-ZE01-70"
+    },
+    {
+      "id": "0688-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0688-ZE02-70"
+    },
+    {
+      "id": "0691-ZE00-70",
+      "url": "/rest/eASiMOV/visualization/0691-ZE00-70"
+    },
+    {
+      "id": "0691-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0691-ZE01-70"
+    },
+    {
+      "id": "0691-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0691-ZE01-71"
+    },
+    {
+      "id": "0691-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0691-ZE01-72"
+    },
+    {
+      "id": "0691-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0691-ZE02-70"
+    },
+    {
+      "id": "0691-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0691-ZE02-71"
+    },
+    {
+      "id": "0691-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0691-ZE03-70"
+    },
+    {
+      "id": "0691-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0691-ZE03-71"
+    },
+    {
+      "id": "0691-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0691-ZE04-70"
+    },
+    {
+      "id": "0691-ZE04-71",
+      "url": "/rest/eASiMOV/visualization/0691-ZE04-71"
+    },
+    {
+      "id": "0691-ZE05-71",
+      "url": "/rest/eASiMOV/visualization/0691-ZE05-71"
+    },
+    {
+      "id": "0691-ZE06-71",
+      "url": "/rest/eASiMOV/visualization/0691-ZE06-71"
+    },
+    {
+      "id": "0691-ZE07-71",
+      "url": "/rest/eASiMOV/visualization/0691-ZE07-71"
+    },
+    {
+      "id": "0691-ZE08-73",
+      "url": "/rest/eASiMOV/visualization/0691-ZE08-73"
+    },
+    {
+      "id": "0691-ZE09-71",
+      "url": "/rest/eASiMOV/visualization/0691-ZE09-71"
+    },
+    {
+      "id": "0695-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0695-ZE01-70"
+    },
+    {
+      "id": "0696-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0696-ZE01-70"
+    },
+    {
+      "id": "0701-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0701-ZE01-70"
+    },
+    {
+      "id": "0701-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0701-ZE01-71"
+    },
+    {
+      "id": "0701-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0701-ZE01-72"
+    },
+    {
+      "id": "0701-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0701-ZE02-70"
+    },
+    {
+      "id": "0701-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0701-ZE02-72"
+    },
+    {
+      "id": "0701-ZE03-70",
+      "url": "/rest/eASiMOV/visualization/0701-ZE03-70"
+    },
+    {
+      "id": "0701-ZE03-72",
+      "url": "/rest/eASiMOV/visualization/0701-ZE03-72"
+    },
+    {
+      "id": "0701-ZE04-70",
+      "url": "/rest/eASiMOV/visualization/0701-ZE04-70"
+    },
+    {
+      "id": "0701-ZE04-72",
+      "url": "/rest/eASiMOV/visualization/0701-ZE04-72"
+    },
+    {
+      "id": "0701-ZE05-70",
+      "url": "/rest/eASiMOV/visualization/0701-ZE05-70"
+    },
+    {
+      "id": "0701-ZE05-72",
+      "url": "/rest/eASiMOV/visualization/0701-ZE05-72"
+    },
+    {
+      "id": "0705-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0705-ZE01-70"
+    },
+    {
+      "id": "0705-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0705-ZE01-72"
+    },
+    {
+      "id": "0705-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0705-ZE02-70"
+    },
+    {
+      "id": "0707-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0707-ZE01-70"
+    },
+    {
+      "id": "0708-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0708-ZE01-72"
+    },
+    {
+      "id": "0711-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0711-ZE01-71"
+    },
+    {
+      "id": "0712-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0712-ZE01-70"
+    },
+    {
+      "id": "0712-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0712-ZE01-72"
+    },
+    {
+      "id": "0713-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0713-ZE01-70"
+    },
+    {
+      "id": "0713-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0713-ZE01-72"
+    },
+    {
+      "id": "0713-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0713-ZE02-72"
+    },
+    {
+      "id": "0713-ZE03-72",
+      "url": "/rest/eASiMOV/visualization/0713-ZE03-72"
+    },
+    {
+      "id": "0714-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0714-ZE01-70"
+    },
+    {
+      "id": "0714-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0714-ZE01-72"
+    },
+    {
+      "id": "0714-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0714-ZE02-70"
+    },
+    {
+      "id": "0717-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0717-ZE01-68"
+    },
+    {
+      "id": "0717-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0717-ZE01-70"
+    },
+    {
+      "id": "0717-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE02-71"
+    },
+    {
+      "id": "0717-ZE03-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE03-71"
+    },
+    {
+      "id": "0717-ZE04-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE04-71"
+    },
+    {
+      "id": "0717-ZE05-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE05-71"
+    },
+    {
+      "id": "0717-ZE06-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE06-71"
+    },
+    {
+      "id": "0717-ZE07-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE07-71"
+    },
+    {
+      "id": "0717-ZE08-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE08-71"
+    },
+    {
+      "id": "0717-ZE09-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE09-71"
+    },
+    {
+      "id": "0717-ZE10-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE10-71"
+    },
+    {
+      "id": "0717-ZE11-71",
+      "url": "/rest/eASiMOV/visualization/0717-ZE11-71"
+    },
+    {
+      "id": "0720-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0720-ZE01-70"
+    },
+    {
+      "id": "0721-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0721-ZE01-70"
+    },
+    {
+      "id": "0721-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0721-ZE01-72"
+    },
+    {
+      "id": "0723-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0723-ZE01-70"
+    },
+    {
+      "id": "0723-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0723-ZE01-72"
+    },
+    {
+      "id": "0723-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0723-ZE02-70"
+    },
+    {
+      "id": "0724-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0724-ZE01-72"
+    },
+    {
+      "id": "0724-ZE02-72",
+      "url": "/rest/eASiMOV/visualization/0724-ZE02-72"
+    },
+    {
+      "id": "0725-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0725-ZE01-70"
+    },
+    {
+      "id": "0725-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/0725-ZE01-72"
+    },
+    {
+      "id": "0725-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/0725-ZE02-70"
+    },
+    {
+      "id": "0727-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0727-ZE01-70"
+    },
+    {
+      "id": "0732-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0732-ZE01-71"
+    },
+    {
+      "id": "0733-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0733-ZE01-71"
+    },
+    {
+      "id": "0738-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0738-ZE01-71"
+    },
+    {
+      "id": "0741-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0741-ZE01-68"
+    },
+    {
+      "id": "0801-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0801-ZE01-68"
+    },
+    {
+      "id": "0901-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0901-ZE01-68"
+    },
+    {
+      "id": "0905-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0905-ZE01-70"
+    },
+    {
+      "id": "0907-ZE01-66",
+      "url": "/rest/eASiMOV/visualization/0907-ZE01-66"
+    },
+    {
+      "id": "0907-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/0907-ZE01-68"
+    },
+    {
+      "id": "0907-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/0907-ZE01-70"
+    },
+    {
+      "id": "0907-ZE02-66",
+      "url": "/rest/eASiMOV/visualization/0907-ZE02-66"
+    },
+    {
+      "id": "0907-ZE03-66",
+      "url": "/rest/eASiMOV/visualization/0907-ZE03-66"
+    },
+    {
+      "id": "0910-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/0910-ZE01-71"
+    },
+    {
+      "id": "1500-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/1500-ZE01-68"
+    },
+    {
+      "id": "1507-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/1507-ZE01-68"
+    },
+    {
+      "id": "1507-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/1507-ZE01-71"
+    },
+    {
+      "id": "1507-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/1507-ZE02-71"
+    },
+    {
+      "id": "1600-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/1600-ZE01-70"
+    },
+    {
+      "id": "4614-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/4614-ZE01-68"
+    },
+    {
+      "id": "4614-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/4614-ZE01-70"
+    },
+    {
+      "id": "4614-ZE02-68",
+      "url": "/rest/eASiMOV/visualization/4614-ZE02-68"
+    },
+    {
+      "id": "4691-ZE01-68",
+      "url": "/rest/eASiMOV/visualization/4691-ZE01-68"
+    },
+    {
+      "id": "4691-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/4691-ZE01-70"
+    },
+    {
+      "id": "5131-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/5131-ZE01-70"
+    },
+    {
+      "id": "5252-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/5252-ZE01-71"
+    },
+    {
+      "id": "5252-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/5252-ZE02-70"
+    },
+    {
+      "id": "5311-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/5311-ZE01-70"
+    },
+    {
+      "id": "5435-ZE02-71",
+      "url": "/rest/eASiMOV/visualization/5435-ZE02-71"
+    },
+    {
+      "id": "5523-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/5523-ZE01-70"
+    },
+    {
+      "id": "5523-ZE02-70",
+      "url": "/rest/eASiMOV/visualization/5523-ZE02-70"
+    },
+    {
+      "id": "5524-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/5524-ZE01-70"
+    },
+    {
+      "id": "5813-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/5813-ZE01-71"
+    },
+    {
+      "id": "6907-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/6907-ZE01-70"
+    },
+    {
+      "id": "9100-ZE01-72",
+      "url": "/rest/eASiMOV/visualization/9100-ZE01-72"
+    },
+    {
+      "id": "9520-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/9520-ZE01-71"
+    },
+    {
+      "id": "9546-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/9546-ZE01-71"
+    },
+    {
+      "id": "9605-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9605-ZE01-70"
+    },
+    {
+      "id": "9608-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9608-ZE01-70"
+    },
+    {
+      "id": "9641-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/9641-ZE01-71"
+    },
+    {
+      "id": "9651-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/9651-ZE01-71"
+    },
+    {
+      "id": "9657-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9657-ZE01-70"
+    },
+    {
+      "id": "9658-ZE01-71",
+      "url": "/rest/eASiMOV/visualization/9658-ZE01-71"
+    },
+    {
+      "id": "9660-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9660-ZE01-70"
+    },
+    {
+      "id": "9661-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9661-ZE01-70"
+    },
+    {
+      "id": "9670-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9670-ZE01-70"
+    },
+    {
+      "id": "9675-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9675-ZE01-70"
+    },
+    {
+      "id": "9680-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9680-ZE01-70"
+    },
+    {
+      "id": "9687-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9687-ZE01-70"
+    },
+    {
+      "id": "9900-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9900-ZE01-70"
+    },
+    {
+      "id": "9940-ZE01-70",
+      "url": "/rest/eASiMOV/visualization/9940-ZE01-70"
+    }
+  ],
+  "buildings": [
+    {
+      "id": "G-101",
+      "url": "/rest/eASiMOV/visualization/G-101"
+    },
+    {
+      "id": "G-102",
+      "url": "/rest/eASiMOV/visualization/G-102"
+    },
+    {
+      "id": "G-103",
+      "url": "/rest/eASiMOV/visualization/G-103"
+    },
+    {
+      "id": "G-104",
+      "url": "/rest/eASiMOV/visualization/G-104"
+    },
+    {
+      "id": "G-121",
+      "url": "/rest/eASiMOV/visualization/G-121"
+    },
+    {
+      "id": "G-123",
+      "url": "/rest/eASiMOV/visualization/G-123"
+    },
+    {
+      "id": "G-124",
+      "url": "/rest/eASiMOV/visualization/G-124"
+    },
+    {
+      "id": "G-126",
+      "url": "/rest/eASiMOV/visualization/G-126"
+    },
+    {
+      "id": "G-131",
+      "url": "/rest/eASiMOV/visualization/G-131"
+    },
+    {
+      "id": "G-132",
+      "url": "/rest/eASiMOV/visualization/G-132"
+    },
+    {
+      "id": "G-141",
+      "url": "/rest/eASiMOV/visualization/G-141"
+    },
+    {
+      "id": "G-142",
+      "url": "/rest/eASiMOV/visualization/G-142"
+    },
+    {
+      "id": "G-144",
+      "url": "/rest/eASiMOV/visualization/G-144"
+    },
+    {
+      "id": "G-221",
+      "url": "/rest/eASiMOV/visualization/G-221"
+    },
+    {
+      "id": "G-222",
+      "url": "/rest/eASiMOV/visualization/G-222"
+    },
+    {
+      "id": "G-5131",
+      "url": "/rest/eASiMOV/visualization/G-5131"
+    },
+    {
+      "id": "G-145",
+      "url": "/rest/eASiMOV/visualization/G-145"
+    },
+    {
+      "id": "G-210",
+      "url": "/rest/eASiMOV/visualization/G-210"
+    },
+    {
+      "id": "G-211",
+      "url": "/rest/eASiMOV/visualization/G-211"
+    },
+    {
+      "id": "G-230",
+      "url": "/rest/eASiMOV/visualization/G-230"
+    },
+    {
+      "id": "G-235",
+      "url": "/rest/eASiMOV/visualization/G-235"
+    },
+    {
+      "id": "G-237",
+      "url": "/rest/eASiMOV/visualization/G-237"
+    },
+    {
+      "id": "G-238",
+      "url": "/rest/eASiMOV/visualization/G-238"
+    },
+    {
+      "id": "G-240",
+      "url": "/rest/eASiMOV/visualization/G-240"
+    },
+    {
+      "id": "G-241",
+      "url": "/rest/eASiMOV/visualization/G-241"
+    },
+    {
+      "id": "G-242",
+      "url": "/rest/eASiMOV/visualization/G-242"
+    },
+    {
+      "id": "G-243",
+      "url": "/rest/eASiMOV/visualization/G-243"
+    },
+    {
+      "id": "G-244",
+      "url": "/rest/eASiMOV/visualization/G-244"
+    },
+    {
+      "id": "G-245",
+      "url": "/rest/eASiMOV/visualization/G-245"
+    },
+    {
+      "id": "G-248",
+      "url": "/rest/eASiMOV/visualization/G-248"
+    },
+    {
+      "id": "G-401",
+      "url": "/rest/eASiMOV/visualization/G-401"
+    },
+    {
+      "id": "G-402",
+      "url": "/rest/eASiMOV/visualization/G-402"
+    },
+    {
+      "id": "G-403",
+      "url": "/rest/eASiMOV/visualization/G-403"
+    },
+    {
+      "id": "G-404",
+      "url": "/rest/eASiMOV/visualization/G-404"
+    },
+    {
+      "id": "G-405",
+      "url": "/rest/eASiMOV/visualization/G-405"
+    },
+    {
+      "id": "G-430",
+      "url": "/rest/eASiMOV/visualization/G-430"
+    },
+    {
+      "id": "G-5252",
+      "url": "/rest/eASiMOV/visualization/G-5252"
+    },
+    {
+      "id": "G-272",
+      "url": "/rest/eASiMOV/visualization/G-272"
+    },
+    {
+      "id": "G-277",
+      "url": "/rest/eASiMOV/visualization/G-277"
+    },
+    {
+      "id": "G-229",
+      "url": "/rest/eASiMOV/visualization/G-229"
+    },
+    {
+      "id": "G-234",
+      "url": "/rest/eASiMOV/visualization/G-234"
+    },
+    {
+      "id": "G-252",
+      "url": "/rest/eASiMOV/visualization/G-252"
+    },
+    {
+      "id": "G-255",
+      "url": "/rest/eASiMOV/visualization/G-255"
+    },
+    {
+      "id": "G-256",
+      "url": "/rest/eASiMOV/visualization/G-256"
+    },
+    {
+      "id": "G-257",
+      "url": "/rest/eASiMOV/visualization/G-257"
+    },
+    {
+      "id": "G-272",
+      "url": "/rest/eASiMOV/visualization/G-272"
+    },
+    {
+      "id": "G-273",
+      "url": "/rest/eASiMOV/visualization/G-273"
+    },
+    {
+      "id": "G-276",
+      "url": "/rest/eASiMOV/visualization/G-276"
+    },
+    {
+      "id": "G-301",
+      "url": "/rest/eASiMOV/visualization/G-301"
+    },
+    {
+      "id": "G-303",
+      "url": "/rest/eASiMOV/visualization/G-303"
+    },
+    {
+      "id": "G-307",
+      "url": "/rest/eASiMOV/visualization/G-307"
+    },
+    {
+      "id": "G-308",
+      "url": "/rest/eASiMOV/visualization/G-308"
+    },
+    {
+      "id": "G-310",
+      "url": "/rest/eASiMOV/visualization/G-310"
+    },
+    {
+      "id": "G-151",
+      "url": "/rest/eASiMOV/visualization/G-151"
+    },
+    {
+      "id": "G-152",
+      "url": "/rest/eASiMOV/visualization/G-152"
+    },
+    {
+      "id": "G-304",
+      "url": "/rest/eASiMOV/visualization/G-304"
+    },
+    {
+      "id": "G-311",
+      "url": "/rest/eASiMOV/visualization/G-311"
+    },
+    {
+      "id": "G-315",
+      "url": "/rest/eASiMOV/visualization/G-315"
+    },
+    {
+      "id": "G-316",
+      "url": "/rest/eASiMOV/visualization/G-316"
+    },
+    {
+      "id": "G-330",
+      "url": "/rest/eASiMOV/visualization/G-330"
+    },
+    {
+      "id": "G-9661",
+      "url": "/rest/eASiMOV/visualization/G-9661"
+    },
+    {
+      "id": "G-320",
+      "url": "/rest/eASiMOV/visualization/G-320"
+    },
+    {
+      "id": "G-321",
+      "url": "/rest/eASiMOV/visualization/G-321"
+    },
+    {
+      "id": "G-322",
+      "url": "/rest/eASiMOV/visualization/G-322"
+    },
+    {
+      "id": "G-323",
+      "url": "/rest/eASiMOV/visualization/G-323"
+    },
+    {
+      "id": "G-327",
+      "url": "/rest/eASiMOV/visualization/G-327"
+    },
+    {
+      "id": "G-329",
+      "url": "/rest/eASiMOV/visualization/G-329"
+    },
+    {
+      "id": "G-341",
+      "url": "/rest/eASiMOV/visualization/G-341"
+    },
+    {
+      "id": "G-342",
+      "url": "/rest/eASiMOV/visualization/G-342"
+    },
+    {
+      "id": "G-343",
+      "url": "/rest/eASiMOV/visualization/G-343"
+    },
+    {
+      "id": "G-345",
+      "url": "/rest/eASiMOV/visualization/G-345"
+    },
+    {
+      "id": "G-348",
+      "url": "/rest/eASiMOV/visualization/G-348"
+    },
+    {
+      "id": "G-348",
+      "url": "/rest/eASiMOV/visualization/G-348"
+    },
+    {
+      "id": "G-351",
+      "url": "/rest/eASiMOV/visualization/G-351"
+    },
+    {
+      "id": "G-330",
+      "url": "/rest/eASiMOV/visualization/G-330"
+    },
+    {
+      "id": "G-353",
+      "url": "/rest/eASiMOV/visualization/G-353"
+    },
+    {
+      "id": "G-400",
+      "url": "/rest/eASiMOV/visualization/G-400"
+    },
+    {
+      "id": "G-406",
+      "url": "/rest/eASiMOV/visualization/G-406"
+    },
+    {
+      "id": "G-410",
+      "url": "/rest/eASiMOV/visualization/G-410"
+    },
+    {
+      "id": "G-413",
+      "url": "/rest/eASiMOV/visualization/G-413"
+    },
+    {
+      "id": "G-414",
+      "url": "/rest/eASiMOV/visualization/G-414"
+    },
+    {
+      "id": "G-415",
+      "url": "/rest/eASiMOV/visualization/G-415"
+    },
+    {
+      "id": "G-416",
+      "url": "/rest/eASiMOV/visualization/G-416"
+    },
+    {
+      "id": "G-418",
+      "url": "/rest/eASiMOV/visualization/G-418"
+    },
+    {
+      "id": "G-419",
+      "url": "/rest/eASiMOV/visualization/G-419"
+    },
+    {
+      "id": "G-440",
+      "url": "/rest/eASiMOV/visualization/G-440"
+    },
+    {
+      "id": "G-421",
+      "url": "/rest/eASiMOV/visualization/G-421"
+    },
+    {
+      "id": "G-422",
+      "url": "/rest/eASiMOV/visualization/G-422"
+    },
+    {
+      "id": "G-423",
+      "url": "/rest/eASiMOV/visualization/G-423"
+    },
+    {
+      "id": "G-426",
+      "url": "/rest/eASiMOV/visualization/G-426"
+    },
+    {
+      "id": "G-427",
+      "url": "/rest/eASiMOV/visualization/G-427"
+    },
+    {
+      "id": "G-428",
+      "url": "/rest/eASiMOV/visualization/G-428"
+    },
+    {
+      "id": "G-429",
+      "url": "/rest/eASiMOV/visualization/G-429"
+    },
+    {
+      "id": "G-449",
+      "url": "/rest/eASiMOV/visualization/G-449"
+    },
+    {
+      "id": "G-406",
+      "url": "/rest/eASiMOV/visualization/G-406"
+    },
+    {
+      "id": "G-409",
+      "url": "/rest/eASiMOV/visualization/G-409"
+    },
+    {
+      "id": "G-432",
+      "url": "/rest/eASiMOV/visualization/G-432"
+    },
+    {
+      "id": "G-435",
+      "url": "/rest/eASiMOV/visualization/G-435"
+    },
+    {
+      "id": "G-436",
+      "url": "/rest/eASiMOV/visualization/G-436"
+    },
+    {
+      "id": "G-438",
+      "url": "/rest/eASiMOV/visualization/G-438"
+    },
+    {
+      "id": "G-439",
+      "url": "/rest/eASiMOV/visualization/G-439"
+    },
+    {
+      "id": "G-444",
+      "url": "/rest/eASiMOV/visualization/G-444"
+    },
+    {
+      "id": "G-9675",
+      "url": "/rest/eASiMOV/visualization/G-9675"
+    },
+    {
+      "id": "G-441",
+      "url": "/rest/eASiMOV/visualization/G-441"
+    },
+    {
+      "id": "G-442",
+      "url": "/rest/eASiMOV/visualization/G-442"
+    },
+    {
+      "id": "G-445",
+      "url": "/rest/eASiMOV/visualization/G-445"
+    },
+    {
+      "id": "G-425",
+      "url": "/rest/eASiMOV/visualization/G-425"
+    },
+    {
+      "id": "G-426",
+      "url": "/rest/eASiMOV/visualization/G-426"
+    },
+    {
+      "id": "G-433",
+      "url": "/rest/eASiMOV/visualization/G-433"
+    },
+    {
+      "id": "G-434",
+      "url": "/rest/eASiMOV/visualization/G-434"
+    },
+    {
+      "id": "G-443",
+      "url": "/rest/eASiMOV/visualization/G-443"
+    },
+    {
+      "id": "G-448",
+      "url": "/rest/eASiMOV/visualization/G-448"
+    },
+    {
+      "id": "G-451",
+      "url": "/rest/eASiMOV/visualization/G-451"
+    },
+    {
+      "id": "G-453",
+      "url": "/rest/eASiMOV/visualization/G-453"
+    },
+    {
+      "id": "G-500",
+      "url": "/rest/eASiMOV/visualization/G-500"
+    },
+    {
+      "id": "G-510",
+      "url": "/rest/eASiMOV/visualization/G-510"
+    },
+    {
+      "id": "G-511",
+      "url": "/rest/eASiMOV/visualization/G-511"
+    },
+    {
+      "id": "G-515",
+      "url": "/rest/eASiMOV/visualization/G-515"
+    },
+    {
+      "id": "G-5311",
+      "url": "/rest/eASiMOV/visualization/G-5311"
+    },
+    {
+      "id": "G-506",
+      "url": "/rest/eASiMOV/visualization/G-506"
+    },
+    {
+      "id": "G-519",
+      "url": "/rest/eASiMOV/visualization/G-519"
+    },
+    {
+      "id": "G-521",
+      "url": "/rest/eASiMOV/visualization/G-521"
+    },
+    {
+      "id": "G-522",
+      "url": "/rest/eASiMOV/visualization/G-522"
+    },
+    {
+      "id": "G-523",
+      "url": "/rest/eASiMOV/visualization/G-523"
+    },
+    {
+      "id": "G-526",
+      "url": "/rest/eASiMOV/visualization/G-526"
+    },
+    {
+      "id": "G-529",
+      "url": "/rest/eASiMOV/visualization/G-529"
+    },
+    {
+      "id": "G-530",
+      "url": "/rest/eASiMOV/visualization/G-530"
+    },
+    {
+      "id": "G-5523",
+      "url": "/rest/eASiMOV/visualization/G-5523"
+    },
+    {
+      "id": "G-701",
+      "url": "/rest/eASiMOV/visualization/G-701"
+    },
+    {
+      "id": "G-5524",
+      "url": "/rest/eASiMOV/visualization/G-5524"
+    },
+    {
+      "id": "G-9657",
+      "url": "/rest/eASiMOV/visualization/G-9657"
+    },
+    {
+      "id": "G-640",
+      "url": "/rest/eASiMOV/visualization/G-640"
+    },
+    {
+      "id": "G-650",
+      "url": "/rest/eASiMOV/visualization/G-650"
+    },
+    {
+      "id": "G-9940",
+      "url": "/rest/eASiMOV/visualization/G-9940"
+    },
+    {
+      "id": "G-618",
+      "url": "/rest/eASiMOV/visualization/G-618"
+    },
+    {
+      "id": "G-620",
+      "url": "/rest/eASiMOV/visualization/G-620"
+    },
+    {
+      "id": "G-630",
+      "url": "/rest/eASiMOV/visualization/G-630"
+    },
+    {
+      "id": "G-631",
+      "url": "/rest/eASiMOV/visualization/G-631"
+    },
+    {
+      "id": "G-741",
+      "url": "/rest/eASiMOV/visualization/G-741"
+    },
+    {
+      "id": "G-9605",
+      "url": "/rest/eASiMOV/visualization/G-9605"
+    },
+    {
+      "id": "G-255",
+      "url": "/rest/eASiMOV/visualization/G-255"
+    },
+    {
+      "id": "G-660",
+      "url": "/rest/eASiMOV/visualization/G-660"
+    },
+    {
+      "id": "G-664",
+      "url": "/rest/eASiMOV/visualization/G-664"
+    },
+    {
+      "id": "G-670",
+      "url": "/rest/eASiMOV/visualization/G-670"
+    },
+    {
+      "id": "G-691",
+      "url": "/rest/eASiMOV/visualization/G-691"
+    },
+    {
+      "id": "G-460",
+      "url": "/rest/eASiMOV/visualization/G-460"
+    },
+    {
+      "id": "G-681",
+      "url": "/rest/eASiMOV/visualization/G-681"
+    },
+    {
+      "id": "G-685",
+      "url": "/rest/eASiMOV/visualization/G-685"
+    },
+    {
+      "id": "G-686",
+      "url": "/rest/eASiMOV/visualization/G-686"
+    },
+    {
+      "id": "G-688",
+      "url": "/rest/eASiMOV/visualization/G-688"
+    },
+    {
+      "id": "G-691",
+      "url": "/rest/eASiMOV/visualization/G-691"
+    },
+    {
+      "id": "G-695",
+      "url": "/rest/eASiMOV/visualization/G-695"
+    },
+    {
+      "id": "G-696",
+      "url": "/rest/eASiMOV/visualization/G-696"
+    },
+    {
+      "id": "G-701",
+      "url": "/rest/eASiMOV/visualization/G-701"
+    },
+    {
+      "id": "G-705",
+      "url": "/rest/eASiMOV/visualization/G-705"
+    },
+    {
+      "id": "G-721",
+      "url": "/rest/eASiMOV/visualization/G-721"
+    },
+    {
+      "id": "G-723",
+      "url": "/rest/eASiMOV/visualization/G-723"
+    },
+    {
+      "id": "G-724",
+      "url": "/rest/eASiMOV/visualization/G-724"
+    },
+    {
+      "id": "G-725",
+      "url": "/rest/eASiMOV/visualization/G-725"
+    },
+    {
+      "id": "G-727",
+      "url": "/rest/eASiMOV/visualization/G-727"
+    },
+    {
+      "id": "G-732",
+      "url": "/rest/eASiMOV/visualization/G-732"
+    },
+    {
+      "id": "G-1500",
+      "url": "/rest/eASiMOV/visualization/G-1500"
+    },
+    {
+      "id": "G-531",
+      "url": "/rest/eASiMOV/visualization/G-531"
+    },
+    {
+      "id": "G-536",
+      "url": "/rest/eASiMOV/visualization/G-536"
+    },
+    {
+      "id": "G-556",
+      "url": "/rest/eASiMOV/visualization/G-556"
+    },
+    {
+      "id": "G-563",
+      "url": "/rest/eASiMOV/visualization/G-563"
+    },
+    {
+      "id": "G-572",
+      "url": "/rest/eASiMOV/visualization/G-572"
+    },
+    {
+      "id": "G-574",
+      "url": "/rest/eASiMOV/visualization/G-574"
+    },
+    {
+      "id": "G-575",
+      "url": "/rest/eASiMOV/visualization/G-575"
+    },
+    {
+      "id": "G-705",
+      "url": "/rest/eASiMOV/visualization/G-705"
+    },
+    {
+      "id": "G-707",
+      "url": "/rest/eASiMOV/visualization/G-707"
+    },
+    {
+      "id": "G-708",
+      "url": "/rest/eASiMOV/visualization/G-708"
+    },
+    {
+      "id": "G-712",
+      "url": "/rest/eASiMOV/visualization/G-712"
+    },
+    {
+      "id": "G-713",
+      "url": "/rest/eASiMOV/visualization/G-713"
+    },
+    {
+      "id": "G-714",
+      "url": "/rest/eASiMOV/visualization/G-714"
+    },
+    {
+      "id": "G-720",
+      "url": "/rest/eASiMOV/visualization/G-720"
+    },
+    {
+      "id": "G-9100",
+      "url": "/rest/eASiMOV/visualization/G-9100"
+    },
+    {
+      "id": "G-9608",
+      "url": "/rest/eASiMOV/visualization/G-9608"
+    },
+    {
+      "id": "G-9670",
+      "url": "/rest/eASiMOV/visualization/G-9670"
+    },
+    {
+      "id": "G-9680",
+      "url": "/rest/eASiMOV/visualization/G-9680"
+    },
+    {
+      "id": "G-717",
+      "url": "/rest/eASiMOV/visualization/G-717"
+    },
+    {
+      "id": "G-801",
+      "url": "/rest/eASiMOV/visualization/G-801"
+    },
+    {
+      "id": "G-905",
+      "url": "/rest/eASiMOV/visualization/G-905"
+    },
+    {
+      "id": "G-901",
+      "url": "/rest/eASiMOV/visualization/G-901"
+    },
+    {
+      "id": "G-907",
+      "url": "/rest/eASiMOV/visualization/G-907"
+    },
+    {
+      "id": "G-1507",
+      "url": "/rest/eASiMOV/visualization/G-1507"
+    }
+  ],
+  "stations": [
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-267A",
+        "description": "BHKW",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-267A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.43613282622329,
+          49.09176554276926
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-311",
+        "description": "",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-311"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.42633,
+          49.09520999999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-145",
+        "description": "Neue Kantine",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-145"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.429487377618369,
+          49.09335178003868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-131",
+        "description": "",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-131"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.42656,
+          49.09231
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-211",
+        "description": "Alte Kantine",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-211"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.429281909112717,
+          49.09093775823604
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-244",
+        "description": "",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-244"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.431361380082617,
+          49.09300944084534
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-273",
+        "description": "",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-273"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.43467,
+          49.09269
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-272",
+        "description": "",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-272"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.43573651970259,
+          49.09260987335416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-677",
+        "description": "Bioliq",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-677"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.435328845423356,
+          49.09905042779366
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-675",
+        "description": "PV - 1.5 MW PV-Speicherfeld; 2 MW Trafo",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-675"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.437831025892118,
+          49.09953521163811
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-674",
+        "description": "1.25 MW",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-674"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.435067556262169,
+          49.09886284245228
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-660",
+        "description": "Versuchsgebaeude BETA 660",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-660"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.43461177008181,
+          49.09906263094516
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-255",
+        "description": "Blockheizkraftwerk",
+        "size": 1,
+        "color": "#aaff00",
+        "url": "/rest/eASiMOV/visualization/S-255"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.43521153040024,
+          49.09219019160501
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-348N",
+        "description": "ANKA Technikumshalle",
+        "size": 1,
+        "color": "#ffff00",
+        "url": "/rest/eASiMOV/visualization/S-348N"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.42827793752975,
+          49.09720150247285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-302",
+        "description": "Abwassersammel- und Trafostation",
+        "size": 1,
+        "color": "#ffff00",
+        "url": "/rest/eASiMOV/visualization/S-302"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.429023901428941,
+          49.09460193272468
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-308",
+        "description": "",
+        "size": 1,
+        "color": "#ffff00",
+        "url": "/rest/eASiMOV/visualization/S-308"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.429311636160921,
+          49.09470372896982
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-414",
+        "description": "",
+        "size": 1,
+        "color": "#ffff00",
+        "url": "/rest/eASiMOV/visualization/S-414"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.434782570922081,
+          49.09350120079709
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-611",
+        "description": "",
+        "size": 1,
+        "color": "#ffff00",
+        "url": "/rest/eASiMOV/visualization/S-611"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.432794470747233,
+          49.09841558556649
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-5 (WAK)",
+        "id": "S-WAK-1",
+        "description": "",
+        "size": 1,
+        "color": "#ff0000",
+        "url": "/rest/eASiMOV/visualization/S-WAK-1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.432792,
+          49.10951399999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-5 (WAK)",
+        "id": "Switch WAK-1-2",
+        "description": "",
+        "size": 1,
+        "color": "#ff0000",
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.434148,
+          49.109356
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-5 (WAK)",
+        "id": "S-WAK-2",
+        "description": "",
+        "size": 1,
+        "color": "#ff0000",
+        "url": "/rest/eASiMOV/visualization/S-WAK2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.435329,
+          49.109182
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-429",
+        "description": "Abwassersammel- und Trafostation",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-429"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.431779056920451,
+          49.09540108602549
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-451",
+        "description": "Tritium-Labor",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-451"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.434411558785907,
+          49.09536024601987
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-449",
+        "description": "Anbau ForHLR",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-449"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.433206849600857,
+          49.09605299999999
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-442",
+        "description": "Rechenzentrum",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-442"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.432343264639297,
+          49.09629748443204
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-323",
+        "description": "Rechenzentrum",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-323"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.429463022287816,
+          49.0956652080986
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-348S",
+        "description": "ANKA Technikumshalle",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-348S"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.427922311708699,
+          49.09648014285883
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-351",
+        "description": "Laborgeb�ude ZAG",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-351"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.427117661186145,
+          49.0970951776591
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-353",
+        "description": "Kompaktzyklotron",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-353"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.426307438273405,
+          49.09677049486762
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-523",
+        "description": "",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-523"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.430571558645184,
+          49.09889634928905
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-506",
+        "description": "Trafohaus, 1 x 2 MW, 20/0.4 kV",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-506"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.431456757233233,
+          49.09871765056505
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-522",
+        "description": "Trafohaus, 1 x 2 MW, 20/0.4 kV",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-522"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.431053878914787,
+          49.09893362193246
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-546",
+        "description": "",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-546"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.430857548342129,
+          49.10009101282645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-612",
+        "description": "K�ltekraftwerk (BHKW)",
+        "size": 1,
+        "color": "#ff5500",
+        "url": "/rest/eASiMOV/visualization/S-612"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.433722589365253,
+          49.09731026493852
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-267B",
+        "description": "BHKW",
+        "size": 1,
+        "color": "#00aaff",
+        "url": "/rest/eASiMOV/visualization/S-267B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.436150510240441,
+          49.09180530874547
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-713",
+        "description": "",
+        "size": 1,
+        "color": "#00aaff",
+        "url": "/rest/eASiMOV/visualization/S-713"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.429936394351383,
+          49.10129965967177
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-717",
+        "description": "Hightech-Inkubator",
+        "size": 1,
+        "color": "#00aaff",
+        "url": "/rest/eASiMOV/visualization/S-717"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.43070426496042,
+          49.1015324477769
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-500",
+        "description": "",
+        "size": 1,
+        "color": "#00aaff",
+        "url": "/rest/eASiMOV/visualization/S-500"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.426873762918463,
+          49.09823086265893
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-432",
+        "description": "",
+        "size": 1,
+        "color": "#00aaff",
+        "url": "/rest/eASiMOV/visualization/S-432"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.434339028290278,
+          49.09437942170409
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-456",
+        "description": "KATRIN",
+        "size": 1,
+        "color": "#00aaff",
+        "url": "/rest/eASiMOV/visualization/S-456"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.436077592570738,
+          49.09533359783199
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-631",
+        "description": "Versorgungszentrale",
+        "size": 1,
+        "color": "#00aaff",
+        "url": "/rest/eASiMOV/visualization/S-631"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.43643008747998,
+          49.09650807306898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-7 (ITU)",
+        "id": "S-801",
+        "description": "ITU",
+        "size": 1,
+        "color": "#aaaaff",
+        "url": "/rest/eASiMOV/visualization/S-801"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.435409218465498,
+          49.10235070123234
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Connections Switches",
+        "id": "S-907A",
+        "description": "",
+        "size": 1,
+        "color": "#ff0099",
+        "url": "/rest/eASiMOV/visualization/S-907A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.431245645938027,
+          49.10478428722789
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Connections Switches",
+        "id": "S-907B",
+        "description": "",
+        "size": 1,
+        "color": "#ff0099",
+        "url": "/rest/eASiMOV/visualization/S-907B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.431299201350512,
+          49.10491438216759
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Connections Switches",
+        "id": "S-686A",
+        "description": "Elektrozentrale Nord 686A",
+        "size": 1,
+        "color": "#ff0099",
+        "url": "/rest/eASiMOV/visualization/S-686A"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.433791681392853,
+          49.10131704807611
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Connections Switches",
+        "id": "S-686B",
+        "description": "Elektrozentrale Nord 686B",
+        "size": 1,
+        "color": "#ff0099",
+        "url": "/rest/eASiMOV/visualization/S-686B"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.43411745452968,
+          49.10125964652501
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Connections Switches",
+        "id": "Switch 907A - 907B",
+        "description": "Elektrozentrale Nord 686B",
+        "size": 1,
+        "color": "#ff0099",
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.43126989881987,
+          49.1048423707398
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Connections Switches",
+        "id": "Switch 686A - 686B",
+        "description": "Elektrozentrale Nord 686B",
+        "size": 1,
+        "color": "#ff0099",
+        "url": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          8.433952,
+          49.101294
+        ]
+      }
+    }
+  ],
+  "lines": [
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-7",
+        "id": "S-801 - S-686A",
+        "color": "#aaaaff",
+        "roofColor": "#aaaaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.435420560827147,
+            49.10236818535698,
+            0
+          ],
+          [
+            8.435335095890778,
+            49.10222830721779,
+            0
+          ],
+          [
+            8.43385134387187,
+            49.10250678883306,
+            0
+          ],
+          [
+            8.433572769764549,
+            49.10181129618376,
+            0
+          ],
+          [
+            8.433439789032022,
+            49.10176096177112,
+            0
+          ],
+          [
+            8.433400143760977,
+            49.10165410820441,
+            0
+          ],
+          [
+            8.433509970129297,
+            49.10157399462945,
+            0
+          ],
+          [
+            8.433472745044341,
+            49.1014750709391,
+            0
+          ],
+          [
+            8.433499922316713,
+            49.10143596081213,
+            0
+          ],
+          [
+            8.433617737694368,
+            49.10141328393648,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-7",
+        "id": "S-907B - S-801",
+        "color": "#aaaaff",
+        "roofColor": "#aaaaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431342296517387,
+            49.10496773693035,
+            0
+          ],
+          [
+            8.431401515728663,
+            49.10495798927861,
+            0
+          ],
+          [
+            8.43153258977396,
+            49.10491534333615,
+            0
+          ],
+          [
+            8.431625862155519,
+            49.10477276678086,
+            0
+          ],
+          [
+            8.431496383858374,
+            49.10438837293077,
+            0
+          ],
+          [
+            8.431224698097125,
+            49.10431867227513,
+            0
+          ],
+          [
+            8.431038230347745,
+            49.10384127774637,
+            0
+          ],
+          [
+            8.43108940238817,
+            49.10378935941511,
+            0
+          ],
+          [
+            8.431487767438197,
+            49.10371504146268,
+            0
+          ],
+          [
+            8.431493213605794,
+            49.10362120175256,
+            0
+          ],
+          [
+            8.433703486672986,
+            49.10321484119793,
+            0
+          ],
+          [
+            8.434013650481521,
+            49.10286613798574,
+            0
+          ],
+          [
+            8.433879596020311,
+            49.10254972055432,
+            0
+          ],
+          [
+            8.435318613900787,
+            49.102270431729,
+            0
+          ],
+          [
+            8.435420560827147,
+            49.10236818535698,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-6",
+        "id": "S-907B - S-686A",
+        "color": "#ff0099",
+        "roofColor": "#ff0099"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431309724335676,
+            49.1048789620385,
+            0
+          ],
+          [
+            8.43165969863116,
+            49.10482344857432,
+            0
+          ],
+          [
+            8.431675964518636,
+            49.10477854832251,
+            0
+          ],
+          [
+            8.431530921311431,
+            49.10436853532288,
+            0
+          ],
+          [
+            8.431260283193735,
+            49.1042998311463,
+            0
+          ],
+          [
+            8.431085071197025,
+            49.10383953999074,
+            0
+          ],
+          [
+            8.431116943228119,
+            49.10379967364383,
+            0
+          ],
+          [
+            8.431535523683255,
+            49.10372378654265,
+            0
+          ],
+          [
+            8.431544657936609,
+            49.10366219727671,
+            0
+          ],
+          [
+            8.433750114788074,
+            49.10324605819949,
+            0
+          ],
+          [
+            8.434077592389631,
+            49.10287897786384,
+            0
+          ],
+          [
+            8.43361397811616,
+            49.10177461197495,
+            0
+          ],
+          [
+            8.433624770820849,
+            49.10174404364396,
+            0
+          ],
+          [
+            8.43359525820116,
+            49.10164384741938,
+            0
+          ],
+          [
+            8.433638412980951,
+            49.1015911839341,
+            0
+          ],
+          [
+            8.433744350234381,
+            49.10157178507243,
+            0
+          ],
+          [
+            8.433759331412018,
+            49.10154981681374,
+            0
+          ],
+          [
+            8.4336990841747,
+            49.10141833323102,
+            0
+          ],
+          [
+            8.433663265201591,
+            49.10140679733371,
+            0
+          ],
+          [
+            8.433627148687712,
+            49.10141190149654,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-5 (WAK)",
+        "id": "S-WAK-2 - S-686A",
+        "color": "#ff0000",
+        "roofColor": "#ff0000"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.435362635036384,
+            49.10919832065639
+          ],
+          [
+            8.435523031519379,
+            49.1092504267628
+          ],
+          [
+            8.436101535073998,
+            49.10912828911322
+          ],
+          [
+            8.434715619777894,
+            49.10567841381163
+          ],
+          [
+            8.434844264847769,
+            49.10562299039643
+          ],
+          [
+            8.434901477489394,
+            49.1054422490358
+          ],
+          [
+            8.435095480814837,
+            49.10537719704023
+          ],
+          [
+            8.435056888624175,
+            49.10528786703651
+          ],
+          [
+            8.434950159963925,
+            49.10529873620193
+          ],
+          [
+            8.43486396946151,
+            49.10527414159994
+          ],
+          [
+            8.43444161844495,
+            49.10422148774424
+          ],
+          [
+            8.434513429943458,
+            49.10415714737077
+          ],
+          [
+            8.434489261881605,
+            49.10408887184266
+          ],
+          [
+            8.434359192393545,
+            49.10406153118839
+          ],
+          [
+            8.433997472802986,
+            49.10317784759749
+          ],
+          [
+            8.434113899518414,
+            49.10308498952889
+          ],
+          [
+            8.434063839588372,
+            49.10298053611214
+          ],
+          [
+            8.433970810993884,
+            49.10294499983942
+          ],
+          [
+            8.4335381318155,
+            49.10183065797907
+          ],
+          [
+            8.433419388821202,
+            49.10183662463997
+          ],
+          [
+            8.433346023894828,
+            49.10163880447051
+          ],
+          [
+            8.433455240981342,
+            49.10156669203424
+          ],
+          [
+            8.433409057968568,
+            49.10143996380921
+          ],
+          [
+            8.433445937615025,
+            49.10139736707649
+          ],
+          [
+            8.433607063213328,
+            49.10137015828491
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-5 (WAK)",
+        "id": "S-WAK-1 - Switch-WAK-1-2 - WAK-2",
+        "color": "#ff0000",
+        "roofColor": "#ff0000"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.432792,
+            49.10951399999999
+          ],
+          [
+            8.434148,
+            49.109356
+          ],
+          [
+            8.435362635036384,
+            49.10919832065639
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-5 (WAK)",
+        "id": "S-907A - S-WAK-1",
+        "color": "#ff0000",
+        "roofColor": "#ff0000"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431281056433583,
+            49.10480355272153
+          ],
+          [
+            8.43136920290071,
+            49.10478796922293
+          ],
+          [
+            8.43145244385282,
+            49.10499440849893
+          ],
+          [
+            8.431405960887584,
+            49.10503194757159
+          ],
+          [
+            8.431414873657845,
+            49.10506360329329
+          ],
+          [
+            8.431270986264344,
+            49.10512450364566
+          ],
+          [
+            8.431260561210845,
+            49.10531731189553
+          ],
+          [
+            8.431278869301607,
+            49.10589486620496
+          ],
+          [
+            8.429109733861303,
+            49.10629573632885
+          ],
+          [
+            8.429989098688896,
+            49.1087588843952
+          ],
+          [
+            8.430501863426967,
+            49.10929334632513
+          ],
+          [
+            8.432792,
+            49.10951399999999
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-612 (BHKW) - S-449",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.433719255406844,
+            49.09731798523738
+          ],
+          [
+            8.433651689985467,
+            49.09731327465001
+          ],
+          [
+            8.433329679191736,
+            49.09654627732423
+          ],
+          [
+            8.43334081023868,
+            49.09649303634273
+          ],
+          [
+            8.433458713037146,
+            49.09646847569932
+          ],
+          [
+            8.433476168817148,
+            49.09644456955055
+          ],
+          [
+            8.433311639441403,
+            49.09606372993478
+          ],
+          [
+            8.433283024598207,
+            49.09604838237124
+          ],
+          [
+            8.433205540054548,
+            49.09606046460998
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-523 - T-522",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.43056932011888,
+            49.09889694743005
+          ],
+          [
+            8.43056307958441,
+            49.09886761458399
+          ],
+          [
+            8.430680670725355,
+            49.09884314680005
+          ],
+          [
+            8.430713627333377,
+            49.09892603607431
+          ],
+          [
+            8.43094774573742,
+            49.0989191193622
+          ],
+          [
+            8.431040885624144,
+            49.09890422113598
+          ],
+          [
+            8.431052284141373,
+            49.09893208041333
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-523 - T-506",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.430567802290156,
+            49.09889487099618
+          ],
+          [
+            8.430610150024876,
+            49.09886856666341
+          ],
+          [
+            8.430670585580556,
+            49.09885924993642
+          ],
+          [
+            8.43070348181749,
+            49.09893358090098
+          ],
+          [
+            8.43094661779528,
+            49.09894023613019
+          ],
+          [
+            8.431048698581245,
+            49.09905508419523
+          ],
+          [
+            8.43151536625427,
+            49.09897237141902
+          ],
+          [
+            8.431538652545106,
+            49.0989491229746
+          ],
+          [
+            8.431509397433771,
+            49.09889267013298
+          ],
+          [
+            8.431550111431426,
+            49.09884599197616
+          ],
+          [
+            8.43150293064333,
+            49.09874503692208
+          ],
+          [
+            8.431456799919609,
+            49.09871969620336
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-546 - S-686A",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.430852928491305,
+            49.10010711028884
+          ],
+          [
+            8.430939509998689,
+            49.10011886330834
+          ],
+          [
+            8.431124924374643,
+            49.10008370293707
+          ],
+          [
+            8.431216163635789,
+            49.10016522353926
+          ],
+          [
+            8.431361555599937,
+            49.10022012679475
+          ],
+          [
+            8.431705357257599,
+            49.10051508185852
+          ],
+          [
+            8.431839993096657,
+            49.10060983380916
+          ],
+          [
+            8.432390812878124,
+            49.10051621031824
+          ],
+          [
+            8.432520230985114,
+            49.10059116552897
+          ],
+          [
+            8.432778994859621,
+            49.10053939694821
+          ],
+          [
+            8.43285700936056,
+            49.10057137766122
+          ],
+          [
+            8.433019548278587,
+            49.10101706019447
+          ],
+          [
+            8.433110875468897,
+            49.10105078820812
+          ],
+          [
+            8.433169623480513,
+            49.1011834229157
+          ],
+          [
+            8.433296072040456,
+            49.1011650298392
+          ],
+          [
+            8.433349935083001,
+            49.10131890360513
+          ],
+          [
+            8.433435784040563,
+            49.1013625452554
+          ],
+          [
+            8.433593642815495,
+            49.10133559909318
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-523 - S-546",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.430571013092301,
+            49.09890249016577
+          ],
+          [
+            8.43042683611846,
+            49.09893174585757
+          ],
+          [
+            8.43045577765221,
+            49.09900119994961
+          ],
+          [
+            8.430678963422656,
+            49.09896420409901
+          ],
+          [
+            8.43090459667202,
+            49.09897618954123
+          ],
+          [
+            8.431014220672438,
+            49.0991019511897
+          ],
+          [
+            8.431552079548014,
+            49.09900903628016
+          ],
+          [
+            8.431688247634721,
+            49.09892043051421
+          ],
+          [
+            8.431659090455291,
+            49.09884636829958
+          ],
+          [
+            8.43178274156616,
+            49.09882440991785
+          ],
+          [
+            8.431802393166548,
+            49.09888104610748
+          ],
+          [
+            8.43198452916621,
+            49.09891321835431
+          ],
+          [
+            8.432268401804386,
+            49.0988637717911
+          ],
+          [
+            8.432433297850823,
+            49.09895688625198
+          ],
+          [
+            8.432493093732209,
+            49.0990004346865
+          ],
+          [
+            8.432890045724886,
+            49.09992603283648
+          ],
+          [
+            8.432723683853107,
+            49.10005903238282
+          ],
+          [
+            8.4315341164568,
+            49.10024838385557
+          ],
+          [
+            8.431372485400242,
+            49.10017715414736
+          ],
+          [
+            8.431253800627712,
+            49.10015249383449
+          ],
+          [
+            8.431128166386262,
+            49.1000540383931
+          ],
+          [
+            8.430852928491305,
+            49.10010711028884
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-451 - S-523",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.434406786208214,
+            49.09536764954723
+          ],
+          [
+            8.434383860614412,
+            49.0953124248291
+          ],
+          [
+            8.434323767401606,
+            49.09530661317491
+          ],
+          [
+            8.431031056458362,
+            49.09588137742027
+          ],
+          [
+            8.430932626862749,
+            49.0959535119931
+          ],
+          [
+            8.431228314187633,
+            49.09670731273658
+          ],
+          [
+            8.43129084797502,
+            49.09676484578156
+          ],
+          [
+            8.431360421931837,
+            49.09694621082801
+          ],
+          [
+            8.431342157709983,
+            49.09698069857582
+          ],
+          [
+            8.43146507072337,
+            49.09727492605297
+          ],
+          [
+            8.4317433263856,
+            49.09732069466029
+          ],
+          [
+            8.432234184517762,
+            49.09850888119538
+          ],
+          [
+            8.432279196617909,
+            49.09855756359369
+          ],
+          [
+            8.432304887882026,
+            49.09862324476448
+          ],
+          [
+            8.431929274691415,
+            49.09870212877865
+          ],
+          [
+            8.431856846175329,
+            49.09875742668587
+          ],
+          [
+            8.431633814377799,
+            49.09880309763007
+          ],
+          [
+            8.431613049954038,
+            49.09883649225814
+          ],
+          [
+            8.431637320735923,
+            49.09891572739907
+          ],
+          [
+            8.431531053649033,
+            49.09898791433089
+          ],
+          [
+            8.431028717158428,
+            49.09907885731529
+          ],
+          [
+            8.430920183774568,
+            49.09895594712911
+          ],
+          [
+            8.430684917767053,
+            49.09894772603176
+          ],
+          [
+            8.43066243644385,
+            49.0988836208177
+          ],
+          [
+            8.430571013092301,
+            49.09890249016577
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-449 - S-451",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.434412665529825,
+            49.09537036780683
+          ],
+          [
+            8.433536162421131,
+            49.09552027350897
+          ],
+          [
+            8.43338816798031,
+            49.09561356490476
+          ],
+          [
+            8.433481157802332,
+            49.09583693440697
+          ],
+          [
+            8.433476216841232,
+            49.09585372970432
+          ],
+          [
+            8.43327645372834,
+            49.09588892732566
+          ],
+          [
+            8.433260605392656,
+            49.09591820934009
+          ],
+          [
+            8.433288798157578,
+            49.09598339568602
+          ],
+          [
+            8.433279549855255,
+            49.09599583912238
+          ],
+          [
+            8.43322036528531,
+            49.0960025387753
+          ],
+          [
+            8.433204298442234,
+            49.09602107375973
+          ],
+          [
+            8.433201278590545,
+            49.0960528546983
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-442 - S-449",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.433201278590545,
+            49.0960528546983,
+            0
+          ],
+          [
+            8.433180845205282,
+            49.09602682667671,
+            0
+          ],
+          [
+            8.433161907779354,
+            49.09601504637652,
+            0
+          ],
+          [
+            8.432962655475777,
+            49.09605036274335,
+            0
+          ],
+          [
+            8.432951232508305,
+            49.09607126867413,
+            0
+          ],
+          [
+            8.43301050226393,
+            49.09623633963872,
+            0
+          ],
+          [
+            8.433005588519318,
+            49.09625066602581,
+            0
+          ],
+          [
+            8.432403858541694,
+            49.09635689412384,
+            0
+          ],
+          [
+            8.432362132509923,
+            49.0963502681244,
+            0
+          ],
+          [
+            8.432343331819819,
+            49.09630049898887,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-429 - S-442",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431776094452161,
+            49.095405910495,
+            0
+          ],
+          [
+            8.431785570979445,
+            49.09543223064118,
+            0
+          ],
+          [
+            8.431728063512416,
+            49.09544160029692,
+            0
+          ],
+          [
+            8.431715598936044,
+            49.09545805559829,
+            0
+          ],
+          [
+            8.431764523011756,
+            49.0955829255771,
+            0
+          ],
+          [
+            8.43181978402468,
+            49.09559770226058,
+            0
+          ],
+          [
+            8.432305117179306,
+            49.09550861138219,
+            0
+          ],
+          [
+            8.43236896573385,
+            49.09552404204575,
+            0
+          ],
+          [
+            8.432692982901766,
+            49.09628712693272,
+            0
+          ],
+          [
+            8.432403140172948,
+            49.09633677335471,
+            0
+          ],
+          [
+            8.43238408384839,
+            49.09629351200933,
+            0
+          ],
+          [
+            8.432341944990128,
+            49.09630028374403,
+            0
+          ],
+          [
+            8.432289739572617,
+            49.09630906148602,
+            0
+          ],
+          [
+            8.43243938022281,
+            49.09628351496578,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-323 - S-429",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.429462470467026,
+            49.09567279544405,
+            0
+          ],
+          [
+            8.429365695811237,
+            49.09569753350886,
+            0
+          ],
+          [
+            8.429347453065784,
+            49.09572625650772,
+            0
+          ],
+          [
+            8.429448148309666,
+            49.09597962439516,
+            0
+          ],
+          [
+            8.429514297748792,
+            49.0959840639917,
+            0
+          ],
+          [
+            8.429779728561702,
+            49.09593272272952,
+            0
+          ],
+          [
+            8.429834075553229,
+            49.09594877957348,
+            0
+          ],
+          [
+            8.430561359241162,
+            49.09581377445078,
+            0
+          ],
+          [
+            8.430601942959308,
+            49.09578507474368,
+            0
+          ],
+          [
+            8.430874497515893,
+            49.09573770188126,
+            0
+          ],
+          [
+            8.430939349851855,
+            49.09574566067462,
+            0
+          ],
+          [
+            8.431683915026769,
+            49.09561056385553,
+            0
+          ],
+          [
+            8.431704569753258,
+            49.09558619769874,
+            0
+          ],
+          [
+            8.431650831893496,
+            49.09546567619696,
+            0
+          ],
+          [
+            8.431674678657458,
+            49.0954306657698,
+            0
+          ],
+          [
+            8.431785221817645,
+            49.0954112817253,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-348S - S-323",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.429466652502185,
+            49.09567237492112,
+            0
+          ],
+          [
+            8.429452806742965,
+            49.09563975440032,
+            0
+          ],
+          [
+            8.429354972297741,
+            49.09566373428248,
+            0
+          ],
+          [
+            8.429283445591702,
+            49.09570853078435,
+            0
+          ],
+          [
+            8.429106363206987,
+            49.09575841411137,
+            0
+          ],
+          [
+            8.42925971648696,
+            49.09614219253086,
+            0
+          ],
+          [
+            8.429177370021733,
+            49.09619749678582,
+            0
+          ],
+          [
+            8.427920757213485,
+            49.0964128782194,
+            0
+          ],
+          [
+            8.427915500948401,
+            49.09647948908809,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-351 - S-348S",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.427915500948401,
+            49.09647948908809,
+            0
+          ],
+          [
+            8.427862068727654,
+            49.09642279812705,
+            0
+          ],
+          [
+            8.42759259630154,
+            49.09647546934235,
+            0
+          ],
+          [
+            8.427552903821777,
+            49.09653714432164,
+            0
+          ],
+          [
+            8.427466991455637,
+            49.09655617554693,
+            0
+          ],
+          [
+            8.427416377738659,
+            49.09659706559366,
+            0
+          ],
+          [
+            8.427668494579702,
+            49.09722834218255,
+            0
+          ],
+          [
+            8.427612244447872,
+            49.09729678840429,
+            0
+          ],
+          [
+            8.427381993671226,
+            49.09733356910925,
+            0
+          ],
+          [
+            8.427313570369261,
+            49.09731958647321,
+            0
+          ],
+          [
+            8.427237835413354,
+            49.09723383720021,
+            0
+          ],
+          [
+            8.427152754822362,
+            49.09719445829749,
+            0
+          ],
+          [
+            8.427112344594159,
+            49.09709881651082,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-4 (Nordring)",
+        "id": "S-907B - S-351",
+        "color": "#ff5500",
+        "roofColor": "#ff5500"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431321158368757,
+            49.10491004547863,
+            0
+          ],
+          [
+            8.43147221664902,
+            49.10488553927045,
+            0
+          ],
+          [
+            8.431495122546739,
+            49.10481927640246,
+            0
+          ],
+          [
+            8.431368523787404,
+            49.10447091199748,
+            0
+          ],
+          [
+            8.431089729356462,
+            49.10439767822479,
+            0
+          ],
+          [
+            8.430983362402317,
+            49.10423353364323,
+            0
+          ],
+          [
+            8.430929785096406,
+            49.10420693105113,
+            0
+          ],
+          [
+            8.429862848110526,
+            49.10439518399178,
+            0
+          ],
+          [
+            8.42955810878717,
+            49.10431097561103,
+            0
+          ],
+          [
+            8.428356145408442,
+            49.10450834862422,
+            0
+          ],
+          [
+            8.42622403329618,
+            49.09864189164042,
+            0
+          ],
+          [
+            8.42625589990673,
+            49.09855130112847,
+            0
+          ],
+          [
+            8.426067659101806,
+            49.0980599663738,
+            0
+          ],
+          [
+            8.426349829347036,
+            49.09770618394952,
+            0
+          ],
+          [
+            8.42706782647069,
+            49.09757579708943,
+            0
+          ],
+          [
+            8.427122000624355,
+            49.09751009488426,
+            0
+          ],
+          [
+            8.426988588577405,
+            49.09718363202495,
+            0
+          ],
+          [
+            8.427047481294288,
+            49.09711424918538,
+            0
+          ],
+          [
+            8.427116421999212,
+            49.09709920005053,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-611 - S-686B",
+        "color": "#ffff00",
+        "roofColor": "#ffff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.432792504470632,
+            49.09841594873564
+          ],
+          [
+            8.432818011129736,
+            49.09846911497311
+          ],
+          [
+            8.432760046878599,
+            49.09852109481724
+          ],
+          [
+            8.432540994297124,
+            49.09856441014176
+          ],
+          [
+            8.432476935344441,
+            49.09860337514631
+          ],
+          [
+            8.43314981643395,
+            49.10020691014415
+          ],
+          [
+            8.433443571146944,
+            49.10093277527436
+          ],
+          [
+            8.43358307442827,
+            49.10097407206033
+          ],
+          [
+            8.433710615724854,
+            49.10094935022823
+          ],
+          [
+            8.434181612530612,
+            49.10093415789323
+          ],
+          [
+            8.434274331278012,
+            49.10113220511342
+          ],
+          [
+            8.434134986553731,
+            49.10120215774642
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-414 - S-611",
+        "color": "#ffff00",
+        "roofColor": "#ffff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.434778622796856,
+            49.09350193014166,
+            0
+          ],
+          [
+            8.434789968159045,
+            49.09345115065677,
+            0
+          ],
+          [
+            8.435012191385425,
+            49.09340454741442,
+            0
+          ],
+          [
+            8.435203512962566,
+            49.09386242861795,
+            0
+          ],
+          [
+            8.435056387019777,
+            49.09403812820104,
+            0
+          ],
+          [
+            8.430721465658246,
+            49.09483691350183,
+            0
+          ],
+          [
+            8.43060535434708,
+            49.0949781084733,
+            0
+          ],
+          [
+            8.431521478509232,
+            49.09725764875821,
+            0
+          ],
+          [
+            8.431773432271026,
+            49.09728951283139,
+            0
+          ],
+          [
+            8.432268571961794,
+            49.09844853064854,
+            0
+          ],
+          [
+            8.432528606549916,
+            49.09839987295441,
+            0
+          ],
+          [
+            8.43261003851067,
+            49.09833061082718,
+            0
+          ],
+          [
+            8.432821025868936,
+            49.09829381165577,
+            0
+          ],
+          [
+            8.432899607672459,
+            49.09831661512355,
+            0
+          ],
+          [
+            8.432919208694624,
+            49.0983688532394,
+            0
+          ],
+          [
+            8.432895354679781,
+            49.09839722280529,
+            0
+          ],
+          [
+            8.432792504470632,
+            49.09841594873564,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-308 - S-414",
+        "color": "#ffff00",
+        "roofColor": "#ffff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.42931189397585,
+            49.09471463208089,
+            0
+          ],
+          [
+            8.429409746685465,
+            49.09469566617825,
+            0
+          ],
+          [
+            8.429491488431598,
+            49.09473104501922,
+            0
+          ],
+          [
+            8.429533376490998,
+            49.09481175726992,
+            0
+          ],
+          [
+            8.429583333765475,
+            49.09483116906933,
+            0
+          ],
+          [
+            8.430116564575902,
+            49.09473494602964,
+            0
+          ],
+          [
+            8.430279566807455,
+            49.09476125573427,
+            0
+          ],
+          [
+            8.434098166411736,
+            49.0940754806581,
+            0
+          ],
+          [
+            8.434955128939956,
+            49.09391950407965,
+            0
+          ],
+          [
+            8.435075889443953,
+            49.0938351360841,
+            0
+          ],
+          [
+            8.434950893205933,
+            49.09355122208481,
+            0
+          ],
+          [
+            8.434778622796856,
+            49.09350193014166,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-302 - S-308",
+        "color": "#ffff00",
+        "roofColor": "#ffff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.429022194323604,
+            49.09461195638122,
+            0
+          ],
+          [
+            8.429143900714868,
+            49.09459386873154,
+            0
+          ],
+          [
+            8.429191460940526,
+            49.09470545195047,
+            0
+          ],
+          [
+            8.42924751801257,
+            49.09472582550579,
+            0
+          ],
+          [
+            8.42931189397585,
+            49.09471463208089,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-348N - S-302",
+        "color": "#ffff00",
+        "roofColor": "#ffff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.42827768854054,
+            49.09720291252012,
+            0
+          ],
+          [
+            8.428525357707695,
+            49.09726402680482,
+            0
+          ],
+          [
+            8.43074091684117,
+            49.09687638142734,
+            0
+          ],
+          [
+            8.430952072812019,
+            49.09665758506723,
+            0
+          ],
+          [
+            8.43025395482398,
+            49.0950259455643,
+            0
+          ],
+          [
+            8.430166206040521,
+            49.09495810301821,
+            0
+          ],
+          [
+            8.430064836119664,
+            49.09493819608751,
+            0
+          ],
+          [
+            8.430019443006236,
+            49.0948429070443,
+            0
+          ],
+          [
+            8.42997135877392,
+            49.09483122728439,
+            0
+          ],
+          [
+            8.4291560334313,
+            49.09497313117291,
+            0
+          ],
+          [
+            8.429101691369949,
+            49.09494934792268,
+            0
+          ],
+          [
+            8.428986238199684,
+            49.09466197742984,
+            0
+          ],
+          [
+            8.429022194323604,
+            49.09461195638122,
+            0
+          ],
+          [
+            8.429143900714868,
+            49.09459386873154,
+            0
+          ],
+          [
+            8.429191460940526,
+            49.09470545195047,
+            0
+          ],
+          [
+            8.42924751801257,
+            49.09472582550579,
+            0
+          ],
+          [
+            8.42931189397585,
+            49.09471463208089,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-3 (Ring A)",
+        "id": "S-907B - S-348N",
+        "color": "#ffff00",
+        "roofColor": "#ffff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431272234523782,
+            49.1047784305471,
+            0
+          ],
+          [
+            8.431351875688105,
+            49.10476310199435,
+            0
+          ],
+          [
+            8.43153119480476,
+            49.10473301197814,
+            0
+          ],
+          [
+            8.431565120179009,
+            49.10469868986656,
+            0
+          ],
+          [
+            8.431466790192317,
+            49.10441546733409,
+            0
+          ],
+          [
+            8.431184870725785,
+            49.10433308711244,
+            0
+          ],
+          [
+            8.430988629899536,
+            49.10383825460188,
+            0
+          ],
+          [
+            8.431025836397499,
+            49.10378222485301,
+            0
+          ],
+          [
+            8.431452857088246,
+            49.10369826848548,
+            0
+          ],
+          [
+            8.431476308696242,
+            49.10352238844592,
+            0
+          ],
+          [
+            8.433622005115904,
+            49.1031136860267,
+            0
+          ],
+          [
+            8.433833151542288,
+            49.10287369508411,
+            0
+          ],
+          [
+            8.433452579301626,
+            49.10188626687476,
+            0
+          ],
+          [
+            8.433386912581124,
+            49.10185003832568,
+            0
+          ],
+          [
+            8.433291539662083,
+            49.10163245518083,
+            0
+          ],
+          [
+            8.433205777689958,
+            49.10113632710185,
+            0
+          ],
+          [
+            8.43293486520917,
+            49.10041952326834,
+            0
+          ],
+          [
+            8.433113268127407,
+            49.10027225999933,
+            0
+          ],
+          [
+            8.43236639681619,
+            49.09855683201048,
+            0
+          ],
+          [
+            8.432187544247716,
+            49.09849937634751,
+            0
+          ],
+          [
+            8.4317235014343,
+            49.09735725056006,
+            0
+          ],
+          [
+            8.43140216047344,
+            49.09730017627211,
+            0
+          ],
+          [
+            8.4313028531947,
+            49.09703584896635,
+            0
+          ],
+          [
+            8.431255532765544,
+            49.09700752341224,
+            0
+          ],
+          [
+            8.430726131625619,
+            49.0970981552627,
+            0
+          ],
+          [
+            8.43067635483441,
+            49.09699904245912,
+            0
+          ],
+          [
+            8.428572065751327,
+            49.09736422861183,
+            0
+          ],
+          [
+            8.42847784473226,
+            49.09735689032167,
+            0
+          ],
+          [
+            8.42827768854054,
+            49.09720291252012,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-267B (BHKW) - S-432",
+        "color": "#00aaff",
+        "roofColor": "#00aaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.436147262761096,
+            49.09181403137657,
+            0
+          ],
+          [
+            8.436118705433733,
+            49.09181942748238,
+            0
+          ],
+          [
+            8.436115795120042,
+            49.09183341619502,
+            0
+          ],
+          [
+            8.436110303449745,
+            49.09194635919687,
+            0
+          ],
+          [
+            8.436148076950731,
+            49.09207995284233,
+            0
+          ],
+          [
+            8.436297319826508,
+            49.09214328565344,
+            0
+          ],
+          [
+            8.436900699238103,
+            49.09355175916768,
+            0
+          ],
+          [
+            8.436782735654562,
+            49.09366163926426,
+            0
+          ],
+          [
+            8.436143694702148,
+            49.09377451476285,
+            0
+          ],
+          [
+            8.436022727932446,
+            49.09387185924122,
+            0
+          ],
+          [
+            8.435414569031728,
+            49.09396770717459,
+            0
+          ],
+          [
+            8.435355235422502,
+            49.0940370594076,
+            0
+          ],
+          [
+            8.435226876633465,
+            49.09406807782204,
+            0
+          ],
+          [
+            8.434367162468705,
+            49.09423145551915,
+            0
+          ],
+          [
+            8.434310237682322,
+            49.0943083829192,
+            0
+          ],
+          [
+            8.434337667228675,
+            49.094382966276,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-631 - S-686A",
+        "color": "#00aaff",
+        "roofColor": "#00aaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.436426347502092,
+            49.0965117948101,
+            0
+          ],
+          [
+            8.436457801269103,
+            49.09645608305513,
+            0
+          ],
+          [
+            8.436418088955367,
+            49.09637647676276,
+            0
+          ],
+          [
+            8.436488244083094,
+            49.09634524694138,
+            0
+          ],
+          [
+            8.436607945805527,
+            49.09636954228426,
+            0
+          ],
+          [
+            8.436777354128518,
+            49.09676516812979,
+            0
+          ],
+          [
+            8.436083444469384,
+            49.09689378864497,
+            0
+          ],
+          [
+            8.436240294015835,
+            49.09727712044727,
+            0
+          ],
+          [
+            8.435085090267515,
+            49.09746198372494,
+            0
+          ],
+          [
+            8.435006687811288,
+            49.09755097481607,
+            0
+          ],
+          [
+            8.435492538764597,
+            49.09867211218841,
+            0
+          ],
+          [
+            8.435595878016173,
+            49.09894589171672,
+            0
+          ],
+          [
+            8.435498917226896,
+            49.09909370506797,
+            0
+          ],
+          [
+            8.434710377924802,
+            49.09924614458098,
+            0
+          ],
+          [
+            8.434688652030198,
+            49.09919734403859,
+            0
+          ],
+          [
+            8.434293079502563,
+            49.09927981166258,
+            0
+          ],
+          [
+            8.43451057292032,
+            49.0997934828937,
+            0
+          ],
+          [
+            8.434555075816728,
+            49.09997449978682,
+            0
+          ],
+          [
+            8.434678758720725,
+            49.10028163418259,
+            0
+          ],
+          [
+            8.434525264597115,
+            49.10031421956635,
+            0
+          ],
+          [
+            8.43460847750408,
+            49.10053302337301,
+            0
+          ],
+          [
+            8.434592358102327,
+            49.10070372341977,
+            0
+          ],
+          [
+            8.434829162316644,
+            49.10071696363928,
+            0
+          ],
+          [
+            8.434947582409736,
+            49.10100130683937,
+            0
+          ],
+          [
+            8.434778810164836,
+            49.10102863054357,
+            0
+          ],
+          [
+            8.434728328988136,
+            49.10098073856788,
+            0
+          ],
+          [
+            8.434594128581729,
+            49.10095137595665,
+            0
+          ],
+          [
+            8.433482470113612,
+            49.10115979701604,
+            0
+          ],
+          [
+            8.433393884380482,
+            49.10121467819394,
+            0
+          ],
+          [
+            8.433425419413826,
+            49.10130399361303,
+            0
+          ],
+          [
+            8.433464802309992,
+            49.10132698473981,
+            0
+          ],
+          [
+            8.433580841219852,
+            49.10130800287575,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-456 - S-631",
+        "color": "#00aaff",
+        "roofColor": "#00aaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.436070566237603,
+            49.09534382502002,
+            0
+          ],
+          [
+            8.436306738270375,
+            49.09535258058993,
+            0
+          ],
+          [
+            8.436468016260916,
+            49.095539459516,
+            0
+          ],
+          [
+            8.436606500767718,
+            49.095921907075,
+            0
+          ],
+          [
+            8.436305806550212,
+            49.09597849849916,
+            0
+          ],
+          [
+            8.436171028859425,
+            49.09618218855072,
+            0
+          ],
+          [
+            8.43621596987909,
+            49.09627723983688,
+            0
+          ],
+          [
+            8.436265482344318,
+            49.09640088083428,
+            0
+          ],
+          [
+            8.436426347502092,
+            49.0965117948101,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-432 - S-456",
+        "color": "#00aaff",
+        "roofColor": "#00aaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.434335905183545,
+            49.09438413056081,
+            0
+          ],
+          [
+            8.435094765654068,
+            49.09425195024501,
+            0
+          ],
+          [
+            8.435188603815888,
+            49.0942757008111,
+            0
+          ],
+          [
+            8.435366441664197,
+            49.09468255302082,
+            0
+          ],
+          [
+            8.435525184500852,
+            49.09465656089089,
+            0
+          ],
+          [
+            8.435610228577353,
+            49.0946862570397,
+            0
+          ],
+          [
+            8.435661264419165,
+            49.09482732615251,
+            0
+          ],
+          [
+            8.435848365037524,
+            49.0949201291956,
+            0
+          ],
+          [
+            8.435984461744187,
+            49.09525423965884,
+            0
+          ],
+          [
+            8.436070566237603,
+            49.09534382502002,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-353 - S-432",
+        "color": "#00aaff",
+        "roofColor": "#00aaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.426306136487366,
+            49.09677646940153,
+            0
+          ],
+          [
+            8.426317229600333,
+            49.09675854953907,
+            0
+          ],
+          [
+            8.426285229939731,
+            49.09666059375034,
+            0
+          ],
+          [
+            8.426294005180106,
+            49.09664636624661,
+            0
+          ],
+          [
+            8.42759792890414,
+            49.0964127706532,
+            0
+          ],
+          [
+            8.431711490508647,
+            49.095710731954,
+            0
+          ],
+          [
+            8.434012995269956,
+            49.09531362075548,
+            0
+          ],
+          [
+            8.434141919594033,
+            49.09506632203771,
+            0
+          ],
+          [
+            8.433872423995776,
+            49.09436842652038,
+            0
+          ],
+          [
+            8.434193052661714,
+            49.09431840390688,
+            0
+          ],
+          [
+            8.434335905183545,
+            49.09438413056081,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-500 - S-353",
+        "color": "#00aaff",
+        "roofColor": "#00aaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.426873493410147,
+            49.09823629358691,
+            0
+          ],
+          [
+            8.426648241073185,
+            49.09832104013223,
+            0
+          ],
+          [
+            8.426568399399713,
+            49.09840833944299,
+            0
+          ],
+          [
+            8.426492189154578,
+            49.09843588794882,
+            0
+          ],
+          [
+            8.42617285968645,
+            49.0984964428651,
+            0
+          ],
+          [
+            8.426115919440711,
+            49.09846164341009,
+            0
+          ],
+          [
+            8.425871475742849,
+            49.09776185550776,
+            0
+          ],
+          [
+            8.425908140257473,
+            49.09761302516419,
+            0
+          ],
+          [
+            8.425580653317745,
+            49.09669878433916,
+            0
+          ],
+          [
+            8.42567707355486,
+            49.09663284854425,
+            0
+          ],
+          [
+            8.426034608826749,
+            49.09656758549644,
+            0
+          ],
+          [
+            8.426248899288066,
+            49.09665967755303,
+            0
+          ],
+          [
+            8.426287891510595,
+            49.09676766166254,
+            0
+          ],
+          [
+            8.426306136487366,
+            49.09677646940153,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-713 - S-500",
+        "color": "#00aaff",
+        "roofColor": "#00aaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.429936380474523,
+            49.10130189068754,
+            0
+          ],
+          [
+            8.429872860026261,
+            49.10117130281863,
+            0
+          ],
+          [
+            8.42947313116685,
+            49.10122653024997,
+            0
+          ],
+          [
+            8.429380048433508,
+            49.10118695532654,
+            0
+          ],
+          [
+            8.427532066401188,
+            49.10152438187615,
+            0
+          ],
+          [
+            8.427392101572561,
+            49.10146312561984,
+            0
+          ],
+          [
+            8.426332966068582,
+            49.09853449102424,
+            0
+          ],
+          [
+            8.426605607187643,
+            49.0984798849392,
+            0
+          ],
+          [
+            8.42659961793217,
+            49.09844030238985,
+            0
+          ],
+          [
+            8.426676531597009,
+            49.09842062702803,
+            0
+          ],
+          [
+            8.426873493410147,
+            49.09823629358691,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-717 - S-713",
+        "color": "#00aaff",
+        "roofColor": "#00aaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.43070427509989,
+            49.10153515490273,
+            0
+          ],
+          [
+            8.430757800497105,
+            49.10149605377371,
+            0
+          ],
+          [
+            8.43073197601667,
+            49.10142824788019,
+            0
+          ],
+          [
+            8.430648132015769,
+            49.10144131019642,
+            0
+          ],
+          [
+            8.430313376009073,
+            49.10149575774107,
+            0
+          ],
+          [
+            8.430286571882915,
+            49.10149504316366,
+            0
+          ],
+          [
+            8.430207198370033,
+            49.10131896576012,
+            0
+          ],
+          [
+            8.430159158167656,
+            49.10131230607227,
+            0
+          ],
+          [
+            8.429953945431532,
+            49.1013429630621,
+            0
+          ],
+          [
+            8.429933920597461,
+            49.10130903705923,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-2 (Ring B)",
+        "id": "S-907B - S-717",
+        "color": "#00aaff",
+        "roofColor": "#00aaff"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.43126481259411,
+            49.10476126434165,
+            0
+          ],
+          [
+            8.43132345171381,
+            49.1047496673127,
+            0
+          ],
+          [
+            8.431344840587062,
+            49.10473039111266,
+            0
+          ],
+          [
+            8.431367563713684,
+            49.10468256197183,
+            0
+          ],
+          [
+            8.431288898152918,
+            49.10449975087884,
+            0
+          ],
+          [
+            8.431054518055888,
+            49.10445165988648,
+            0
+          ],
+          [
+            8.430839838466941,
+            49.10419802352056,
+            0
+          ],
+          [
+            8.430688580713639,
+            49.10380189233351,
+            0
+          ],
+          [
+            8.43062450864171,
+            49.1036288983173,
+            0
+          ],
+          [
+            8.430012585583967,
+            49.10213317752309,
+            0
+          ],
+          [
+            8.43051611371016,
+            49.10204135794314,
+            0
+          ],
+          [
+            8.430295625277608,
+            49.10152132279379,
+            0
+          ],
+          [
+            8.430644825293971,
+            49.10146462951165,
+            0
+          ],
+          [
+            8.43070427509989,
+            49.10153515490273,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-255 (BHKW) - S-660",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.43520357175172,
+            49.09220607013125,
+            0
+          ],
+          [
+            8.435288708103988,
+            49.09230789416225,
+            0
+          ],
+          [
+            8.436196448207532,
+            49.09217030470973,
+            0
+          ],
+          [
+            8.43625778711045,
+            49.09218380224326,
+            0
+          ],
+          [
+            8.43634560032421,
+            49.09237454945011,
+            0
+          ],
+          [
+            8.43851417553703,
+            49.09761837138003,
+            0
+          ],
+          [
+            8.438380072210228,
+            49.0978152494338,
+            0
+          ],
+          [
+            8.438581157967693,
+            49.09828310397768,
+            0
+          ],
+          [
+            8.438561098968451,
+            49.09830210614385,
+            0
+          ],
+          [
+            8.435783443776517,
+            49.09879321818869,
+            0
+          ],
+          [
+            8.435616227815059,
+            49.09873738182314,
+            0
+          ],
+          [
+            8.435232154624408,
+            49.0988081383086,
+            0
+          ],
+          [
+            8.435141742216068,
+            49.0988122767494,
+            0
+          ],
+          [
+            8.434644814785663,
+            49.09890288134669,
+            0
+          ],
+          [
+            8.434591342554821,
+            49.09893993688138,
+            0
+          ],
+          [
+            8.434614803112856,
+            49.09900341005248,
+            0
+          ],
+          [
+            8.43462361905919,
+            49.09902987884802,
+            0
+          ],
+          [
+            8.434601140297858,
+            49.09908064827051,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-674 (PV) - S-674",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.437831541904231,
+            49.09954551326386,
+            0
+          ],
+          [
+            8.437812974523757,
+            49.09951979393953,
+            0
+          ],
+          [
+            8.437725991731188,
+            49.09929899075,
+            0
+          ],
+          [
+            8.437703224549729,
+            49.09928014999295,
+            0
+          ],
+          [
+            8.437623426332774,
+            49.09922095379768,
+            0
+          ],
+          [
+            8.437524747745332,
+            49.09917242120355,
+            0
+          ],
+          [
+            8.437418915898467,
+            49.09916013219031,
+            0
+          ],
+          [
+            8.437406166828648,
+            49.09914622838128,
+            0
+          ],
+          [
+            8.437160858084829,
+            49.0986081605379,
+            0
+          ],
+          [
+            8.437108795113774,
+            49.09859623670251,
+            0
+          ],
+          [
+            8.436088955609069,
+            49.0987762129344,
+            0
+          ],
+          [
+            8.435771544775433,
+            49.09883649527839,
+            0
+          ],
+          [
+            8.435649592106389,
+            49.09880451871001,
+            0
+          ],
+          [
+            8.435300060229627,
+            49.09887128118332,
+            0
+          ],
+          [
+            8.435153272983968,
+            49.0988944408122,
+            0
+          ],
+          [
+            8.43509537371409,
+            49.09888733545438,
+            0
+          ],
+          [
+            8.435065928610555,
+            49.09886847427521,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-660 - S-686B",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.43460271043094,
+            49.09907705033874,
+            0
+          ],
+          [
+            8.434561157695368,
+            49.09907694347072,
+            0
+          ],
+          [
+            8.434481335061786,
+            49.09887221023659,
+            0
+          ],
+          [
+            8.434428435589963,
+            49.09886451286576,
+            0
+          ],
+          [
+            8.434181546752388,
+            49.09890669215351,
+            0
+          ],
+          [
+            8.434122436885087,
+            49.099023816709,
+            0
+          ],
+          [
+            8.434485489212209,
+            49.09985124870577,
+            0
+          ],
+          [
+            8.434500541175584,
+            49.09998094740379,
+            0
+          ],
+          [
+            8.43461711659834,
+            49.10026046636355,
+            0
+          ],
+          [
+            8.434468537261086,
+            49.10028923625671,
+            0
+          ],
+          [
+            8.434561794284349,
+            49.1005259921542,
+            0
+          ],
+          [
+            8.434542009949839,
+            49.100702811061,
+            0
+          ],
+          [
+            8.434576653295052,
+            49.10075787542587,
+            0
+          ],
+          [
+            8.434642715244003,
+            49.10090334728611,
+            0
+          ],
+          [
+            8.434601393616843,
+            49.100929553192,
+            0
+          ],
+          [
+            8.434432722582203,
+            49.10095731606367,
+            0
+          ],
+          [
+            8.434422662755752,
+            49.10101620050097,
+            0
+          ],
+          [
+            8.434473590355609,
+            49.10114223608067,
+            0
+          ],
+          [
+            8.434445822028252,
+            49.10117432296567,
+            0
+          ],
+          [
+            8.434146349661127,
+            49.10123123011424,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-660 - S-677",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.435325622979523,
+            49.09907239702629,
+            0
+          ],
+          [
+            8.435305504811613,
+            49.09906967074627,
+            0
+          ],
+          [
+            8.435271665819883,
+            49.09903607805549,
+            0
+          ],
+          [
+            8.435126830255221,
+            49.09906436246141,
+            0
+          ],
+          [
+            8.434682561031972,
+            49.09915114260982,
+            0
+          ],
+          [
+            8.43460867898753,
+            49.09907385213202,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-674 - S-677",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.435325622979523,
+            49.09907239702629,
+            0
+          ],
+          [
+            8.435328648078874,
+            49.09905754059578,
+            0
+          ],
+          [
+            8.435259372609114,
+            49.09892326065944,
+            0
+          ],
+          [
+            8.435229133197579,
+            49.09891326436082,
+            0
+          ],
+          [
+            8.43512567746288,
+            49.09893113760046,
+            0
+          ],
+          [
+            8.435070037557917,
+            49.09889031194776,
+            0
+          ],
+          [
+            8.43506493966423,
+            49.09887624327097,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-267A - S-674",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.436131180832188,
+            49.09177269600315,
+            0
+          ],
+          [
+            8.4361233243533,
+            49.09179400861823,
+            0
+          ],
+          [
+            8.436096302883179,
+            49.09180006269249,
+            0
+          ],
+          [
+            8.436091817937703,
+            49.09182201088348,
+            0
+          ],
+          [
+            8.436083458819105,
+            49.09194685621933,
+            0
+          ],
+          [
+            8.436127643476539,
+            49.09209136771032,
+            0
+          ],
+          [
+            8.43627511785169,
+            49.09215226613837,
+            0
+          ],
+          [
+            8.436378575295242,
+            49.09237797767631,
+            0
+          ],
+          [
+            8.438536484753605,
+            49.09762225296323,
+            0
+          ],
+          [
+            8.438402582168125,
+            49.09781789267626,
+            0
+          ],
+          [
+            8.438601128808514,
+            49.09828436641313,
+            0
+          ],
+          [
+            8.43857258493377,
+            49.09831366613846,
+            0
+          ],
+          [
+            8.437187275124924,
+            49.09856662184481,
+            0
+          ],
+          [
+            8.437128609472788,
+            49.09857279682454,
+            0
+          ],
+          [
+            8.436086765912945,
+            49.09876014144889,
+            0
+          ],
+          [
+            8.435776541306481,
+            49.09881403528775,
+            0
+          ],
+          [
+            8.435625535837152,
+            49.09876540180773,
+            0
+          ],
+          [
+            8.435324318850558,
+            49.098816061292,
+            0
+          ],
+          [
+            8.435061906386661,
+            49.09886934288163,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-272 - S-267A",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.435730967330528,
+            49.09261052596932,
+            0
+          ],
+          [
+            8.435751322350018,
+            49.0925683938506,
+            0
+          ],
+          [
+            8.435715340113088,
+            49.09241763676479,
+            0
+          ],
+          [
+            8.43573390544492,
+            49.09230925875921,
+            0
+          ],
+          [
+            8.435638148525367,
+            49.09201885399854,
+            0
+          ],
+          [
+            8.435690510088751,
+            49.09197969588594,
+            0
+          ],
+          [
+            8.435906621550957,
+            49.09193316697754,
+            0
+          ],
+          [
+            8.43603799328269,
+            49.09190771003678,
+            0
+          ],
+          [
+            8.436078082838526,
+            49.09181878376348,
+            0
+          ],
+          [
+            8.4360662927986,
+            49.09178430579938,
+            0
+          ],
+          [
+            8.436131180832188,
+            49.09177269600315,
+            0
+          ],
+          [
+            8.4361233243533,
+            49.09179400861823,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-273 - S-272",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.434672047214436,
+            49.09269999409631,
+            0
+          ],
+          [
+            8.434694648855054,
+            49.09263519038774,
+            0
+          ],
+          [
+            8.43476029659422,
+            49.09262085895534,
+            0
+          ],
+          [
+            8.43480958440789,
+            49.09264782341952,
+            0
+          ],
+          [
+            8.43502419228388,
+            49.09261215941124,
+            0
+          ],
+          [
+            8.435069031497981,
+            49.09254293944476,
+            0
+          ],
+          [
+            8.43553663921345,
+            49.09245800772799,
+            0
+          ],
+          [
+            8.435730967330528,
+            49.09261052596932,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-244 - S-273",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431346632039808,
+            49.09300944040181,
+            0
+          ],
+          [
+            8.431522238949062,
+            49.09302236988528,
+            0
+          ],
+          [
+            8.43177939800869,
+            49.09305869076664,
+            0
+          ],
+          [
+            8.434280397851195,
+            49.09258978983693,
+            0
+          ],
+          [
+            8.43443167461427,
+            49.0926789377584,
+            0
+          ],
+          [
+            8.434559705835056,
+            49.09265668840067,
+            0
+          ],
+          [
+            8.434672047214436,
+            49.09269999409631,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-211 - S-244",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.429284806398949,
+            49.0909339134152,
+            0
+          ],
+          [
+            8.429295563192824,
+            49.09087253718194,
+            0
+          ],
+          [
+            8.429244371806295,
+            49.0907801246025,
+            0
+          ],
+          [
+            8.429446108510257,
+            49.09077004113249,
+            0
+          ],
+          [
+            8.429961317514657,
+            49.09068160885628,
+            0
+          ],
+          [
+            8.430066358602124,
+            49.09070126423607,
+            0
+          ],
+          [
+            8.430321442217394,
+            49.09134001323774,
+            0
+          ],
+          [
+            8.430391469414136,
+            49.09139242386113,
+            0
+          ],
+          [
+            8.430441486501447,
+            49.09152344889727,
+            0
+          ],
+          [
+            8.430336441680586,
+            49.09157913309003,
+            0
+          ],
+          [
+            8.4298812503969,
+            49.091661017113,
+            0
+          ],
+          [
+            8.429781205521156,
+            49.09174290586382,
+            0
+          ],
+          [
+            8.429998854085328,
+            49.09230285027139,
+            0
+          ],
+          [
+            8.430096808198108,
+            49.09232752283258,
+            0
+          ],
+          [
+            8.430232438888687,
+            49.09230285348911,
+            0
+          ],
+          [
+            8.430341695466971,
+            49.09233246025443,
+            0
+          ],
+          [
+            8.430416633031545,
+            49.09249939286628,
+            0
+          ],
+          [
+            8.430660810958123,
+            49.09255557594761,
+            0
+          ],
+          [
+            8.430869744494077,
+            49.09308197243947,
+            0
+          ],
+          [
+            8.430952255940271,
+            49.09311709357748,
+            0
+          ],
+          [
+            8.430985260286088,
+            49.09315221434099,
+            0
+          ],
+          [
+            8.43117091279947,
+            49.09312519972851,
+            0
+          ],
+          [
+            8.431232797397756,
+            49.09306306381211,
+            0
+          ],
+          [
+            8.431346632039808,
+            49.09300944040181,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-145 - S-211",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.42656268023511,
+            49.09231989382519,
+            0
+          ],
+          [
+            8.426496790700222,
+            49.09226094548934,
+            0
+          ],
+          [
+            8.42638103317096,
+            49.09197656380595,
+            0
+          ],
+          [
+            8.426583695594982,
+            49.09193550214833,
+            0
+          ],
+          [
+            8.426631933505348,
+            49.09202081757988,
+            0
+          ],
+          [
+            8.427128932529264,
+            49.09194501847098,
+            0
+          ],
+          [
+            8.427191638818584,
+            49.09208088955005,
+            0
+          ],
+          [
+            8.427292961145154,
+            49.09211565271662,
+            0
+          ],
+          [
+            8.42804569573925,
+            49.09197983125453,
+            0
+          ],
+          [
+            8.428079480043104,
+            49.0919134795796,
+            0
+          ],
+          [
+            8.428040892709577,
+            49.09181236711051,
+            0
+          ],
+          [
+            8.428142231125936,
+            49.09172074157596,
+            0
+          ],
+          [
+            8.427917785139798,
+            49.09121956124307,
+            0
+          ],
+          [
+            8.4279119713596,
+            49.09111652168755,
+            0
+          ],
+          [
+            8.428214952957632,
+            49.09106320530647,
+            0
+          ],
+          [
+            8.428263276187709,
+            49.09099992871091,
+            0
+          ],
+          [
+            8.428232541696197,
+            49.09091076078755,
+            0
+          ],
+          [
+            8.428267686508716,
+            49.09085898871334,
+            0
+          ],
+          [
+            8.428430204449642,
+            49.09082735776046,
+            0
+          ],
+          [
+            8.429181112905777,
+            49.09078507347683,
+            0
+          ],
+          [
+            8.429284806398949,
+            49.0909339134152,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-145 - S-131",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.429475281348882,
+            49.09335490076151,
+            0
+          ],
+          [
+            8.42960663447186,
+            49.0933082291676,
+            0
+          ],
+          [
+            8.42937478721221,
+            49.09272526279459,
+            0
+          ],
+          [
+            8.428636104946815,
+            49.09283913226349,
+            0
+          ],
+          [
+            8.428505937197475,
+            49.09256316485326,
+            0
+          ],
+          [
+            8.427069079159304,
+            49.09283611119856,
+            0
+          ],
+          [
+            8.426833189901856,
+            49.09279951542058,
+            0
+          ],
+          [
+            8.426720019491453,
+            49.09252095003604,
+            0
+          ],
+          [
+            8.426592396401297,
+            49.09250445193231,
+            0
+          ],
+          [
+            8.426523154265812,
+            49.0923499883615,
+            0
+          ],
+          [
+            8.42656268023511,
+            49.09231989382519,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-311 - S-145",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.426316455993195,
+            49.0952148670352,
+            0
+          ],
+          [
+            8.426239697463442,
+            49.09511872179084,
+            0
+          ],
+          [
+            8.426215339699777,
+            49.09495957976546,
+            0
+          ],
+          [
+            8.426148747008115,
+            49.09463600069779,
+            0
+          ],
+          [
+            8.426558692604665,
+            49.09433141287199,
+            0
+          ],
+          [
+            8.427104001171346,
+            49.09424131028784,
+            0
+          ],
+          [
+            8.429071132621317,
+            49.09389888509773,
+            0
+          ],
+          [
+            8.428985406802035,
+            49.0936318811189,
+            0
+          ],
+          [
+            8.429652946459026,
+            49.09351926553663,
+            0
+          ],
+          [
+            8.42960412756086,
+            49.09338031139156,
+            0
+          ],
+          [
+            8.429475281348882,
+            49.09335490076151,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Ring-1 (Suedring)",
+        "id": "S-907A - S-311",
+        "color": "#aaff00",
+        "roofColor": "#aaff00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431248436580185,
+            49.10472850587789,
+            0
+          ],
+          [
+            8.431283483442218,
+            49.10472357177148,
+            0
+          ],
+          [
+            8.431304284859188,
+            49.10469403773911,
+            0
+          ],
+          [
+            8.431229346005045,
+            49.10454892222431,
+            0
+          ],
+          [
+            8.431000094199765,
+            49.10450641742283,
+            0
+          ],
+          [
+            8.430903607809547,
+            49.10437480249885,
+            0
+          ],
+          [
+            8.430762797154951,
+            49.10428371620817,
+            0
+          ],
+          [
+            8.429848159118183,
+            49.10444508570966,
+            0
+          ],
+          [
+            8.429588409384381,
+            49.10437017626306,
+            0
+          ],
+          [
+            8.42827184639737,
+            49.10458821334808,
+            0
+          ],
+          [
+            8.42578396734382,
+            49.09774813521138,
+            0
+          ],
+          [
+            8.425847558028519,
+            49.09761146764766,
+            0
+          ],
+          [
+            8.42505375803746,
+            49.09539320826401,
+            0
+          ],
+          [
+            8.426154094663074,
+            49.09516636623234,
+            0
+          ],
+          [
+            8.426282861518672,
+            49.09522404202936,
+            0
+          ],
+          [
+            8.426230255272653,
+            49.09523270608547,
+            0
+          ],
+          [
+            8.426366005594677,
+            49.09521128810054,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Stations Cables",
+        "id": "Schiene 686A-686B",
+        "color": "#ff0099",
+        "roofColor": "#ff0099"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.433633795564322,
+            49.10142468670125,
+            0
+          ],
+          [
+            8.433570605202899,
+            49.10127783319207,
+            0
+          ],
+          [
+            8.433603360918339,
+            49.10135698956136,
+            0
+          ],
+          [
+            8.433791085644142,
+            49.10132345600124,
+            0
+          ],
+          [
+            8.433952,
+            49.101294,
+            0
+          ],
+          [
+            8.43411620606091,
+            49.10126480981122,
+            0
+          ],
+          [
+            8.434162018007747,
+            49.10125616581144,
+            0
+          ],
+          [
+            8.434177414445232,
+            49.10129508361003,
+            0
+          ],
+          [
+            8.434131468839553,
+            49.10118676615196,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Stations Cables",
+        "id": "S-907A - S-907B",
+        "color": "#ff0099",
+        "roofColor": "#ff0099"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431271309646407,
+            49.10477829883187,
+            0
+          ],
+          [
+            8.431243640275092,
+            49.10471630845093,
+            0
+          ],
+          [
+            8.43129141023638,
+            49.10482393334254,
+            0
+          ],
+          [
+            8.431277172132603,
+            49.10479103662756,
+            0
+          ],
+          [
+            8.431249401121551,
+            49.10479650078213,
+            0
+          ],
+          [
+            8.431268233878066,
+            49.10484091992997,
+            0
+          ],
+          [
+            8.43128455507378,
+            49.10488427302659,
+            0
+          ],
+          [
+            8.431309299141196,
+            49.10487954301777,
+            0
+          ],
+          [
+            8.431300537189653,
+            49.10485837874956,
+            0
+          ],
+          [
+            8.43135507647588,
+            49.10499095727484,
+            0
+          ],
+          [
+            8.431321113873029,
+            49.10490954046724,
+            0
+          ],
+          [
+            8.431295320344596,
+            49.10491402135629,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Stations Cables",
+        "id": "T1 - S-907A",
+        "color": "#ff0099",
+        "roofColor": "#ff0099"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.430723777653581,
+            49.10440216545081,
+            0
+          ],
+          [
+            8.430857700099054,
+            49.10440744020503,
+            0
+          ],
+          [
+            8.43103529804982,
+            49.10470037055646,
+            0
+          ],
+          [
+            8.431244024278602,
+            49.10478333890491,
+            0
+          ],
+          [
+            8.431271309646407,
+            49.10477829883187,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Stations Cables",
+        "id": "T2 - S-907B",
+        "color": "#ff0099",
+        "roofColor": "#ff0099"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.431321113873029,
+            49.10490954046724,
+            0
+          ],
+          [
+            8.431295320344596,
+            49.10491402135629,
+            0
+          ],
+          [
+            8.431205107884395,
+            49.10493045816851,
+            0
+          ],
+          [
+            8.431157137820612,
+            49.1048090976213,
+            0
+          ],
+          [
+            8.430988969558918,
+            49.10476459160776,
+            0
+          ],
+          [
+            8.430870893113156,
+            49.10454674286863,
+            0
+          ],
+          [
+            8.430785020649715,
+            49.10456079792598,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "group": "Head Stations Cables",
+        "id": "T3 - S-686B",
+        "color": "#ff0099",
+        "roofColor": "#ff0099"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            8.430841240446753,
+            49.10472293204943,
+            0
+          ],
+          [
+            8.43145753189299,
+            49.1046213267669,
+            0
+          ],
+          [
+            8.431489079765804,
+            49.10458477733487,
+            0
+          ],
+          [
+            8.431432378498142,
+            49.10443175194958,
+            0
+          ],
+          [
+            8.43114736262364,
+            49.1043476558181,
+            0
+          ],
+          [
+            8.430921238415642,
+            49.10383049814944,
+            0
+          ],
+          [
+            8.430978750472,
+            49.10375805267702,
+            0
+          ],
+          [
+            8.431426619074983,
+            49.10367575526666,
+            0
+          ],
+          [
+            8.43143720610086,
+            49.1035789292639,
+            0
+          ],
+          [
+            8.433658619811219,
+            49.10315708092409,
+            0
+          ],
+          [
+            8.433894696384609,
+            49.10289228010925,
+            0
+          ],
+          [
+            8.433484940028924,
+            49.10180638143984,
+            0
+          ],
+          [
+            8.433560030772027,
+            49.10175108837326,
+            0
+          ],
+          [
+            8.433531307243252,
+            49.10164502416806,
+            0
+          ],
+          [
+            8.433591092851975,
+            49.10158387706888,
+            0
+          ],
+          [
+            8.433450045287108,
+            49.10124108571271,
+            0
+          ],
+          [
+            8.43353299010728,
+            49.10119410170382,
+            0
+          ],
+          [
+            8.433982128474838,
+            49.10111173796477,
+            0
+          ],
+          [
+            8.43404520327418,
+            49.1011267812662,
+            0
+          ],
+          [
+            8.434084542602335,
+            49.10120796965629,
+            0
+          ],
+          [
+            8.434144600254127,
+            49.10121828275499,
+            0
+          ]
+        ]
+      }
+    }
+  ]
+}
