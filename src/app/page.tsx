@@ -1,7 +1,7 @@
 import CampusMap2D from '@/components/CampusMap2D';
 import CampusMap3D from '@/components/CampusMap3D';
 import LiveDataSection from '@/components/LiveDataSection';
-import { gridData } from '@/data/grid';
+import { gridData } from '@/config/grid';
 import { ArrowUpRight, FlameKindling, Layers, MapPinned, Radio, Zap } from 'lucide-react';
 
 const stats = [

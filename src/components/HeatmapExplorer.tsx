@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import Map, { Layer, LayerProps, NavigationControl, Source } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
-import { Loader2, MapPinned, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MapPinned, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button, Badge, Spinner, Input } from '@/components/ui';
+import { MAP_STYLES, COLORS } from '@/lib/constants';
 
 type FeatureCollection = {
   type: 'FeatureCollection';
@@ -31,8 +33,9 @@ export default function HeatmapExplorer() {
   const [canRenderMap] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     try {
-      const supported =
-        maplibregl.supported?.({ failIfMajorPerformanceCaveat: false }) ?? true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const lib = maplibregl as any;
+      const supported = lib.supported?.({ failIfMajorPerformanceCaveat: false }) ?? true;
       const canvas = document.createElement('canvas');
       const gl =
         canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -183,58 +186,54 @@ export default function HeatmapExplorer() {
           <p className="text-xs uppercase tracking-[0.25em] text-white/60">Heatmap</p>
           <p className="text-white/70">Data source: ESA Data</p>
         </div>
-        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-sm font-semibold text-white">
-          <Radio className="h-4 w-4 text-emerald-300" />
+        <Badge variant="secondary" icon={<Radio className="h-4 w-4 text-emerald-300" />}>
           Stations: {stats?.stations ?? 0} · Meters: {stats?.meters ?? 0}
-        </div>
+        </Badge>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <label className="text-sm text-white/70">Timestamp</label>
         <div className="flex items-center gap-2">
-          <button
-            className="rounded-md border border-white/10 bg-white/10 p-2 text-white hover:bg-white/15 disabled:opacity-40"
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => stepTimestamp(-1)}
             disabled={!selected}
             aria-label="Previous slice"
           >
             <ChevronLeft className="h-4 w-4" />
-          </button>
-          <input
+          </Button>
+          <Input
             list="heatmap-ts"
-            className="min-w-[210px] rounded-md border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none"
             value={inputTs}
             onChange={(e) => setInputTs(e.target.value)}
             onBlur={applyInput}
             placeholder="YYYY-MM-DD HH:mm:ss"
+            size="sm"
+            className="min-w-[210px]"
           />
           <datalist id="heatmap-ts">
             {timestamps.map((ts) => (
               <option key={ts} value={ts} />
             ))}
           </datalist>
-          <button
-            className="rounded-md border border-white/10 bg-white/10 p-2 text-white hover:bg-white/15 disabled:opacity-40"
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => stepTimestamp(1)}
             disabled={!selected}
             aria-label="Next slice"
           >
             <ChevronRight className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            className="rounded-md border border-white/10 bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/15"
-            onClick={() => downloadSlice('json')}
-          >
+          <Button variant="ghost" size="sm" onClick={() => downloadSlice('json')}>
             Download JSON
-          </button>
-          <button
-            className="rounded-md border border-white/10 bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/15"
-            onClick={() => downloadSlice('csv')}
-          >
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => downloadSlice('csv')}>
             Download CSV
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -244,7 +243,7 @@ export default function HeatmapExplorer() {
             <span>Heatmap view</span>
             {loading ? (
               <span className="inline-flex items-center gap-2 text-xs text-white/60">
-                <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+                <Spinner size="sm" /> Loading…
               </span>
             ) : (
               <span className="text-xs text-white/60">Stations scaled by kW</span>
@@ -255,7 +254,7 @@ export default function HeatmapExplorer() {
               <Map
                 reuseMaps={false}
                 mapLib={maplibregl}
-                mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+                mapStyle={MAP_STYLES.dark}
                 initialViewState={mapView}
                 minZoom={12}
                 maxZoom={18}
@@ -338,7 +337,7 @@ export default function HeatmapExplorer() {
                     <td className="px-3 py-3 text-center text-white/60" colSpan={3}>
                       {loading ? (
                         <div className="flex items-center justify-center gap-2">
-                          <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+                          <Spinner size="sm" /> Loading…
                         </div>
                       ) : (
                         'No data available for this timestamp.'

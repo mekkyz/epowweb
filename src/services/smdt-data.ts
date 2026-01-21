@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import dayjs from 'dayjs';
-import { getDataDir, getSmdtConfig } from '@/server/config-loader';
+import { getDataDir, getSmdtConfig } from '@/services/config-loader';
 import {
   getBoundsPg,
   hasPg,
@@ -9,7 +9,7 @@ import {
   loadAggregatedSeriesPg,
   loadHeatmapSlicePg,
   loadMeterSeriesPg,
-} from '@/server/pg-store';
+} from '@/services/pg-store';
 import {
   BuildingMeta,
   HeatmapPoint,
@@ -18,6 +18,7 @@ import {
   SmdtConfig,
   StationMeta,
 } from '@/types/smdt';
+import { dbLogger } from '@/lib/logger';
 
 const METER_DIR = path.join(getDataDir(), 'DatenSM');
 const HEATMAP_DIR = path.join(getDataDir(), 'DatenSM_time');
@@ -56,52 +57,72 @@ export async function loadMeterSeries(
   if (hasPg()) {
     return loadMeterSeriesPg(meterId, options);
   }
+  
   const filePath = path.join(METER_DIR, `${meterId}.csv`);
-  if (!fs.existsSync(filePath)) return [];
-
-  const content = await fs.promises.readFile(filePath, 'utf8');
-  const lines = content.split(/\r?\n/).filter(Boolean);
-  if (lines.length <= 1) return [];
-
-  const [, ...dataLines] = lines;
-  const startBound = options.start ? dayjs(options.start) : null;
-  const endBound = options.end ? dayjs(options.end) : null;
-
-  let rows: MeterReading[] = dataLines.map((line) => parseMeterLine(line)).filter(Boolean) as MeterReading[];
-
-  if (startBound) {
-    const startMs = startBound.valueOf();
-    rows = rows.filter((r) => dayjs(r.start).valueOf() >= startMs);
-  }
-  if (endBound) {
-    const endMs = endBound.valueOf();
-    rows = rows.filter((r) => dayjs(r.end).valueOf() <= endMs);
+  if (!fs.existsSync(filePath)) {
+    dbLogger.warn('Meter CSV file not found', { meterId, filePath });
+    return [];
   }
 
-  const limit = options.limit ?? 500;
-  if (rows.length > limit) {
-    const stride = Math.ceil(rows.length / limit);
-    rows = rows.filter((_, idx) => idx % stride === 0);
-  }
+  try {
+    const content = await fs.promises.readFile(filePath, 'utf8');
+    const lines = content.split(/\r?\n/).filter(Boolean);
+    if (lines.length <= 1) return [];
 
-  return rows;
+    const [, ...dataLines] = lines;
+    const startBound = options.start ? dayjs(options.start) : null;
+    const endBound = options.end ? dayjs(options.end) : null;
+
+    let rows: MeterReading[] = dataLines
+      .map((line) => parseMeterLine(line))
+      .filter((row): row is MeterReading => row !== null);
+
+    if (startBound) {
+      const startMs = startBound.valueOf();
+      rows = rows.filter((r) => dayjs(r.start).valueOf() >= startMs);
+    }
+    if (endBound) {
+      const endMs = endBound.valueOf();
+      rows = rows.filter((r) => dayjs(r.end).valueOf() <= endMs);
+    }
+
+    const limit = options.limit ?? 500;
+    if (rows.length > limit) {
+      const stride = Math.ceil(rows.length / limit);
+      rows = rows.filter((_, idx) => idx % stride === 0);
+    }
+
+    return rows;
+  } catch (error) {
+    dbLogger.error('Failed to load meter series from CSV', error, { meterId });
+    return [];
+  }
 }
 
 export async function getMeterBounds(meterId: string): Promise<SeriesBounds> {
   if (hasPg()) {
     return getBoundsPg([meterId]);
   }
+  
   const filePath = path.join(METER_DIR, `${meterId}.csv`);
   if (!fs.existsSync(filePath)) return {};
-  const content = await fs.promises.readFile(filePath, 'utf8');
-  const lines = content.split(/\r?\n/).filter(Boolean);
-  if (lines.length <= 1) return {};
-  const first = parseMeterLine(lines[1]);
-  const last = parseMeterLine(lines[lines.length - 1]);
-  return {
-    start: first?.start,
-    end: last?.end,
-  };
+  
+  try {
+    const content = await fs.promises.readFile(filePath, 'utf8');
+    const lines = content.split(/\r?\n/).filter(Boolean);
+    if (lines.length <= 1) return {};
+    
+    const first = parseMeterLine(lines[1]);
+    const last = parseMeterLine(lines[lines.length - 1]);
+    
+    return {
+      start: first?.start,
+      end: last?.end,
+    };
+  } catch (error) {
+    dbLogger.error('Failed to get meter bounds from CSV', error, { meterId });
+    return {};
+  }
 }
 
 export async function loadAggregatedSeries(
@@ -111,6 +132,7 @@ export async function loadAggregatedSeries(
   if (hasPg()) {
     return loadAggregatedSeriesPg(meterIds, options);
   }
+  
   const seriesList = await Promise.all(meterIds.map((id) => loadMeterSeries(id, options)));
   if (seriesList.length === 0) return [];
 
@@ -140,13 +162,16 @@ export async function getAggregatedBounds(meterIds: string[]): Promise<SeriesBou
   if (hasPg()) {
     return getBoundsPg(meterIds);
   }
+  
   let minStart: string | undefined;
   let maxEnd: string | undefined;
+  
   for (const id of meterIds) {
     const bounds = await getMeterBounds(id);
     if (bounds.start && (!minStart || bounds.start < minStart)) minStart = bounds.start;
     if (bounds.end && (!maxEnd || bounds.end > maxEnd)) maxEnd = bounds.end;
   }
+  
   return { start: minStart, end: maxEnd };
 }
 
@@ -156,21 +181,35 @@ export async function loadHeatmapSlice(timestamp: string): Promise<HeatmapPoint[
   }
 
   const ts = dayjs(timestamp).isValid() ? dayjs(timestamp) : dayjs(timestamp, 'YYYYMMDD_HHmmss');
-  if (!ts.isValid()) return [];
+  if (!ts.isValid()) {
+    dbLogger.warn('Invalid heatmap timestamp', { timestamp });
+    return [];
+  }
+  
   const filename = `zw_${ts.format('YYYYMMDD_HHmmss')}.csv`;
   const filePath = path.join(HEATMAP_DIR, filename);
-  if (!fs.existsSync(filePath)) return [];
+  
+  if (!fs.existsSync(filePath)) {
+    dbLogger.warn('Heatmap CSV file not found', { timestamp, filePath });
+    return [];
+  }
 
-  const content = await fs.promises.readFile(filePath, 'utf8');
-  const lines = content.split(/\r?\n/).filter(Boolean);
-  return lines.map((line) => {
-    const parts = line.split(';').map((s) => s.trim());
-    return {
-      meterId: parts[1],
-      valueKw: safeNumber(parts[2]),
-      unit: parts[3] ?? 'kW',
-    };
-  });
+  try {
+    const content = await fs.promises.readFile(filePath, 'utf8');
+    const lines = content.split(/\r?\n/).filter(Boolean);
+    
+    return lines.map((line) => {
+      const parts = line.split(';').map((s) => s.trim());
+      return {
+        meterId: parts[1],
+        valueKw: safeNumber(parts[2]),
+        unit: parts[3] ?? 'kW',
+      };
+    });
+  } catch (error) {
+    dbLogger.error('Failed to load heatmap slice from CSV', error, { timestamp });
+    return [];
+  }
 }
 
 export async function listHeatmapTimestamps(): Promise<string[]> {
@@ -178,22 +217,38 @@ export async function listHeatmapTimestamps(): Promise<string[]> {
     return listHeatmapTimestampsPg();
   }
 
-  if (!fs.existsSync(HEATMAP_DIR)) return [];
-  const files = await fs.promises.readdir(HEATMAP_DIR);
-  return files
-    .filter((f) => f.startsWith('zw_') && f.endsWith('.csv'))
-    .map((f) => f.replace('zw_', '').replace('.csv', ''))
-    .map((raw) => {
-      const parsed = dayjs(raw, 'YYYYMMDD_HHmmss');
-      return parsed.isValid() ? parsed.format('YYYY-MM-DD HH:mm:ss') : raw;
-    })
-    .sort();
+  if (!fs.existsSync(HEATMAP_DIR)) {
+    dbLogger.warn('Heatmap directory not found', { path: HEATMAP_DIR });
+    return [];
+  }
+  
+  try {
+    const files = await fs.promises.readdir(HEATMAP_DIR);
+    
+    return files
+      .filter((f) => f.startsWith('zw_') && f.endsWith('.csv'))
+      .map((f) => f.replace('zw_', '').replace('.csv', ''))
+      .map((raw) => {
+        const parsed = dayjs(raw, 'YYYYMMDD_HHmmss');
+        return parsed.isValid() ? parsed.format('YYYY-MM-DD HH:mm:ss') : raw;
+      })
+      .sort();
+  } catch (error) {
+    dbLogger.error('Failed to list heatmap timestamps', error);
+    return [];
+  }
 }
+
+// =============================================================================
+// Private Helper Functions
+// =============================================================================
 
 function parseMeterLine(line: string): MeterReading | null {
   const parts = line.split(';').map((s) => s.trim());
   if (parts.length < 6) return null;
+  
   const [start, end, powerOriginalKw, powerKw, energyOriginalKwh, energyKwh, errorCode] = parts;
+  
   return {
     start,
     end,
@@ -215,3 +270,6 @@ function sum(a: number | null, b: number | null): number | null {
   if (a == null && b == null) return null;
   return (a ?? 0) + (b ?? 0);
 }
+
+// Re-export types for convenience
+export type { MeterReading };

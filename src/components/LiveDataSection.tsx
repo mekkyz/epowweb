@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import LookupPanel from '@/components/LookupPanel';
 import TimeSeriesPreview from '@/components/TimeSeriesPreview';
-import { meterOptions } from '@/data/grid';
+import { meterOptions } from '@/config/grid';
 
 export default function LiveDataSection() {
   const defaultUrl = useMemo(

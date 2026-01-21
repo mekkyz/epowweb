@@ -10,28 +10,17 @@ import Map, {
 } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import clsx from 'clsx';
-import { gridCollections } from '@/data/grid';
+import { gridCollections } from '@/config/grid';
+import { MAP_STYLES, DEFAULT_MAP_VIEW, MAP_ZOOM_LIMITS, COLORS } from '@/lib/constants';
+import { ToggleGroup } from '@/components/ui';
 import type { Feature, Point } from 'geojson';
-
-const baseStyles = {
-  light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-};
-
-const defaultView = {
-  longitude: 8.4346,
-  latitude: 49.099,
-  zoom: 13.5,
-  pitch: 0,
-  bearing: 0,
-};
 
 const lineLayer: LayerProps = {
   id: 'lines',
   type: 'line',
   paint: {
     'line-width': 3,
-    'line-color': ['coalesce', ['get', 'color'], '#64d4a3'],
+    'line-color': ['coalesce', ['get', 'color'], COLORS.grid.line],
     'line-opacity': 0.9,
   },
 };
@@ -51,9 +40,9 @@ const stationsLayer: LayerProps = {
       18,
       16,
     ],
-    'circle-color': ['coalesce', ['get', 'color'], '#6ea8ff'],
+    'circle-color': ['coalesce', ['get', 'color'], COLORS.grid.station],
     'circle-stroke-width': 1.6,
-    'circle-stroke-color': '#0b1020',
+    'circle-stroke-color': COLORS.grid.stroke,
   },
 };
 
@@ -65,8 +54,9 @@ export default function CampusMap2D() {
   const [canRenderMap] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     try {
-      const supported =
-        maplibregl.supported?.({ failIfMajorPerformanceCaveat: false }) ?? true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const lib = maplibregl as any;
+      const supported = lib.supported?.({ failIfMajorPerformanceCaveat: false }) ?? true;
       const canvas = document.createElement('canvas');
       const gl =
         canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -75,15 +65,9 @@ export default function CampusMap2D() {
       return false;
     }
   });
+  
   const isLight = style === 'light';
-  const chipActive = isLight
-    ? 'bg-slate-900 text-white shadow-sm ring-1 ring-black/15'
-    : 'bg-white text-slate-900 shadow-sm ring-1 ring-black/10';
-  const chipInactive = isLight
-    ? 'bg-white/80 text-slate-900/80 hover:text-slate-900'
-    : 'bg-white/10 text-white/80 hover:text-white';
-  const chipGroup =
-    'flex items-center gap-1 rounded-xl bg-white/80 p-1 shadow-sm shadow-black/20 backdrop-blur';
+  const chipGroup = 'flex items-center gap-1 rounded-xl bg-white/80 p-1 shadow-sm shadow-black/20 backdrop-blur';
 
   const onMapClick = useCallback((event: MapLayerMouseEvent) => {
     const feature = event.features?.find((f) => f.layer.id === 'stations') as
@@ -96,24 +80,23 @@ export default function CampusMap2D() {
     | { id?: string; url?: string; description?: string; group?: string }
     | undefined;
 
-  const mapStyle = useMemo(() => baseStyles[style], [style]);
+  const mapStyle = useMemo(() => MAP_STYLES[style], [style]);
+
+  const mapStyleOptions = [
+    { value: 'dark' as const, label: 'Dark map' },
+    { value: 'light' as const, label: 'Light map' },
+  ];
 
   return (
     <div className="relative h-[520px] overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0">
       <div className="pointer-events-auto absolute left-4 top-4 z-10 flex flex-wrap gap-2">
         <div className={chipGroup}>
-          {(['dark', 'light'] as const).map((variant) => (
-            <button
-              key={variant}
-              className={clsx(
-                'rounded-xl px-3 py-1 text-sm font-medium transition',
-                style === variant ? chipActive : chipInactive,
-              )}
-              onClick={() => setStyle(variant)}
-            >
-              {variant === 'dark' ? 'Dark map' : 'Light map'}
-            </button>
-          ))}
+          <ToggleGroup
+            options={mapStyleOptions}
+            value={style}
+            onChange={setStyle}
+            variant={isLight ? 'light' : 'dark'}
+          />
         </div>
         <div className={chipGroup}>
           <ToggleChip
@@ -136,9 +119,9 @@ export default function CampusMap2D() {
           reuseMaps={false}
           mapLib={maplibregl}
           mapStyle={mapStyle}
-          initialViewState={defaultView}
-          minZoom={12}
-          maxZoom={19}
+          initialViewState={DEFAULT_MAP_VIEW}
+          minZoom={MAP_ZOOM_LIMITS.min}
+          maxZoom={MAP_ZOOM_LIMITS.max}
           interactiveLayerIds={['stations']}
           onClick={onMapClick}
           style={{ width: '100%', height: '100%' }}

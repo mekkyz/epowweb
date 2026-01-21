@@ -1,4 +1,4 @@
-import legacyGrid from '@/data/legacy-grid.json';
+import legacyGrid from '@/config/legacy-grid.json';
 import type {
   Building,
   GridCollections,
@@ -9,6 +9,10 @@ import type {
 } from '@/types/grid';
 
 const raw = legacyGrid as LegacyGridData;
+
+// =============================================================================
+// Data Processing - Deduplicate and enrich with URLs
+// =============================================================================
 
 const uniqueMeters = dedupe(raw.meters, (m) => m.id).map((m) => ({
   ...m,
@@ -30,6 +34,13 @@ const uniqueStations = dedupe(raw.stations, (s) => s.properties.id).map((s) => (
 
 const uniqueLines = dedupe(raw.lines, (l) => l.properties.id);
 
+// =============================================================================
+// Exported Data Collections
+// =============================================================================
+
+/**
+ * Complete grid data with all entities
+ */
 export const gridData: LegacyGridData = {
   meters: uniqueMeters,
   buildings: uniqueBuildings,
@@ -37,6 +48,9 @@ export const gridData: LegacyGridData = {
   lines: uniqueLines,
 };
 
+/**
+ * GeoJSON FeatureCollections for map layers
+ */
 export const gridCollections: GridCollections = {
   stations: {
     type: 'FeatureCollection',
@@ -48,6 +62,10 @@ export const gridCollections: GridCollections = {
   },
 };
 
+// =============================================================================
+// Lookup Maps for O(1) access
+// =============================================================================
+
 export const stationById = new Map<string, StationFeature>(
   gridData.stations.map((s) => [s.properties.id, s]),
 );
@@ -56,7 +74,13 @@ export const buildingById = new Map<string, Building>(
   gridData.buildings.map((b) => [b.id, b]),
 );
 
-export const meterById = new Map<string, Meter>(gridData.meters.map((m) => [m.id, m]));
+export const meterById = new Map<string, Meter>(
+  gridData.meters.map((m) => [m.id, m]),
+);
+
+// =============================================================================
+// Select Options for UI Components
+// =============================================================================
 
 export const stationOptions = gridData.stations
   .map((station) => ({
@@ -79,11 +103,22 @@ export const meterOptions = gridData.meters
   }))
   .sort((a, b) => a.id.localeCompare(b.id));
 
+// =============================================================================
+// Direct Feature Exports for Map Layers
+// =============================================================================
+
 export const lineFeatures = gridData.lines as LineFeature[];
 export const stationFeatures = gridData.stations as StationFeature[];
 export const meters = gridData.meters as Meter[];
 export const buildings = gridData.buildings as Building[];
 
+// =============================================================================
+// Utility Functions
+// =============================================================================
+
+/**
+ * Removes duplicate items from an array based on a key function
+ */
 function dedupe<T>(items: T[], keyFn: (item: T) => string): T[] {
   const seen = new Set<string>();
   return items.filter((item) => {

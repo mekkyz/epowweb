@@ -11,6 +11,8 @@ import {
   YAxis,
 } from 'recharts';
 import type { ValueType } from 'recharts/types/component/DefaultTooltipContent';
+import { Spinner, EmptyState } from '@/components/ui';
+import { COLORS } from '@/lib/constants';
 
 interface SeriesPoint {
   start: string;
@@ -66,9 +68,10 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
 
   if (!fetchUrl || !mounted) {
     return (
-      <div className="flex h-[420px] w-full items-center justify-center rounded-3xl border border-white/10 bg-black/40 text-white/60">
-        Missing data source.
-      </div>
+      <EmptyState
+        title="Missing data source"
+        className="h-[420px] w-full rounded-3xl border border-white/10 bg-black/40"
+      />
     );
   }
 
@@ -85,7 +88,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
           </p>
         </div>
         <div className="text-xs text-white/60">
-          {status === 'loading' && 'Loading…'}
+          {status === 'loading' && <Spinner size="sm" />}
           {status === 'error' && 'Failed to load'}
           {status === 'idle' && `${data.length} points`}
         </div>
@@ -95,8 +98,8 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
           <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="colorPower" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#64d4a3" stopOpacity={0.9} />
-                <stop offset="95%" stopColor="#64d4a3" stopOpacity={0.05} />
+                <stop offset="5%" stopColor={COLORS.accent.primary} stopOpacity={0.9} />
+                <stop offset="95%" stopColor={COLORS.accent.primary} stopOpacity={0.05} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -120,7 +123,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
             <Area
               type="monotone"
               dataKey="powerKw"
-              stroke="#64d4a3"
+              stroke={COLORS.accent.primary}
               fillOpacity={1}
               fill="url(#colorPower)"
             />

@@ -6,17 +6,9 @@ import { ColumnLayer, PathLayer } from '@deck.gl/layers';
 import { Map } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import { hexToRgb } from '@/lib/color';
-import { lineFeatures, stationFeatures } from '@/data/grid';
-
-const viewState = {
-  longitude: 8.4346,
-  latitude: 49.099,
-  zoom: 15.7,
-  pitch: 62,
-  bearing: -18,
-};
-
-const mapStyle = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+import { lineFeatures, stationFeatures } from '@/config/grid';
+import { MAP_STYLES, MAP_3D_VIEW, COLORS } from '@/lib/constants';
+import { Badge } from '@/components/ui';
 
 export default function CampusMap3D() {
   const layers = useMemo(
@@ -60,7 +52,7 @@ export default function CampusMap3D() {
     <div className="relative h-[520px] overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 shadow-2xl shadow-emerald-400/10">
       <DeckGL
         controller
-        initialViewState={viewState}
+        initialViewState={MAP_3D_VIEW}
         getTooltip={({ object }) =>
           object
             ? {
@@ -73,13 +65,13 @@ export default function CampusMap3D() {
         }
         layers={layers}
       >
-        <Map reuseMaps mapLib={maplibregl} mapStyle={mapStyle} />
+        <Map reuseMaps mapLib={maplibregl} mapStyle={MAP_STYLES.dark} />
       </DeckGL>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
       <div className="absolute left-4 top-4 z-10">
-        <div className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-black/30 backdrop-blur">
+        <Badge variant="default" size="md">
           3D power overlay
-        </div>
+        </Badge>
       </div>
     </div>
   );

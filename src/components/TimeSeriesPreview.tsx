@@ -1,6 +1,7 @@
 'use client';
 
 import { PlugZap } from 'lucide-react';
+import { EmptyState } from '@/components/ui';
 
 interface Props {
   url?: string;
@@ -10,17 +11,12 @@ interface Props {
 export default function TimeSeriesPreview({ url, title }: Props) {
   if (!url) {
     return (
-      <div className="flex h-full items-center justify-center rounded-3xl border border-white/10 bg-white/5 p-6 text-white/70">
-        <div className="max-w-xl text-center">
-          <PlugZap className="mx-auto h-10 w-10 text-emerald-300" />
-          <p className="mt-3 text-lg font-semibold text-white">
-            Pick a station, building, or meter to see its time-series.
-          </p>
-          <p className="text-white/60">
-            Visualizations are generated in-app from the CSV/PG data.
-          </p>
-        </div>
-      </div>
+      <EmptyState
+        icon={<PlugZap className="h-10 w-10 text-emerald-300" />}
+        title="Pick a station, building, or meter to see its time-series."
+        description="Visualizations are generated in-app from the CSV/PG data."
+        className="h-full rounded-3xl border border-white/10 bg-white/5 p-6"
+      />
     );
   }
 

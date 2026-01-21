@@ -1,8 +1,9 @@
 import SeriesExplorer from '@/components/SeriesExplorer';
-import { gridData } from '@/data/grid';
+import { gridData } from '@/config/grid';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { Badge } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,9 +41,7 @@ export default async function VisualizationPage({ params, searchParams }: Params
               <ArrowLeft className="h-4 w-4" />
               Home
             </Link>
-            <div className="flex h-9 items-center rounded-full bg-white/10 px-3 text-xs font-semibold uppercase tracking-[0.3em] text-white">
-              {safeType} view
-            </div>
+            <Badge variant="default">{safeType.toUpperCase()} VIEW</Badge>
           </div>
         )}
         <div>

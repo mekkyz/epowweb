@@ -1,6 +1,7 @@
 import HeatmapExplorer from '@/components/HeatmapExplorer';
 import Link from 'next/link';
 import { ArrowLeft, Radio } from 'lucide-react';
+import { Badge } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,10 +17,9 @@ export default function HeatmapPage() {
             <ArrowLeft className="h-4 w-4" />
             Home
           </Link>
-          <div className="flex h-9 items-center gap-2 rounded-full bg-white/10 px-3 text-sm font-semibold uppercase tracking-[0.1em] text-white">
-            <Radio className="h-4 w-4 text-emerald-300" />
-            Heatmap
-          </div>
+          <Badge variant="default" icon={<Radio className="h-4 w-4 text-emerald-300" />}>
+            HEATMAP
+          </Badge>
         </div>
         <div>
           <h1 className="text-3xl font-semibold">Power Heatmap</h1>
