@@ -1,5 +1,4 @@
-// Layout Components
-// Shared layout components for consistent page structure
+// shared layout components for consistent page structure
 
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';

@@ -12,29 +12,17 @@ interface BreadcrumbItem {
 }
 
 interface PageHeaderProps {
-  /** Main page title */
   title: string;
-  /** Optional subtitle/description */
   subtitle?: string;
-  /** Small label above title */
   label?: string;
-  /** Icon to display next to label */
   icon?: LucideIcon;
-  /** Badge text (e.g., "HEATMAP", "METER VIEW") */
   badge?: string;
-  /** Badge variant */
   badgeVariant?: 'default' | 'success' | 'warning' | 'error' | 'info';
-  /** Show back button */
   showBack?: boolean;
-  /** Custom back URL (default: /) */
   backHref?: string;
-  /** Custom back label */
   backLabel?: string;
-  /** Breadcrumb items */
   breadcrumbs?: BreadcrumbItem[];
-  /** Right side actions */
   actions?: ReactNode;
-  /** Additional className */
   className?: string;
 }
 
@@ -54,7 +42,6 @@ export default function PageHeader({
 }: PageHeaderProps) {
   return (
     <header className={clsx('mb-6', className)}>
-      {/* Navigation Row */}
       {(showBack || breadcrumbs) && (
         <div className="mb-4 flex items-center gap-3">
           {showBack && (
@@ -98,7 +85,6 @@ export default function PageHeader({
         </div>
       )}
 
-      {/* Title Row */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           {label && (

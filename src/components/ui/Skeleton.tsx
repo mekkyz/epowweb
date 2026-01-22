@@ -39,7 +39,6 @@ const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
 
 Skeleton.displayName = 'Skeleton';
 
-// Pre-built skeleton patterns for common use cases
 const SkeletonText = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement> & { lines?: number }

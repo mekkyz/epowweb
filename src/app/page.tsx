@@ -1,4 +1,3 @@
-// import Link from 'next/link';
 import Image from 'next/image';
 import CampusMapSection from '@/components/CampusMapSection';
 import LiveDataSection from '@/components/LiveDataSection';
@@ -40,9 +39,7 @@ const stats = [
 export default function Home() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-4 md:py-6">
-      {/* Hero Section */}
       <section className="py-6">
-        {/* Title */}
         <div className="text-center">
           <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
             eASiMOV - ePowWeb
@@ -50,7 +47,6 @@ export default function Home() {
        
         </div>
 
-        {/* Logos and Stats Row */}
         <div className="mt-6 hidden items-center justify-between sm:flex">
           <Image
             src="/eASiMOV.png"
@@ -61,7 +57,6 @@ export default function Home() {
             priority
           />
 
-          {/* Stats */}
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
@@ -87,7 +82,6 @@ export default function Home() {
           />
         </div>
 
-        {/* Mobile Stats Grid */}
         <div className="mt-6 grid grid-cols-2 gap-2 sm:hidden">
           {stats.map((stat) => {
             const Icon = stat.icon;
@@ -106,7 +100,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Campus Map Section with 2D/3D Toggle */}
       <CampusMapSection />
 
       <section id="live-data" className="mt-14 scroll-mt-20 space-y-5">

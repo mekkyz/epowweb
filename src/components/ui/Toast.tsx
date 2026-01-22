@@ -11,10 +11,6 @@ import { createPortal } from 'react-dom';
 import { X, CheckCircle2, AlertCircle, AlertTriangle, Info } from 'lucide-react';
 import clsx from 'clsx';
 
-// =============================================================================
-// Types
-// =============================================================================
-
 type ToastType = 'success' | 'error' | 'warning' | 'info';
 
 interface Toast {
@@ -35,10 +31,6 @@ interface ToastContextValue {
   info: (title: string, message?: string) => void;
 }
 
-// =============================================================================
-// Context
-// =============================================================================
-
 const ToastContext = createContext<ToastContextValue | null>(null);
 
 export function useToast() {
@@ -49,10 +41,6 @@ export function useToast() {
   return context;
 }
 
-// =============================================================================
-// Provider
-// =============================================================================
-
 interface ToastProviderProps {
   children: ReactNode;
 }
@@ -61,7 +49,6 @@ export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [mounted, setMounted] = useState(false);
 
-  // Mount check for portal
   useState(() => {
     setMounted(true);
   });
@@ -127,10 +114,6 @@ export function ToastProvider({ children }: ToastProviderProps) {
   );
 }
 
-// =============================================================================
-// Toast Container
-// =============================================================================
-
 interface ToastContainerProps {
   toasts: Toast[];
   onRemove: (id: string) => void;
@@ -151,10 +134,6 @@ function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
     </div>
   );
 }
-
-// =============================================================================
-// Toast Item
-// =============================================================================
 
 const toastStyles: Record<ToastType, { bg: string; border: string; icon: typeof CheckCircle2 }> = {
   success: {

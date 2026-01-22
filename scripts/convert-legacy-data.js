@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-/**
- * Helper to convert the legacy KITCN.geojson JS blob
- * (it defines global vars instead of exporting JSON) into a consumable JSON.
- */
+// Helper to convert the legacy KITCN.geojson JS blob (it defines global vars instead of exporting JSON) into a consumable JSON.
 
 const fs = require('fs');
 const path = require('path');

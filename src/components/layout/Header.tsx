@@ -18,7 +18,6 @@ function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Using a microtask to avoid the synchronous setState warning
     queueMicrotask(() => setMounted(true));
   }, []);
 
@@ -36,7 +35,6 @@ function ThemeToggle() {
       )}
       aria-label={mounted ? (isDark ? 'Switch to light mode' : 'Switch to dark mode') : 'Toggle theme'}
     >
-      {/* Show placeholder during SSR to avoid hydration mismatch */}
       {!mounted ? (
         <div className="h-5 w-5" />
       ) : (
@@ -70,7 +68,6 @@ function HeaderContent() {
   }, [search]);
 
   const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    // Handle hash links on the same page
     if (href.includes('#')) {
       const [path, hash] = href.split('#');
       if (path === '/' && pathname === '/') {
@@ -89,7 +86,6 @@ function HeaderContent() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
           <Link
             href="/"
             onClick={(e) => {
@@ -110,7 +106,6 @@ function HeaderContent() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => {
               const isActive = pathname === link.href ||
@@ -135,13 +130,11 @@ function HeaderContent() {
               );
             })}
 
-            {/* Theme Toggle - Desktop */}
             <div className="ml-2 border-l border-border pl-3">
               <ThemeToggle />
             </div>
           </nav>
 
-          {/* Mobile: Theme Toggle + Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
             <ThemeToggle />
             <button
@@ -156,7 +149,6 @@ function HeaderContent() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <nav className="border-t border-border py-4 md:hidden">
             <div className="flex flex-col gap-1">

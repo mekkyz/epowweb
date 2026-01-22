@@ -9,7 +9,6 @@ import { OBJLoader } from '@loaders.gl/obj';
 import { load } from '@loaders.gl/core';
 import type { LineFeature } from '@/types/grid';
 
-// Convert a line path to an extruded polygon (ribbon with width)
 function lineToPolygon(coordinates: [number, number][], width: number): [number, number][][] {
   if (coordinates.length < 2) return [];
 
@@ -19,26 +18,23 @@ function lineToPolygon(coordinates: [number, number][], width: number): [number,
     const [x1, y1] = coordinates[i];
     const [x2, y2] = coordinates[i + 1];
 
-    // Calculate perpendicular offset for width
     const dx = x2 - x1;
     const dy = y2 - y1;
     const len = Math.sqrt(dx * dx + dy * dy);
     if (len === 0) continue;
 
-    // Perpendicular unit vector scaled by half-width
-    // Convert width from meters to approximate degrees (at this latitude ~49°N)
     const metersPerDegree = 111320 * Math.cos((y1 * Math.PI) / 180);
     const halfWidth = width / metersPerDegree / 2;
     const px = (-dy / len) * halfWidth;
     const py = (dx / len) * halfWidth;
 
-    // Create rectangle polygon for this segment
+
     polygons.push([
       [x1 + px, y1 + py],
       [x2 + px, y2 + py],
       [x2 - px, y2 - py],
       [x1 - px, y1 - py],
-      [x1 + px, y1 + py], // Close the polygon
+      [x1 + px, y1 + py],
     ]);
   }
 
@@ -54,7 +50,7 @@ import { MapErrorBoundary } from '@/components/MapErrorBoundary';
 import { Box, Maximize2, Minimize2, Info } from 'lucide-react';
 import clsx from 'clsx';
 
-// Grid ring legend - 20 kV medium voltage distribution rings on KIT Campus North
+
 const GRID_LEGEND = [
   { color: '#aaff00', label: 'Ring 1 – Südring' },
   { color: '#00aaff', label: 'Ring 2 – Ring B' },

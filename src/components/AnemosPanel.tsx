@@ -47,7 +47,6 @@ export default function AnemosPanel() {
 
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-gradient-to-br from-sky-500/10 via-indigo-500/10 to-emerald-400/10 shadow-xl backdrop-blur">
-      {/* Header */}
       <div className="flex flex-col gap-4 p-6 md:flex-row md:items-start md:justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -80,7 +79,6 @@ export default function AnemosPanel() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="border-t border-border p-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
           <ToggleGroup
@@ -92,7 +90,6 @@ export default function AnemosPanel() {
           <p className="text-sm text-foreground-secondary">{descriptions[layer]}</p>
         </div>
 
-        {/* Preview Card */}
         <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <div className="flex items-center gap-2">

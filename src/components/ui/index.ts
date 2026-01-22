@@ -1,5 +1,4 @@
-// UI Component Library
-// Reusable, accessible, and consistently styled components
+// accessible, and consistently styled components
 
 export { Button } from './Button';
 export type { ButtonProps, ButtonVariant, ButtonSize } from './Button';

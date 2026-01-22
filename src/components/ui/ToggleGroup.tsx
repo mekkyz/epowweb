@@ -35,8 +35,6 @@ function ToggleGroupInner<T extends string>(
 ) {
   const isLight = variant === 'light';
 
-  // For 'light' variant (used on map overlays with white bg), use fixed dark colors
-  // For 'dark' variant (used in normal UI), use theme variables
   const activeStyles = isLight
     ? 'bg-slate-800 text-white shadow-sm'
     : 'bg-background text-foreground shadow-sm ring-1 ring-border';
@@ -76,7 +74,6 @@ function ToggleGroupInner<T extends string>(
   );
 }
 
-// Cast to preserve generic type
 const ToggleGroup = forwardRef(ToggleGroupInner) as <T extends string>(
   props: ToggleGroupProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
 ) => React.ReactElement;

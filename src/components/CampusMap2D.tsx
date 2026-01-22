@@ -17,7 +17,6 @@ import { MapErrorBoundary } from '@/components/MapErrorBoundary';
 import { Map as MapIcon, Maximize2, Minimize2, Info } from 'lucide-react';
 import type { Feature, Point } from 'geojson';
 
-// Grid ring legend - 20 kV medium voltage distribution rings on KIT Campus North
 const GRID_LEGEND = [
   { color: '#aaff00', label: 'Ring 1 – Südring' },
   { color: '#00aaff', label: 'Ring 2 – Ring B' },
@@ -35,7 +34,6 @@ function checkWebGLSupport(): boolean {
     const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
     if (!gl) return false;
     
-    // Check basic WebGL limits
     const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
     if (!maxTextureSize || maxTextureSize < 2048) return false;
     
@@ -64,7 +62,6 @@ const lineLayer: LayerProps = {
   },
 };
 
-// Dark outline layer for better contrast against light map backgrounds
 const lineOutlineLayer: LayerProps = {
   id: 'lines-outline',
   type: 'line',
@@ -111,7 +108,6 @@ export default function CampusMap2D() {
   const [showAttribution, setShowAttribution] = useState(false);
 
   useEffect(() => {
-    // Delay WebGL check slightly to ensure browser is ready
     const timer = setTimeout(() => {
       const supported = checkWebGLSupport();
       setCanRenderMap(supported);
@@ -131,7 +127,6 @@ export default function CampusMap2D() {
     setMapError(true);
   }, []);
 
-  // Suppress missing sprite image warnings from OpenFreeMap tiles
   const handleStyleImageMissing = useCallback((map: maplibregl.Map) => {
     map.on('styleimagemissing', (e) => {
       const emptyImage = { width: 1, height: 1, data: new Uint8Array(4) };
@@ -148,7 +143,6 @@ export default function CampusMap2D() {
     }
   }, [handleStyleImageMissing]);
 
-  // Map style follows app theme
   const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
   const chipGroup = 'flex items-center gap-1 rounded-xl bg-white/90 p-1 shadow-sm shadow-black/10 backdrop-blur dark:bg-slate-800/90 dark:shadow-black/30';
 
@@ -163,7 +157,6 @@ export default function CampusMap2D() {
     | { id?: string; url?: string; description?: string; group?: string }
     | undefined;
 
-  // Always use detailed map style
   const mapStyle = useMemo(() => MAP_STYLES[mapStyleType].detailed, [mapStyleType]);
 
   const toggleFullscreen = useCallback(async () => {
@@ -204,7 +197,6 @@ export default function CampusMap2D() {
         </div>
       </div>
 
-      {/* Legend */}
       <div className="pointer-events-auto absolute bottom-4 left-4 z-10">
         <div className="rounded-xl border border-border bg-background/95 p-3 shadow-lg shadow-black/10 backdrop-blur dark:shadow-black/30">
           <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-foreground">
@@ -233,7 +225,6 @@ export default function CampusMap2D() {
         {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
       </button>
 
-      {/* Collapsible Attribution */}
       <div className="pointer-events-auto absolute bottom-4 right-[10px] z-10">
         <button
           onClick={() => setShowAttribution(!showAttribution)}
@@ -283,7 +274,6 @@ export default function CampusMap2D() {
             style={{ width: '100%', height: '100%' }}
             attributionControl={false}
           >
-            {/* Render order: outline -> lines -> stations (on top) */}
             {showLines && (
               <Source id="grid-lines-outline" type="geojson" data={gridCollections.lines}>
                 <Layer {...lineOutlineLayer} />
@@ -364,8 +354,6 @@ function ToggleChip({
   label: string;
   onChange: (next: boolean) => void;
 }) {
-  // These chips sit on a themed background overlay on the map,
-  // so we use theme-aware colors
   return (
     <button
       className={clsx(
