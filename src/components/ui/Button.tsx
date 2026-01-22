@@ -18,13 +18,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-emerald-500 text-slate-900 border-emerald-400/60 shadow-sm shadow-emerald-500/30 hover:bg-emerald-400 focus-visible:ring-emerald-400/50',
+    'bg-emerald-500 text-white border-emerald-400/60 shadow-sm shadow-emerald-500/30 hover:bg-emerald-400 focus-visible:ring-emerald-400/50',
   secondary:
-    'bg-white text-slate-900 border-white/20 shadow-sm hover:bg-slate-100 focus-visible:ring-white/50',
+    'bg-surface text-foreground border-border shadow-sm hover:bg-surface-hover focus-visible:ring-accent/50',
   ghost:
-    'bg-white/10 text-white border-white/10 hover:bg-white/15 focus-visible:ring-white/30',
+    'bg-surface text-foreground border-border hover:bg-surface-hover focus-visible:ring-accent/30',
   outline:
-    'bg-transparent text-white border-white/20 hover:bg-white/10 focus-visible:ring-white/30',
+    'bg-transparent text-foreground border-border-strong hover:bg-surface focus-visible:ring-accent/30',
   danger:
     'bg-red-500 text-white border-red-400/60 shadow-sm shadow-red-500/30 hover:bg-red-400 focus-visible:ring-red-400/50',
 };
@@ -59,7 +59,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         className={clsx(
           'inline-flex items-center justify-center font-semibold rounded-lg border transition-colors',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           variantStyles[variant],
           sizeStyles[size],

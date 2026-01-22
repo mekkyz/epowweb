@@ -11,7 +11,7 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>
 }
 
 const sizeStyles = {
-  sm: 'px-2.5 py-1.5 text-xs',
+  sm: 'px-2.5 py-1 text-xs',
   md: 'px-3 py-2 text-sm',
   lg: 'px-4 py-2.5 text-base',
 };
@@ -26,7 +26,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-xs uppercase tracking-[0.2em] text-white/60 mb-1.5"
+            className="block text-xs uppercase tracking-[0.2em] text-foreground-secondary mb-1.5"
           >
             {label}
           </label>
@@ -35,13 +35,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={clsx(
-            'w-full rounded-lg border bg-black/40 text-white outline-none transition-colors',
-            'placeholder:text-white/40',
-            'focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-400/50',
+            'w-full rounded-lg border bg-surface text-foreground outline-none transition-colors',
+            'placeholder:text-foreground-tertiary',
+            'focus:ring-2 focus:ring-accent/50 focus:border-accent/50',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             error
               ? 'border-red-400/60 focus:ring-red-400/50 focus:border-red-400/50'
-              : 'border-white/10 hover:border-white/20',
+              : 'border-border hover:border-border-strong',
             sizeStyles[size],
             className
           )}
@@ -52,7 +52,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {helperText && (
           <p
             id={`${inputId}-helper`}
-            className={clsx('mt-1.5 text-xs', error ? 'text-red-400' : 'text-white/50')}
+            className={clsx('mt-1.5 text-xs', error ? 'text-red-400' : 'text-foreground-tertiary')}
           >
             {helperText}
           </p>

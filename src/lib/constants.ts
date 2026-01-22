@@ -8,9 +8,17 @@
 // =============================================================================
 
 export const MAP_STYLES = {
-  light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-  dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+  light: {
+    minimal: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    detailed: 'https://tiles.openfreemap.org/styles/liberty', // OpenStreetMap-based with full detail
+  },
+  dark: {
+    minimal: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    detailed: 'https://tiles.openfreemap.org/styles/dark', // OSM dark style with full detail
+  },
 } as const;
+
+export type MapDetailLevel = 'minimal' | 'detailed';
 
 export const DEFAULT_MAP_VIEW = {
   longitude: 8.4346,

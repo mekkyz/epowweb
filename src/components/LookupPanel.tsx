@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowUpRight, Sparkles, Building, Gauge, Radio } from 'lucide-react';
 import {
   buildingOptions,
   meterOptions,
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function LookupPanel({ onPreview }: Props) {
+  const router = useRouter();
   const [station, setStation] = useState(stationOptions[0]?.id ?? '');
   const [building, setBuilding] = useState(buildingOptions[0]?.id ?? '');
   const [meter, setMeter] = useState(meterOptions[0]?.id ?? '');
@@ -28,23 +30,15 @@ export default function LookupPanel({ onPreview }: Props) {
       onPreview?.(target);
       return;
     }
-    window.location.assign(target);
+    router.push(target);
   };
 
   return (
-    <div className="space-y-4">
-      <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-emerald-200/80">
-          Jump to data
-        </p>
-        <p className="text-lg font-semibold text-white">
-          Stations, buildings, and meters
-        </p>
-      </div>
-
-      <div className="grid gap-3 md:grid-cols-3">
+    <div className="space-y-5">
+      <div className="grid gap-4 md:grid-cols-3">
         <LookupSelect
           label="Stations"
+          icon={<Radio className="h-4 w-4 text-emerald-400" />}
           value={station}
           onChange={setStation}
           options={stationOptions}
@@ -53,6 +47,7 @@ export default function LookupPanel({ onPreview }: Props) {
         />
         <LookupSelect
           label="Buildings"
+          icon={<Building className="h-4 w-4 text-blue-400" />}
           value={building}
           onChange={setBuilding}
           options={buildingOptions}
@@ -61,6 +56,7 @@ export default function LookupPanel({ onPreview }: Props) {
         />
         <LookupSelect
           label="Meters"
+          icon={<Gauge className="h-4 w-4 text-amber-400" />}
           value={meter}
           onChange={setMeter}
           options={meterOptions}
@@ -69,9 +65,9 @@ export default function LookupPanel({ onPreview }: Props) {
         />
       </div>
 
-      <div className="flex items-center gap-2 text-sm text-white/70">
-        <Sparkles className="h-4 w-4 text-emerald-300" />
-        <p>Use “Preview” to load the visualization below, or “Open” to jump into the full page.</p>
+      <div className="flex items-center gap-2 rounded-lg bg-panel border border-border px-4 py-3 text-sm text-foreground-secondary">
+        <Sparkles className="h-4 w-4 flex-shrink-0 text-emerald-400" />
+        <p>Click <strong className="text-foreground">Preview</strong> for visualization below, or <strong className="text-foreground">Open</strong> to view in a full page.</p>
       </div>
     </div>
   );
@@ -79,6 +75,7 @@ export default function LookupPanel({ onPreview }: Props) {
 
 function LookupSelect({
   label,
+  icon,
   value,
   onChange,
   options,
@@ -86,6 +83,7 @@ function LookupSelect({
   onOpen,
 }: {
   label: string;
+  icon: React.ReactNode;
   value: string;
   options: { id: string; label: string }[];
   onChange: (next: string) => void;
@@ -98,9 +96,12 @@ function LookupSelect({
   }));
 
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/50 p-3 shadow-sm">
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <p className="text-sm font-semibold text-white">{label}</p>
+    <div className="rounded-xl border border-border bg-panel p-4 shadow-sm transition-all hover:border-border-strong">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          {icon}
+          <p className="text-sm font-semibold text-foreground">{label}</p>
+        </div>
         <div className="flex gap-1">
           <Button variant="ghost" size="sm" onClick={onPreview}>
             Preview

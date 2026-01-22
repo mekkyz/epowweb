@@ -51,8 +51,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       return (
         <div className="flex min-h-[200px] flex-col items-center justify-center rounded-2xl border border-red-400/20 bg-red-500/5 p-8 text-center">
           <AlertTriangle className="h-12 w-12 text-red-400 mb-4" aria-hidden="true" />
-          <h2 className="text-lg font-semibold text-white mb-2">Something went wrong</h2>
-          <p className="text-sm text-white/60 mb-4 max-w-md">
+          <h2 className="text-lg font-semibold text-foreground mb-2">Something went wrong</h2>
+          <p className="text-sm text-foreground-secondary mb-4 max-w-md">
             {this.state.error?.message || 'An unexpected error occurred while rendering this component.'}
           </p>
           <Button
@@ -121,8 +121,8 @@ class ErrorBoundaryInner extends Component<
       return (
         <div className="flex min-h-[200px] flex-col items-center justify-center rounded-2xl border border-red-400/20 bg-red-500/5 p-8 text-center">
           <AlertTriangle className="h-12 w-12 text-red-400 mb-4" aria-hidden="true" />
-          <h2 className="text-lg font-semibold text-white mb-2">Something went wrong</h2>
-          <p className="text-sm text-white/60 mb-4 max-w-md">
+          <h2 className="text-lg font-semibold text-foreground mb-2">Something went wrong</h2>
+          <p className="text-sm text-foreground-secondary mb-4 max-w-md">
             {this.state.error?.message || 'An unexpected error occurred.'}
           </p>
           <Button

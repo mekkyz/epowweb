@@ -35,17 +35,19 @@ function ToggleGroupInner<T extends string>(
 ) {
   const isLight = variant === 'light';
 
+  // For 'light' variant (used on map overlays with white bg), use fixed dark colors
+  // For 'dark' variant (used in normal UI), use theme variables
   const activeStyles = isLight
-    ? 'bg-slate-900 text-white shadow-sm ring-1 ring-black/15'
-    : 'bg-white text-slate-900 shadow-sm ring-1 ring-black/10';
+    ? 'bg-slate-800 text-white shadow-sm'
+    : 'bg-background text-foreground shadow-sm ring-1 ring-border';
 
   const inactiveStyles = isLight
-    ? 'bg-transparent text-slate-900/80 hover:text-slate-900'
-    : 'bg-transparent text-white/80 hover:text-white';
+    ? 'bg-transparent text-slate-600 hover:text-slate-900'
+    : 'bg-transparent text-foreground-secondary hover:text-foreground';
 
   const containerStyles = isLight
-    ? 'bg-white/80 shadow-sm shadow-black/20 backdrop-blur'
-    : 'bg-white/10 shadow-sm shadow-black/30 backdrop-blur';
+    ? 'bg-white/90 shadow-sm shadow-black/10 backdrop-blur'
+    : 'bg-surface shadow-sm shadow-black/10 dark:shadow-black/30 backdrop-blur';
 
   return (
     <div

@@ -47,7 +47,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="block text-xs uppercase tracking-[0.2em] text-white/60 mb-1.5"
+            className="block text-xs uppercase tracking-[0.2em] text-foreground-secondary mb-1.5"
           >
             {label}
           </label>
@@ -57,12 +57,12 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={selectId}
             className={clsx(
-              'w-full appearance-none rounded-lg border bg-black/40 text-white outline-none transition-colors',
-              'focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-400/50',
+              'w-full appearance-none rounded-lg border bg-surface text-foreground outline-none transition-colors',
+              'focus:ring-2 focus:ring-accent/50 focus:border-accent/50',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               error
                 ? 'border-red-400/60 focus:ring-red-400/50 focus:border-red-400/50'
-                : 'border-white/10 hover:border-white/20',
+                : 'border-border hover:border-border-strong',
               sizeStyles[size],
               'pr-10', // Space for the chevron
               className
@@ -81,7 +81,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
                 key={option.value}
                 value={option.value}
                 disabled={option.disabled}
-                className="bg-slate-950 text-white"
+                className="bg-background text-foreground"
               >
                 {option.label}
               </option>
@@ -89,7 +89,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <svg
-              className="h-4 w-4 text-white/50"
+              className="h-4 w-4 text-foreground-tertiary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -109,7 +109,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             id={`${selectId}-helper`}
             className={clsx(
               'mt-1.5 text-xs',
-              error ? 'text-red-400' : 'text-white/50'
+              error ? 'text-red-400' : 'text-foreground-tertiary'
             )}
           >
             {helperText}

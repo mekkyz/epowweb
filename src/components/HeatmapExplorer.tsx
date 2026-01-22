@@ -1,11 +1,21 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Map, { Layer, LayerProps, NavigationControl, Source } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
-import { MapPinned, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button, Badge, Spinner, Input } from '@/components/ui';
-import { MAP_STYLES, COLORS } from '@/lib/constants';
+import { useTheme } from 'next-themes';
+import {
+  MapPinned,
+  ChevronLeft,
+  ChevronRight,
+  ArrowDownToLine,
+  Search,
+  Maximize2,
+  Minimize2,
+} from 'lucide-react';
+import { Button, Spinner, Input, MapSkeleton, useToast } from '@/components/ui';
+import { MAP_STYLES } from '@/lib/constants';
+import clsx from 'clsx';
 
 type FeatureCollection = {
   type: 'FeatureCollection';
@@ -17,12 +27,16 @@ type FeatureCollection = {
 };
 
 export default function HeatmapExplorer() {
+  const { resolvedTheme } = useTheme();
+  const { success, error: showError } = useToast();
   const [timestamps, setTimestamps] = useState<string[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [inputTs, setInputTs] = useState<string>('');
   const [features, setFeatures] = useState<FeatureCollection | null>(null);
   const [loading, setLoading] = useState(false);
-  const [stats, setStats] = useState<{ stations: number; meters: number } | null>(null);
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [hover, setHover] = useState<{
     stationId: string;
     valueKw: number;
@@ -45,41 +59,133 @@ export default function HeatmapExplorer() {
     }
   });
 
+  // Map style follows app theme
+  const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
+  const mapStyle = useMemo(() => MAP_STYLES[mapStyleType].detailed, [mapStyleType]);
+
   useEffect(() => {
-    let active = true;
-    const load = async () => {
-      const res = await fetch('/api/heatmap/available');
-      const body = await res.json();
-      if (!active) return;
-      const list = body.timestamps ?? [];
-      setTimestamps(list);
-      const last = list[list.length - 1] ?? null;
-      setSelected(last);
-      setInputTs(last ?? '');
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
     };
-    load();
-    return () => {
-      active = false;
-    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
   useEffect(() => {
-    if (!selected) return;
     let active = true;
     const load = async () => {
       setLoading(true);
-      const res = await fetch(`/api/heatmap/geo?timestamp=${encodeURIComponent(selected)}`);
-      const body = await res.json();
-      if (!active) return;
-      setFeatures(body.featureCollection ?? null);
-      setStats(body.stats ?? null);
-      setLoading(false);
+      try {
+        const res = await fetch('/api/heatmap/available');
+        if (!res.ok) throw new Error(`Failed to load timestamps (${res.status})`);
+        const body = await res.json();
+        if (!active) return;
+        const list = body.data?.timestamps ?? body.timestamps ?? [];
+        setTimestamps(list);
+        // Prefer the latest timestamp; fall back to the first if needed
+        const last = list[list.length - 1] ?? list[0] ?? null;
+        setSelected(last);
+        setInputTs(last ?? '');
+      } catch (err) {
+        console.error('Failed to load timestamps:', err);
+        showError('Failed to load available timestamps');
+      } finally {
+        if (active) {
+          setInitialLoad(false);
+          setLoading(false);
+        }
+      }
     };
     load();
     return () => {
       active = false;
     };
+  }, [showError]);
+
+  // Keep input in sync with selected timestamp
+  useEffect(() => {
+    if (selected) {
+      setInputTs(selected);
+    }
   }, [selected]);
+
+  useEffect(() => {
+    if (!selected) {
+      setFeatures(null);
+      return;
+    }
+    let active = true;
+
+    const fetchSlice = async (ts: string) => {
+      const res = await fetch(`/api/heatmap/geo?timestamp=${encodeURIComponent(ts)}`);
+      if (!res.ok) throw new Error(`Failed to load slice (${res.status})`);
+      const body = await res.json();
+      const payload = body.data ?? body;
+      const fc = payload.featureCollection ?? null;
+      const statsPayload =
+        payload.stats ??
+        (fc ? { stations: fc.features?.length ?? 0, meters: payload.points?.length ?? 0 } : null);
+      return { fc, stats: statsPayload };
+    };
+
+    const load = async () => {
+      setLoading(true);
+      try {
+        // If the chosen timestamp isn't in the list, snap to the latest available
+        const idx = timestamps.indexOf(selected);
+        if (idx === -1 && timestamps.length > 0) {
+          const latest = timestamps[timestamps.length - 1];
+          setSelected(latest);
+          setInputTs(latest);
+          return;
+        }
+
+        let currentTs = selected;
+        let result = await fetchSlice(currentTs);
+
+        // If the chosen slice has no data, try a few earlier timestamps
+        let attempts = 0;
+        while (active && result.fc?.features?.length === 0 && attempts < 5) {
+          const idx = timestamps.indexOf(currentTs);
+          const prev = idx > 0 ? timestamps[idx - 1] : null;
+          if (!prev) break;
+          currentTs = prev;
+          result = await fetchSlice(currentTs);
+          attempts += 1;
+        }
+
+        if (!active) return;
+
+        if (currentTs !== selected) {
+          // Trigger re-load with the nearest timestamp that has data
+          setSelected(currentTs);
+          setInputTs(currentTs);
+          return;
+        }
+
+        setFeatures(result.fc ?? { type: 'FeatureCollection', features: [] });
+      } catch (err) {
+        console.error('Failed to load heatmap data:', err);
+        showError('Failed to load heatmap data');
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      active = false;
+    };
+  }, [selected, showError, timestamps]);
+
+  // Ensure selected/input stay in sync if state was cleared
+  useEffect(() => {
+    if (!selected && timestamps.length > 0) {
+      const last = timestamps[timestamps.length - 1];
+      setSelected(last);
+      setInputTs(last);
+    }
+  }, [selected, timestamps]);
 
   const circleLayer: LayerProps = useMemo(
     () => ({
@@ -114,16 +220,19 @@ export default function HeatmapExplorer() {
         ],
         'circle-opacity': 0.8,
         'circle-stroke-width': 1.2,
-        'circle-stroke-color': '#0b1020',
+        'circle-stroke-color': mapStyleType === 'light' ? '#ffffff' : '#0b1020',
       },
     }),
-    [],
+    [mapStyleType],
   );
 
   const list = useMemo(() => {
     const feats = features?.features ?? [];
-    return [...feats].sort((a, b) => b.properties.valueKw - a.properties.valueKw);
-  }, [features]);
+    const sorted = [...feats].sort((a, b) => b.properties.valueKw - a.properties.valueKw);
+    if (!searchQuery.trim()) return sorted;
+    const q = searchQuery.toLowerCase();
+    return sorted.filter((f) => f.properties.stationId.toLowerCase().includes(q));
+  }, [features, searchQuery]);
 
   const mapView = {
     longitude: 8.4346,
@@ -150,111 +259,166 @@ export default function HeatmapExplorer() {
     }
   };
 
+  const toggleFullscreen = useCallback(async () => {
+    const container = document.getElementById('heatmap-explorer-container');
+    if (!container) return;
+
+    try {
+      if (!document.fullscreenElement) {
+        await container.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (err) {
+      console.error('Failed to toggle fullscreen:', err);
+    }
+  }, []);
+
   const downloadSlice = async (format: 'json' | 'csv') => {
     if (!selected) return;
-    const res = await fetch(`/api/heatmap?timestamp=${encodeURIComponent(selected)}`);
-    if (!res.ok) return;
-    const body = await res.json();
-    if (format === 'json') {
-      const blob = new Blob([JSON.stringify(body, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `heatmap-${selected}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } else {
-      const points = body.points ?? [];
-      const rows = ['meterId,valueKw,unit'];
-      points.forEach((p: { meterId: string; valueKw: number | null; unit: string }) => {
-        rows.push(`${p.meterId},${p.valueKw ?? ''},${p.unit ?? ''}`);
-      });
-      const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `heatmap-${selected}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
+    try {
+      const res = await fetch(`/api/heatmap?timestamp=${encodeURIComponent(selected)}`);
+      if (!res.ok) {
+        showError('Failed to download data');
+        return;
+      }
+      const body = await res.json();
+      if (format === 'json') {
+        const blob = new Blob([JSON.stringify(body, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `heatmap-${selected}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        const points = body.points ?? [];
+        const rows = ['meterId,valueKw,unit'];
+        points.forEach((p: { meterId: string; valueKw: number | null; unit: string }) => {
+          rows.push(`${p.meterId},${p.valueKw ?? ''},${p.unit ?? ''}`);
+        });
+        const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `heatmap-${selected}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+      success(`Downloaded heatmap data as ${format.toUpperCase()}`);
+    } catch (err) {
+      console.error('Download failed:', err);
+      showError('Failed to download data');
     }
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-white/60">Heatmap</p>
-          <p className="text-white/70">Data source: ESA Data</p>
-        </div>
-        <Badge variant="secondary" icon={<Radio className="h-4 w-4 text-emerald-300" />}>
-          Stations: {stats?.stations ?? 0} · Meters: {stats?.meters ?? 0}
-        </Badge>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
-        <label className="text-sm text-white/70">Timestamp</label>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => stepTimestamp(-1)}
-            disabled={!selected}
-            aria-label="Previous slice"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Input
-            list="heatmap-ts"
-            value={inputTs}
-            onChange={(e) => setInputTs(e.target.value)}
-            onBlur={applyInput}
-            placeholder="YYYY-MM-DD HH:mm:ss"
-            size="sm"
-            className="min-w-[210px]"
-          />
-          <datalist id="heatmap-ts">
-            {timestamps.map((ts) => (
-              <option key={ts} value={ts} />
-            ))}
-          </datalist>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => stepTimestamp(1)}
-            disabled={!selected}
-            aria-label="Next slice"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={() => downloadSlice('json')}>
-            Download JSON
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => downloadSlice('csv')}>
-            Download CSV
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-[1.5fr,1fr]">
-        <div className="overflow-hidden rounded-xl border border-white/10 bg-black/40 shadow-sm">
-          <div className="flex items-center justify-between border-b border-white/5 px-4 py-3 text-sm text-white/70">
-            <span>Heatmap view</span>
-            {loading ? (
-              <span className="inline-flex items-center gap-2 text-xs text-white/60">
-                <Spinner size="sm" /> Loading…
-              </span>
-            ) : (
-              <span className="text-xs text-white/60">Stations scaled by kW</span>
-            )}
+    <div
+      id="heatmap-explorer-container"
+      className={clsx(
+        'space-y-6',
+        isFullscreen && 'fixed inset-0 z-50 flex h-screen w-screen flex-col bg-background p-4'
+      )}
+    >
+      {/* Controls */}
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-1 flex-wrap items-center gap-3">
+          <label className="text-xs font-semibold uppercase tracking-[0.12em] text-foreground-secondary">
+            Timestamp
+          </label>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => stepTimestamp(-1)}
+              disabled={!selected}
+              aria-label="Previous slice"
+              className="rounded-l-lg rounded-r-none"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Input
+              list="heatmap-ts"
+              value={inputTs}
+              onChange={(e) => setInputTs(e.target.value)}
+              onBlur={applyInput}
+              placeholder="YYYY-MM-DD HH:mm:ss"
+              size="sm"
+              className="min-w-[210px] rounded-none border-x-0"
+            />
+            <datalist id="heatmap-ts">
+              {timestamps.map((ts) => (
+                <option key={ts} value={ts} />
+              ))}
+            </datalist>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => stepTimestamp(1)}
+              disabled={!selected}
+              aria-label="Next slice"
+              className="rounded-l-none rounded-r-lg"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
-          <div className="h-[520px]">
-            {canRenderMap ? (
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => downloadSlice('json')}
+            disabled={!selected}
+            icon={<ArrowDownToLine className="h-3.5 w-3.5" />}
+          >
+            JSON
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => downloadSlice('csv')}
+            disabled={!selected}
+            icon={<ArrowDownToLine className="h-3.5 w-3.5" />}
+          >
+            CSV
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleFullscreen}
+            aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+            icon={isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+          />
+        </div>
+      </div>
+
+      {/* Map and List Grid */}
+      <div className={clsx(
+        'grid gap-6',
+        isFullscreen ? 'flex-1 lg:grid-cols-1' : 'lg:grid-cols-[1.5fr,1fr]'
+      )}>
+        {/* Map Panel */}
+        <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
+          <div className="flex items-center justify-between border-b border-border px-4 py-3">
+            <span className="text-sm font-medium text-foreground">Map View</span>
+            <div className="flex items-center gap-3">
+              {loading ? (
+                <span className="inline-flex items-center gap-2 text-xs text-foreground-secondary">
+                  <Spinner size="sm" /> Loading…
+                </span>
+              ) : (
+                <span className="text-xs text-foreground-secondary">Stations scaled by power consumption</span>
+              )}
+            </div>
+          </div>
+          <div className={clsx(isFullscreen ? 'h-[calc(100vh-140px)]' : 'h-[520px]')}>
+            {initialLoad ? (
+              <MapSkeleton />
+            ) : canRenderMap ? (
               <Map
                 reuseMaps={false}
                 mapLib={maplibregl}
-                mapStyle={MAP_STYLES.dark}
+                mapStyle={mapStyle}
                 initialViewState={mapView}
                 minZoom={12}
                 maxZoom={18}
@@ -283,62 +447,117 @@ export default function HeatmapExplorer() {
                   </Source>
                 )}
                 <NavigationControl position="bottom-right" />
-                <div className="pointer-events-none absolute left-3 bottom-3 rounded-md border border-white/10 bg-black/60 px-3 py-2 text-xs text-white/80">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-block h-3 w-3 rounded-full bg-[#1d4ed8]" /> Low
-                    <span className="inline-block h-3 w-3 rounded-full bg-[#22c55e]" /> Med
-                    <span className="inline-block h-3 w-3 rounded-full bg-[#f59e0b]" /> High
-                    <span className="inline-block h-3 w-3 rounded-full bg-[#ef4444]" /> Peak
+                <div className="pointer-events-none absolute left-3 bottom-3 rounded-lg border border-border bg-panel/90 px-3 py-2.5 text-xs text-foreground-secondary backdrop-blur-sm">
+                  <div className="mb-1.5 font-semibold text-foreground">Power Consumption (kW)</div>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block h-3 w-3 rounded-full bg-[#1d4ed8]" />
+                      <span className="font-mono">0 - 50 kW</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block h-3 w-3 rounded-full bg-[#22c55e]" />
+                      <span className="font-mono">50 - 120 kW</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block h-3 w-3 rounded-full bg-[#f59e0b]" />
+                      <span className="font-mono">120 - 250 kW</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block h-3 w-3 rounded-full bg-[#ef4444]" />
+                      <span className="font-mono">250+ kW</span>
+                    </div>
                   </div>
                 </div>
                 {hover && (
                   <div
-                    className="pointer-events-none absolute rounded-md border border-white/10 bg-black/80 px-3 py-2 text-xs text-white shadow-lg"
+                    className="pointer-events-none absolute z-10 rounded-lg border border-border bg-panel/95 px-3 py-2.5 text-xs text-foreground shadow-xl backdrop-blur-sm"
                     style={{ left: hover.x + 12, top: hover.y + 12 }}
                   >
-                    <div className="font-semibold text-white">{hover.stationId}</div>
-                    <div className="text-white/70">{hover.valueKw.toFixed(3)} kW</div>
-                    <div className="text-white/60">{hover.meters} meters</div>
+                    <div className="mb-1 text-[10px] uppercase tracking-wider text-foreground-tertiary">Station</div>
+                    <div className="font-semibold text-emerald-400">{hover.stationId}</div>
+                    <div className="mt-2 flex items-baseline gap-1">
+                      <span className="text-[10px] uppercase tracking-wider text-foreground-tertiary">Power:</span>
+                      <span className="font-mono font-semibold text-foreground">{hover.valueKw.toFixed(2)} kW</span>
+                    </div>
+                    <div className="mt-1 flex items-baseline gap-1">
+                      <span className="text-[10px] uppercase tracking-wider text-foreground-tertiary">Meters:</span>
+                      <span className="font-mono text-foreground-secondary">{hover.meters}</span>
+                    </div>
                   </div>
                 )}
               </Map>
             ) : (
-              <div className="flex h-full items-center justify-center text-sm text-white/70">
-                WebGL is not available in this browser; heatmap map view is disabled.
+              <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
+                <div className="text-sm text-foreground-secondary">WebGL is not available</div>
+                <div className="text-xs text-foreground-tertiary">Heatmap view requires WebGL support</div>
               </div>
             )}
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-white/10 bg-black/40 shadow-sm">
-          <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3 text-sm text-white/70">
-            <MapPinned className="h-4 w-4 text-emerald-300" />
-            Station list (kW)
+        {/* Station List Panel - hidden in fullscreen */}
+        {!isFullscreen && (
+        <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+            <MapPinned className="h-4 w-4 text-emerald-400" />
+            <span className="text-sm font-medium text-foreground">Station Rankings</span>
+            <span className="ml-auto text-xs text-foreground-tertiary">{list.length} stations</span>
           </div>
-          <div className="max-h-[520px] overflow-auto">
-            <table className="min-w-full text-sm text-white/80">
-              <thead className="sticky top-0 bg-black/60 text-xs uppercase tracking-[0.15em] text-white/60">
+
+          {/* Search */}
+          <div className="border-b border-border p-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground-tertiary" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search stations..."
+                size="sm"
+                className="pl-9"
+              />
+            </div>
+          </div>
+
+          <div className="max-h-[456px] overflow-auto">
+            <table className="min-w-full text-sm">
+              <thead className="sticky top-0 bg-panel/95 text-xs uppercase tracking-wider text-foreground-secondary backdrop-blur-sm">
                 <tr>
-                  <th className="px-3 py-2 text-left">Station</th>
-                  <th className="px-3 py-2 text-right">kW</th>
-                  <th className="px-3 py-2 text-right">Meters</th>
+                  <th className="px-4 py-2.5 text-left font-medium">Station</th>
+                  <th className="px-4 py-2.5 text-right font-medium">kW</th>
+                  <th className="px-4 py-2.5 text-right font-medium">Meters</th>
                 </tr>
               </thead>
-              <tbody>
-                {list.map((f) => (
-                  <tr key={f.properties.stationId} className="hover:bg-white/5">
-                    <td className="px-3 py-2">{f.properties.stationId}</td>
-                    <td className="px-3 py-2 text-right">{f.properties.valueKw.toFixed(3)}</td>
-                    <td className="px-3 py-2 text-right">{f.properties.meters}</td>
+              <tbody className="divide-y divide-border">
+                {list.map((f, idx) => (
+                  <tr
+                    key={f.properties.stationId}
+                    className="text-foreground-secondary transition-colors hover:bg-surface"
+                  >
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-surface text-xs text-foreground-tertiary">
+                          {idx + 1}
+                        </span>
+                        {f.properties.stationId}
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5 text-right font-mono text-emerald-400">
+                      {f.properties.valueKw.toFixed(3)}
+                    </td>
+                    <td className="px-4 py-2.5 text-right text-foreground-secondary">
+                      {f.properties.meters}
+                    </td>
                   </tr>
                 ))}
                 {!list.length && (
                   <tr>
-                    <td className="px-3 py-3 text-center text-white/60" colSpan={3}>
+                    <td className="px-4 py-8 text-center text-foreground-tertiary" colSpan={3}>
                       {loading ? (
                         <div className="flex items-center justify-center gap-2">
-                          <Spinner size="sm" /> Loading…
+                          <Spinner size="sm" /> Loading data…
                         </div>
+                      ) : searchQuery ? (
+                        'No stations match your search.'
                       ) : (
                         'No data available for this timestamp.'
                       )}
@@ -349,6 +568,7 @@ export default function HeatmapExplorer() {
             </table>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

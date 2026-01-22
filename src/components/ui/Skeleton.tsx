@@ -21,7 +21,7 @@ const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
       <div
         ref={ref}
         className={clsx(
-          'animate-pulse bg-white/10',
+          'animate-pulse bg-surface-hover',
           variantStyles[variant],
           className
         )}
@@ -65,7 +65,7 @@ const SkeletonCard = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
       <div
         ref={ref}
         className={clsx(
-          'rounded-2xl border border-white/10 bg-slate-900/70 p-4 space-y-4',
+          'rounded-2xl border border-border bg-panel p-4 space-y-4',
           className
         )}
         {...props}
@@ -91,7 +91,7 @@ const SkeletonChart = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>
       <div
         ref={ref}
         className={clsx(
-          'rounded-2xl border border-white/10 bg-black/40 p-4 space-y-4',
+          'rounded-2xl border border-border bg-surface p-4 space-y-4',
           className
         )}
         {...props}

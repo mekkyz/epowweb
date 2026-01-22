@@ -9,9 +9,9 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles = {
-  default: 'bg-slate-900/70 border-white/10',
-  elevated: 'bg-slate-900/70 border-white/10 shadow-xl shadow-black/40',
-  glass: 'bg-white/5 border-white/10 backdrop-blur-sm',
+  default: 'bg-panel border-border',
+  elevated: 'bg-panel border-border shadow-xl shadow-black/20 dark:shadow-black/40',
+  glass: 'bg-surface border-border backdrop-blur-sm',
 };
 
 const paddingStyles = {
@@ -59,15 +59,15 @@ const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
       >
         <div className="flex items-center gap-3">
           {icon && (
-            <span className="text-emerald-300 shrink-0" aria-hidden="true">
+            <span className="text-accent shrink-0" aria-hidden="true">
               {icon}
             </span>
           )}
           <div>
             {subtitle && (
-              <p className="text-xs uppercase tracking-[0.2em] text-white/60">{subtitle}</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-foreground-secondary">{subtitle}</p>
             )}
-            <h3 className="text-lg font-semibold text-white">{title}</h3>
+            <h3 className="text-lg font-semibold text-foreground">{title}</h3>
           </div>
         </div>
         {action && <div className="shrink-0">{action}</div>}

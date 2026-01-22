@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 /**
- * Quick one-off helper to convert the legacy KITCN.geojson JS blob
- * (it defines global vars instead of exporting JSON) into a consumable
- * JSON file for the Next.js app.
+ * Helper to convert the legacy KITCN.geojson JS blob
+ * (it defines global vars instead of exporting JSON) into a consumable JSON.
  */
 
 const fs = require('fs');

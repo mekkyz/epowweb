@@ -17,17 +17,17 @@ const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
       <div
         ref={ref}
         className={clsx(
-          'flex flex-col items-center justify-center text-center p-8 rounded-2xl border border-white/10 bg-white/5',
+          'flex flex-col items-center justify-center text-center p-8 rounded-2xl border border-border bg-surface',
           className
         )}
         {...props}
       >
-        <div className="mb-4 text-emerald-300/80">
+        <div className="mb-4 text-accent">
           {icon || <FolderOpen className="h-12 w-12" aria-hidden="true" />}
         </div>
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
+        <h3 className="text-lg font-semibold text-foreground">{title}</h3>
         {description && (
-          <p className="mt-1 text-sm text-white/60 max-w-sm">{description}</p>
+          <p className="mt-1 text-sm text-foreground-secondary max-w-sm">{description}</p>
         )}
         {action && <div className="mt-4">{action}</div>}
       </div>
