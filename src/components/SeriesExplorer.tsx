@@ -53,9 +53,12 @@ export default function SeriesExplorer({ type, id }: Props) {
         const body: SeriesResponse = raw?.data ?? raw;
         if (!active) return;
         setBounds(body.bounds ?? {});
-        if (!start && !end && body.bounds?.end) {
-          const endTs = body.bounds.end;
-          const startTs = dayjs(endTs).subtract(7, 'day').format('YYYY-MM-DD HH:mm:ss');
+        if (!start && !end && body.bounds?.start && body.bounds?.end) {
+          const boundsStart = dayjs(body.bounds.start);
+          const boundsEnd = dayjs(body.bounds.end);
+          const midpoint = boundsStart.add(boundsEnd.diff(boundsStart) / 2, 'millisecond');
+          const startTs = midpoint.format('YYYY-MM-DD HH:mm:ss');
+          const endTs = midpoint.add(7, 'day').format('YYYY-MM-DD HH:mm:ss');
           setStart(startTs);
           setEnd(endTs);
         }

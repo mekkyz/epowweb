@@ -82,10 +82,11 @@ export default function HeatmapExplorer() {
         if (!active) return;
         const list = body.data?.timestamps ?? body.timestamps ?? [];
         setTimestamps(list);
-        // Prefer the latest timestamp; fall back to the first if needed
-        const last = list[list.length - 1] ?? list[0] ?? null;
-        setSelected(last);
-        setInputTs(last ?? '');
+        // start from the middle of available timestamps
+        const midIndex = Math.floor(list.length / 2);
+        const middle = list[midIndex] ?? list[0] ?? null;
+        setSelected(middle);
+        setInputTs(middle ?? '');
       } catch (err) {
         console.error('Failed to load timestamps:', err);
         showError('Failed to load available timestamps');
