@@ -80,6 +80,13 @@ function HeaderContent() {
     }
   }, [pathname]);
 
+  // Prefetch heatmap data on hover
+  const handleMouseEnter = useCallback((href: string) => {
+    if (href === '/heatmap' && pathname !== '/heatmap') {
+      fetch('/api/heatmap/init', { priority: 'low' } as RequestInit);
+    }
+  }, [pathname]);
+
   if (isEmbedded) return null;
 
   return (
@@ -117,6 +124,7 @@ function HeaderContent() {
                   key={link.href}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
+                  onMouseEnter={() => handleMouseEnter(link.href)}
                   className={clsx(
                     'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all',
                     isActive

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Map, { Layer, LayerProps, NavigationControl, Source } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import { useTheme } from 'next-themes';
@@ -14,7 +14,7 @@ import {
   Minimize2,
   Info,
 } from 'lucide-react';
-import { Button, Spinner, Input, MapSkeleton, useToast } from '@/components/ui';
+import { Button, Spinner, Input, useToast } from '@/components/ui';
 import { MAP_STYLES } from '@/lib/constants';
 import clsx from 'clsx';
 
@@ -27,15 +27,35 @@ type FeatureCollection = {
   }[];
 };
 
+// Module-level cache persists across navigations
+type HeatmapCache = {
+  timestamps: string[];
+  selected: string | null;
+  features: FeatureCollection | null;
+  fetchedAt: number;
+};
+let heatmapCache: HeatmapCache | null = null;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+function getValidCache(): HeatmapCache | null {
+  if (heatmapCache && Date.now() - heatmapCache.fetchedAt < CACHE_TTL) {
+    return heatmapCache;
+  }
+  return null;
+}
+
 export default function HeatmapExplorer() {
   const { resolvedTheme } = useTheme();
   const { success, error: showError } = useToast();
-  const [timestamps, setTimestamps] = useState<string[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [inputTs, setInputTs] = useState<string>('');
-  const [features, setFeatures] = useState<FeatureCollection | null>(null);
+
+  // Initialize state from cache if valid (instant restore on navigation)
+  const [timestamps, setTimestamps] = useState<string[]>(() => getValidCache()?.timestamps ?? []);
+  const [selected, setSelected] = useState<string | null>(() => getValidCache()?.selected ?? null);
+  const [inputTs, setInputTs] = useState<string>(() => getValidCache()?.selected ?? '');
+  const [features, setFeatures] = useState<FeatureCollection | null>(() => getValidCache()?.features ?? null);
   const [loading, setLoading] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(true);
+  const hasCachedData = useRef(!!getValidCache()?.features);
+  const lastLoadedTs = useRef<string | null>(getValidCache()?.selected ?? null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [hover, setHover] = useState<{
@@ -75,29 +95,40 @@ export default function HeatmapExplorer() {
   }, []);
 
   useEffect(() => {
+    // Skip fetch if we initialized from cache
+    if (hasCachedData.current) {
+      hasCachedData.current = false;
+      return;
+    }
+
     let active = true;
     const load = async () => {
       setLoading(true);
       try {
-        const res = await fetch('/api/heatmap/available');
-        if (!res.ok) throw new Error(`Failed to load timestamps (${res.status})`);
+        const res = await fetch('/api/heatmap/init');
+        if (!res.ok) throw new Error(`Failed to load heatmap data (${res.status})`);
         const body = await res.json();
         if (!active) return;
-        const list = body.data?.timestamps ?? body.timestamps ?? [];
+
+        const list = body.data?.timestamps ?? [];
+        const initial = body.data?.initialTimestamp ?? null;
+        const fc = body.data?.featureCollection ?? null;
+
         setTimestamps(list);
-        // start from the middle of available timestamps
-        const midIndex = Math.floor(list.length / 2);
-        const middle = list[midIndex] ?? list[0] ?? null;
-        setSelected(middle);
-        setInputTs(middle ?? '');
-      } catch (err) {
-        console.error('Failed to load timestamps:', err);
-        showError('Failed to load available timestamps');
-      } finally {
-        if (active) {
-          setInitialLoad(false);
-          setLoading(false);
+        setSelected(initial);
+        setInputTs(initial ?? '');
+        if (fc) {
+          setFeatures(fc);
+          lastLoadedTs.current = initial;
         }
+
+        // Save to cache
+        heatmapCache = { timestamps: list, selected: initial, features: fc, fetchedAt: Date.now() };
+      } catch (err) {
+        console.error('Failed to load heatmap data:', err);
+        showError('Failed to load heatmap data');
+      } finally {
+        if (active) setLoading(false);
       }
     };
     load();
@@ -116,6 +147,11 @@ export default function HeatmapExplorer() {
   useEffect(() => {
     if (!selected) {
       setFeatures(null);
+      lastLoadedTs.current = null;
+      return;
+    }
+    // Skip if we already loaded data for this timestamp
+    if (selected === lastLoadedTs.current) {
       return;
     }
     let active = true;
@@ -168,6 +204,7 @@ export default function HeatmapExplorer() {
         }
 
         setFeatures(result.fc ?? { type: 'FeatureCollection', features: [] });
+        lastLoadedTs.current = currentTs;
       } catch (err) {
         console.error('Failed to load heatmap data:', err);
         showError('Failed to load heatmap data');
@@ -515,9 +552,12 @@ export default function HeatmapExplorer() {
             </div>
           </div>
           <div className={clsx(isFullscreen ? 'h-[calc(100vh-140px)]' : 'h-[520px]')}>
-            {initialLoad ? (
-              <MapSkeleton />
-            ) : canRenderMap ? (
+            {!canRenderMap ? (
+              <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
+                <div className="text-sm text-foreground-secondary">WebGL is not available</div>
+                <div className="text-xs text-foreground-tertiary">Heatmap view requires WebGL support</div>
+              </div>
+            ) : (
               <Map
                 reuseMaps={false}
                 mapLib={maplibregl}
@@ -625,11 +665,6 @@ export default function HeatmapExplorer() {
                   </div>
                 )}
               </Map>
-            ) : (
-              <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-                <div className="text-sm text-foreground-secondary">WebGL is not available</div>
-                <div className="text-xs text-foreground-tertiary">Heatmap view requires WebGL support</div>
-              </div>
             )}
           </div>
         </div>
