@@ -85,16 +85,23 @@ a {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
   border-radius: 12px;
   overflow: hidden;
+  background: rgba(12, 18, 36, 0.85);
+  backdrop-filter: blur(8px);
 }
 
 .maplibregl-ctrl-group button {
-  background: rgba(12, 18, 36, 0.8);
-  color: #f8fafc;
-  border: 1px solid rgba(248, 250, 252, 0.08);
+  background: transparent;
+  color: #e5ecf4;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.maplibregl-ctrl-group button:last-child {
+  border-bottom: none;
 }
 
 .maplibregl-ctrl-group button:not(:disabled):hover {
-  background: rgba(12, 18, 36, 0.95);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .maplibregl-ctrl.maplibregl-ctrl-attrib {
@@ -110,17 +117,23 @@ a {
 
 /* MapLibre Light mode */
 .light .maplibregl-ctrl-group {
+  background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .light .maplibregl-ctrl-group button {
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
   color: #0f172a;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.light .maplibregl-ctrl-group button:last-child {
+  border-bottom: none;
 }
 
 .light .maplibregl-ctrl-group button:not(:disabled):hover {
-  background: #ffffff;
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .light .maplibregl-ctrl.maplibregl-ctrl-attrib {
