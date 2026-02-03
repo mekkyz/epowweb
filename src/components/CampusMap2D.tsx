@@ -96,6 +96,7 @@ export default function CampusMap2D() {
   const [mapError, setMapError] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showAttribution, setShowAttribution] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -134,7 +135,7 @@ export default function CampusMap2D() {
   }, [handleStyleImageMissing]);
 
   const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
-  const chipGroup = 'flex items-center gap-1 rounded-xl bg-white/90 p-1 shadow-sm shadow-black/10 backdrop-blur dark:bg-slate-800/90 dark:shadow-black/30';
+  const chipGroup = 'flex items-center gap-1 rounded-xl bg-panel/90 p-1 shadow-sm shadow-black/10 backdrop-blur';
 
   const onMapClick = useCallback((event: MapLayerMouseEvent) => {
     const feature = event.features?.find((f) => f.layer.id === 'stations') as
@@ -188,28 +189,43 @@ export default function CampusMap2D() {
       </div>
 
       <div className="pointer-events-auto absolute bottom-4 left-4 z-10">
-        <div className="rounded-xl border border-border bg-background/95 p-3 shadow-lg shadow-black/10 backdrop-blur dark:shadow-black/30">
-          <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-foreground">
-            <Info className="h-3.5 w-3.5" />
-            20 kV Kabelringe
-          </div>
-          <div className="flex flex-col gap-1.5">
-            {GRID_LEGEND.map((item) => (
-              <div key={item.color} className="flex items-center gap-2">
-                <div
-                  className="h-3 w-3 rounded-full ring-1 ring-black/20"
-                  style={{ backgroundColor: item.color }}
-                />
-                <span className="text-xs text-foreground-secondary">{item.label}</span>
+        <button
+          onClick={() => setShowLegend(!showLegend)}
+          className={clsx(
+            'flex items-center justify-center rounded-lg bg-panel text-foreground shadow backdrop-blur transition-all',
+            showLegend
+              ? 'h-auto w-auto flex-col items-start gap-2 p-3'
+              : 'h-[29px] w-[29px] text-foreground-secondary hover:bg-surface'
+          )}
+          aria-label={showLegend ? 'Hide legend' : 'Show legend'}
+        >
+          {showLegend ? (
+            <>
+              <div className="flex items-center gap-1.5 text-xs font-semibold">
+                <Info className="h-3.5 w-3.5" />
+                20 kV Kabelringe
               </div>
-            ))}
-          </div>
-        </div>
+              <div className="flex flex-col gap-1.5">
+                {GRID_LEGEND.map((item) => (
+                  <div key={item.color} className="flex items-center gap-2">
+                    <div
+                      className="h-3 w-3 rounded-full ring-1 ring-black/20"
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <span className="text-xs text-foreground-secondary">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <Info className="h-3.5 w-3.5" />
+          )}
+        </button>
       </div>
 
       <button
         onClick={toggleFullscreen}
-        className="pointer-events-auto absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-lg bg-white/90 text-slate-700 shadow-sm shadow-black/10 backdrop-blur transition-all hover:bg-white hover:shadow-md dark:bg-slate-800/90 dark:text-slate-200 dark:shadow-black/30 dark:hover:bg-slate-800"
+        className="pointer-events-auto absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all hover:bg-panel hover:shadow-md"
         aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
       >
         {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
@@ -219,19 +235,19 @@ export default function CampusMap2D() {
         <button
           onClick={() => setShowAttribution(!showAttribution)}
           className={clsx(
-            'flex h-[29px] items-center justify-center rounded-lg text-xs shadow backdrop-blur transition-all',
+            'flex h-[29px] items-center justify-center rounded-lg bg-panel text-xs shadow backdrop-blur transition-all',
             showAttribution
-              ? 'w-auto gap-2 px-2.5 bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-200'
-              : 'w-[29px] bg-white text-slate-500 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
+              ? 'w-auto gap-2 px-2.5 text-foreground'
+              : 'w-[29px] text-foreground-secondary hover:bg-surface'
           )}
           aria-label={showAttribution ? 'Hide attribution' : 'Show attribution'}
         >
           <Info className="h-3.5 w-3.5 flex-shrink-0" />
           {showAttribution && (
             <span>
-              © <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">OpenFreeMap</a>
+              © <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">OpenFreeMap</a>
               {' '}·{' '}
-              <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">OpenStreetMap</a>
+              <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">OpenStreetMap</a>
             </span>
           )}
         </button>
