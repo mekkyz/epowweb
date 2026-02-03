@@ -12,6 +12,7 @@ import {
   Search,
   Maximize2,
   Minimize2,
+  Info,
 } from 'lucide-react';
 import { Button, Spinner, Input, MapSkeleton, useToast } from '@/components/ui';
 import { MAP_STYLES } from '@/lib/constants';
@@ -44,6 +45,8 @@ export default function HeatmapExplorer() {
     x: number;
     y: number;
   } | null>(null);
+  const [showLegend, setShowLegend] = useState(false);
+  const [showAttribution, setShowAttribution] = useState(false);
   const [canRenderMap] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     try {
@@ -188,40 +191,139 @@ export default function HeatmapExplorer() {
     }
   }, [selected, timestamps]);
 
-  const circleLayer: LayerProps = useMemo(
+  // Heatmap layer - professional vibrant green-yellow-red style
+  const heatmapLayer: LayerProps = useMemo(
     () => ({
-      id: 'heat-circles',
+      id: 'heat-layer',
+      type: 'heatmap',
+      maxzoom: 17,
+      paint: {
+        // Weight by power consumption - exponential for sharp hotspots
+        'heatmap-weight': [
+          'interpolate',
+          ['exponential', 2],
+          ['get', 'valueKw'],
+          0, 0.1,
+          50, 0.3,
+          150, 0.5,
+          300, 0.75,
+          500, 0.9,
+          800, 1,
+        ],
+        // Higher intensity for more engaging colors
+        'heatmap-intensity': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          12, 2.2,
+          14, 2.8,
+          16, 3.5,
+        ],
+        // Vibrant green-yellow-orange-red - more saturated
+        'heatmap-color': [
+          'interpolate',
+          ['linear'],
+          ['heatmap-density'],
+          0, 'rgba(0, 255, 0, 0)',
+          0.08, 'rgba(0, 255, 0, 0.8)',
+          0.2, 'rgba(128, 255, 0, 0.9)',
+          0.35, 'rgba(200, 255, 0, 0.95)',
+          0.45, 'rgba(255, 255, 0, 0.97)',
+          0.55, 'rgba(255, 200, 0, 1)',
+          0.65, 'rgba(255, 140, 0, 1)',
+          0.75, 'rgba(255, 70, 0, 1)',
+          0.88, 'rgba(255, 20, 0, 1)',
+          1, 'rgba(180, 0, 0, 1)',
+        ],
+        // Larger radius for smooth coverage
+        'heatmap-radius': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          12, 25,
+          14, 40,
+          16, 60,
+          18, 80,
+        ],
+        // Keep heatmap visible at all zoom levels
+        'heatmap-opacity': 0.85,
+      },
+    }),
+    [],
+  );
+
+  // Glow layer behind circles for eye-catching effect
+  const circleGlowLayer: LayerProps = useMemo(
+    () => ({
+      id: 'heat-circles-glow',
       type: 'circle',
+      minzoom: 14,
       paint: {
         'circle-radius': [
           'interpolate',
           ['linear'],
-          ['get', 'valueKw'],
-          0,
-          4,
-          50,
-          10,
-          150,
-          18,
-          500,
-          26,
+          ['zoom'],
+          14, 12,
+          16, 20,
+          18, 30,
         ],
         'circle-color': [
           'interpolate',
           ['linear'],
           ['get', 'valueKw'],
-          0,
-          '#1d4ed8',
-          50,
-          '#22c55e',
-          120,
-          '#f59e0b',
-          250,
-          '#ef4444',
+          0, '#00ff00',
+          150, '#ffff00',
+          300, '#ff9600',
+          500, '#ff1e00',
         ],
-        'circle-opacity': 0.8,
-        'circle-stroke-width': 1.2,
-        'circle-stroke-color': mapStyleType === 'light' ? '#ffffff' : '#0b1020',
+        'circle-opacity': 0.4,
+        'circle-blur': 1,
+      },
+    }),
+    [],
+  );
+
+  // Circle layer for individual stations - crisp markers
+  const circleLayer: LayerProps = useMemo(
+    () => ({
+      id: 'heat-circles',
+      type: 'circle',
+      minzoom: 14,
+      paint: {
+        'circle-radius': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          14, 5,
+          16, 10,
+          18, 16,
+        ],
+        // Same green-yellow-red color scheme
+        'circle-color': [
+          'interpolate',
+          ['linear'],
+          ['get', 'valueKw'],
+          0, '#00ff00',
+          50, '#80ff00',
+          100, '#c8ff00',
+          150, '#ffff00',
+          200, '#ffc800',
+          300, '#ff9600',
+          400, '#ff5000',
+          500, '#ff1e00',
+          700, '#c80000',
+        ],
+        'circle-opacity': 1,
+        'circle-stroke-width': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          14, 2,
+          16, 3,
+          18, 4,
+        ],
+        'circle-stroke-color': mapStyleType === 'light' ? '#ffffff' : '#1a1a2e',
+        'circle-stroke-opacity': 1,
       },
     }),
     [mapStyleType],
@@ -408,7 +510,7 @@ export default function HeatmapExplorer() {
                   <Spinner size="sm" /> Loading…
                 </span>
               ) : (
-                <span className="text-xs text-foreground-secondary">Stations scaled by power consumption</span>
+                <span className="text-xs text-foreground-secondary">Heat intensity by power consumption</span>
               )}
             </div>
           </div>
@@ -423,6 +525,7 @@ export default function HeatmapExplorer() {
                 initialViewState={mapView}
                 minZoom={12}
                 maxZoom={18}
+                attributionControl={false}
                 interactiveLayerIds={['heat-circles']}
                 onMouseMove={(evt) => {
                   const f = evt.features?.[0];
@@ -444,30 +547,65 @@ export default function HeatmapExplorer() {
               >
                 {features && (
                   <Source id="heat-stations" type="geojson" data={features}>
+                    <Layer {...heatmapLayer} />
+                    <Layer {...circleGlowLayer} />
                     <Layer {...circleLayer} />
                   </Source>
                 )}
-                <NavigationControl position="bottom-right" />
-                <div className="pointer-events-none absolute left-3 bottom-3 rounded-lg border border-border bg-panel/90 px-3 py-2.5 text-xs text-foreground-secondary backdrop-blur-sm">
-                  <div className="mb-1.5 font-semibold text-foreground">Power Consumption (kW)</div>
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-block h-3 w-3 rounded-full bg-[#1d4ed8]" />
-                      <span className="font-mono">0 - 50 kW</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="inline-block h-3 w-3 rounded-full bg-[#22c55e]" />
-                      <span className="font-mono">50 - 120 kW</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="inline-block h-3 w-3 rounded-full bg-[#f59e0b]" />
-                      <span className="font-mono">120 - 250 kW</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="inline-block h-3 w-3 rounded-full bg-[#ef4444]" />
-                      <span className="font-mono">250+ kW</span>
-                    </div>
-                  </div>
+                <NavigationControl position="bottom-right" style={{ marginBottom: '52px' }} />
+                <button
+                  onClick={() => setShowLegend(!showLegend)}
+                  className={clsx(
+                    'pointer-events-auto absolute left-3 bottom-3 flex items-center justify-center rounded-lg bg-panel text-foreground shadow backdrop-blur-sm transition-all',
+                    showLegend
+                      ? 'h-auto w-auto flex-col items-start gap-2 p-3'
+                      : 'h-[29px] w-[29px] text-foreground-secondary hover:bg-surface'
+                  )}
+                  aria-label={showLegend ? 'Hide legend' : 'Show legend'}
+                >
+                  {showLegend ? (
+                    <>
+                      <div className="flex items-center gap-1.5 text-xs font-semibold">
+                        <Info className="h-3.5 w-3.5" />
+                        Power Density
+                      </div>
+                      <div className="flex flex-col gap-2 text-xs text-foreground-secondary">
+                        <div
+                          className="h-3 w-24 rounded-sm"
+                          style={{
+                            background: 'linear-gradient(to right, #4169e1, #00ffff, #00ff00, #ffff00, #ffa500, #ff0000)',
+                          }}
+                        />
+                        <div className="flex justify-between text-[10px] font-mono">
+                          <span>Low</span>
+                          <span>High</span>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <Info className="h-3.5 w-3.5" />
+                  )}
+                </button>
+                <div className="pointer-events-auto absolute bottom-3 right-[10px]">
+                  <button
+                    onClick={() => setShowAttribution(!showAttribution)}
+                    className={clsx(
+                      'flex h-[29px] items-center justify-center rounded-lg bg-panel text-xs shadow backdrop-blur transition-all',
+                      showAttribution
+                        ? 'w-auto gap-2 px-2.5 text-foreground'
+                        : 'w-[29px] text-foreground-secondary hover:bg-surface'
+                    )}
+                    aria-label={showAttribution ? 'Hide attribution' : 'Show attribution'}
+                  >
+                    <Info className="h-3.5 w-3.5 flex-shrink-0" />
+                    {showAttribution && (
+                      <span>
+                        © <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">OpenFreeMap</a>
+                        {' '}·{' '}
+                        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">OpenStreetMap</a>
+                      </span>
+                    )}
+                  </button>
                 </div>
                 {hover && (
                   <div
