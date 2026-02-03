@@ -52,7 +52,7 @@ const lineLayer: LayerProps = {
   id: 'lines',
   type: 'line',
   paint: {
-    'line-width': 4,
+    'line-width': ['interpolate', ['linear'], ['zoom'], 12, 1, 15, 3, 18, 6],
     'line-color': ['coalesce', ['get', 'color'], COLORS.grid.line],
     'line-opacity': 1,
   },
@@ -66,7 +66,7 @@ const lineOutlineLayer: LayerProps = {
   id: 'lines-outline',
   type: 'line',
   paint: {
-    'line-width': 8,
+    'line-width': ['interpolate', ['linear'], ['zoom'], 12, 2, 15, 6, 18, 12],
     'line-color': 'rgba(0, 0, 0, 0.4)',
     'line-opacity': 1,
   },
@@ -80,19 +80,9 @@ const stationsLayer: LayerProps = {
   id: 'stations',
   type: 'circle',
   paint: {
-    'circle-radius': [
-      'interpolate',
-      ['linear'],
-      ['zoom'],
-      12,
-      8,
-      16,
-      14,
-      18,
-      18,
-    ],
+    'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 3, 15, 10, 18, 16],
     'circle-color': ['coalesce', ['get', 'color'], COLORS.grid.line],
-    'circle-stroke-width': 3,
+    'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 12, 1, 15, 2.5, 18, 4],
     'circle-stroke-color': 'rgba(0, 0, 0, 0.4)',
   },
 };
@@ -273,6 +263,7 @@ export default function CampusMap2D() {
             onError={handleMapError}
             style={{ width: '100%', height: '100%' }}
             attributionControl={false}
+            canvasContextAttributes={{ contextType: 'webgl2' }}
           >
             {showLines && (
               <Source id="grid-lines-outline" type="geojson" data={gridCollections.lines}>
