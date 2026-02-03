@@ -60,6 +60,10 @@
   --font-display: var(--font-display);
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   background: var(--background-body);
   color: var(--foreground);
