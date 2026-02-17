@@ -41,8 +41,8 @@ export default function Home() {
     <div className="mx-auto max-w-6xl px-4 py-4 md:py-6">
       <section className="py-6">
         <div className="text-center">
-          <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-            eASiMOV - ePowWeb
+          <h1 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-6xl">
+            eASiMOV - ePowWeb - SMDT
           </h1>
        
         </div>
@@ -65,7 +65,7 @@ export default function Home() {
                 className="flex h-[120px] flex-col items-center justify-center gap-0.5 rounded-lg bg-panel px-6 py-2 ring-1 ring-border shadow-sm"
               >
                 <Icon className={`h-4 w-4 ${stat.color}`} />
-                <span className="font-display text-xl font-bold text-foreground">{stat.value}</span>
+                <span className="font-display text-xl font-semibold text-foreground">{stat.value}</span>
                 <span className="text-xs text-foreground-tertiary">{stat.label}</span>
                 <span className="text-[10px] leading-tight text-foreground-tertiary/70">{stat.hint}</span>
               </div>
@@ -91,7 +91,7 @@ export default function Home() {
                 className="flex flex-col items-center justify-center gap-0.5 rounded-lg bg-panel px-3 py-3 ring-1 ring-border shadow-sm"
               >
                 <Icon className={`h-4 w-4 ${stat.color}`} />
-                <span className="font-display text-xl font-bold text-foreground">{stat.value}</span>
+                <span className="font-display text-xl font-semibold text-foreground">{stat.value}</span>
                 <span className="text-xs text-foreground-tertiary">{stat.label}</span>
                 <span className="text-[10px] leading-tight text-foreground-tertiary/70">{stat.hint}</span>
               </div>
@@ -109,7 +109,7 @@ export default function Home() {
             <p className="text-xs font-semibold uppercase tracking-widest text-foreground-tertiary">
               Visualization
             </p>
-            <h2 className="font-display text-2xl font-bold text-foreground">
+            <h2 className="font-display text-2xl font-semibold text-foreground">
               Station, Building & Meter Previews
             </h2>
           </div>
@@ -127,7 +127,7 @@ export default function Home() {
             <p className="text-xs font-semibold uppercase tracking-widest text-foreground-tertiary">
               Weather Data
             </p>
-            <h2 className="font-display text-2xl font-bold text-foreground">
+            <h2 className="font-display text-2xl font-semibold text-foreground">
               Anemos Atmospheric Layers
             </h2>
           </div>
@@ -139,7 +139,7 @@ export default function Home() {
       {/* <section className="mt-14">
         <div className="relative overflow-hidden rounded-2xl border border-border bg-panel p-8">
           <div className="relative flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-              <h3 className="mt-2 font-display text-2xl font-bold text-foreground">
+              <h3 className="mt-2 font-display text-2xl font-semibold text-foreground">
                 20 kV Load Heatmap
               </h3>
             <Link

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Button, Spinner, Input, useToast } from '@/components/ui';
 import { MAP_STYLES } from '@/lib/constants';
+import { useAuth } from '@/context/AuthProvider';
 import clsx from 'clsx';
 
 type FeatureCollection = {
@@ -29,7 +30,7 @@ type FeatureCollection = {
 
 // Module-level cache persists across navigations
 type HeatmapCache = {
-  timestamps: string[];
+  bounds: { min: string | null; max: string | null; count: number } | null;
   selected: string | null;
   features: FeatureCollection | null;
   fetchedAt: number;
@@ -47,9 +48,10 @@ function getValidCache(): HeatmapCache | null {
 export default function HeatmapExplorer() {
   const { resolvedTheme } = useTheme();
   const { success, error: showError } = useToast();
+  const { isDemo } = useAuth();
 
   // Initialize state from cache if valid (instant restore on navigation)
-  const [timestamps, setTimestamps] = useState<string[]>(() => getValidCache()?.timestamps ?? []);
+  const [bounds, setBounds] = useState<{ min: string | null; max: string | null; count: number } | null>(() => getValidCache()?.bounds ?? null);
   const [selected, setSelected] = useState<string | null>(() => getValidCache()?.selected ?? null);
   const [inputTs, setInputTs] = useState<string>(() => getValidCache()?.selected ?? '');
   const [features, setFeatures] = useState<FeatureCollection | null>(() => getValidCache()?.features ?? null);
@@ -110,11 +112,11 @@ export default function HeatmapExplorer() {
         const body = await res.json();
         if (!active) return;
 
-        const list = body.data?.timestamps ?? [];
+        const b = body.data?.bounds ?? null;
         const initial = body.data?.initialTimestamp ?? null;
         const fc = body.data?.featureCollection ?? null;
 
-        setTimestamps(list);
+        setBounds(b);
         setSelected(initial);
         setInputTs(initial ?? '');
         if (fc) {
@@ -123,7 +125,7 @@ export default function HeatmapExplorer() {
         }
 
         // Save to cache
-        heatmapCache = { timestamps: list, selected: initial, features: fc, fetchedAt: Date.now() };
+        heatmapCache = { bounds: b, selected: initial, features: fc, fetchedAt: Date.now() };
       } catch (err) {
         console.error('Failed to load heatmap data:', err);
         showError('Failed to load heatmap data');
@@ -156,55 +158,18 @@ export default function HeatmapExplorer() {
     }
     let active = true;
 
-    const fetchSlice = async (ts: string) => {
-      const res = await fetch(`/api/heatmap/geo?timestamp=${encodeURIComponent(ts)}`);
-      if (!res.ok) throw new Error(`Failed to load slice (${res.status})`);
-      const body = await res.json();
-      const payload = body.data ?? body;
-      const fc = payload.featureCollection ?? null;
-      const statsPayload =
-        payload.stats ??
-        (fc ? { stations: fc.features?.length ?? 0, meters: payload.points?.length ?? 0 } : null);
-      return { fc, stats: statsPayload };
-    };
-
     const load = async () => {
       setLoading(true);
       try {
-        // If the chosen timestamp isn't in the list, snap to the latest available
-        const idx = timestamps.indexOf(selected);
-        if (idx === -1 && timestamps.length > 0) {
-          const latest = timestamps[timestamps.length - 1];
-          setSelected(latest);
-          setInputTs(latest);
-          return;
-        }
-
-        let currentTs = selected;
-        let result = await fetchSlice(currentTs);
-
-        // If the chosen slice has no data, try a few earlier timestamps
-        let attempts = 0;
-        while (active && result.fc?.features?.length === 0 && attempts < 5) {
-          const idx = timestamps.indexOf(currentTs);
-          const prev = idx > 0 ? timestamps[idx - 1] : null;
-          if (!prev) break;
-          currentTs = prev;
-          result = await fetchSlice(currentTs);
-          attempts += 1;
-        }
-
+        const res = await fetch(`/api/heatmap/geo?timestamp=${encodeURIComponent(selected)}`);
+        if (!res.ok) throw new Error(`Failed to load slice (${res.status})`);
+        const body = await res.json();
         if (!active) return;
+        const payload = body.data ?? body;
+        const fc = payload.featureCollection ?? null;
 
-        if (currentTs !== selected) {
-          // Trigger re-load with the nearest timestamp that has data
-          setSelected(currentTs);
-          setInputTs(currentTs);
-          return;
-        }
-
-        setFeatures(result.fc ?? { type: 'FeatureCollection', features: [] });
-        lastLoadedTs.current = currentTs;
+        setFeatures(fc ?? { type: 'FeatureCollection', features: [] });
+        lastLoadedTs.current = selected;
       } catch (err) {
         console.error('Failed to load heatmap data:', err);
         showError('Failed to load heatmap data');
@@ -217,16 +182,15 @@ export default function HeatmapExplorer() {
     return () => {
       active = false;
     };
-  }, [selected, showError, timestamps]);
+  }, [selected, showError]);
 
   // Ensure selected/input stay in sync if state was cleared
   useEffect(() => {
-    if (!selected && timestamps.length > 0) {
-      const last = timestamps[timestamps.length - 1];
-      setSelected(last);
-      setInputTs(last);
+    if (!selected && bounds?.min) {
+      setSelected(bounds.min);
+      setInputTs(bounds.min);
     }
-  }, [selected, timestamps]);
+  }, [selected, bounds]);
 
   // Heatmap layer - professional vibrant green-yellow-red style
   const heatmapLayer: LayerProps = useMemo(
@@ -380,23 +344,28 @@ export default function HeatmapExplorer() {
     zoom: 14.5,
   };
 
-  const stepTimestamp = (direction: 1 | -1) => {
-    if (!selected) return;
-    const idx = timestamps.indexOf(selected);
-    const next = timestamps[idx + direction];
-    if (next) {
-      setSelected(next);
-      setInputTs(next);
+  const stepTimestamp = async (direction: 1 | -1) => {
+    if (!selected || loading) return;
+    setLoading(true);
+    try {
+      const dir = direction === 1 ? 'next' : 'prev';
+      const res = await fetch(`/api/heatmap/step?current=${encodeURIComponent(selected)}&direction=${dir}`);
+      if (!res.ok) return;
+      const body = await res.json();
+      const ts = body.data?.timestamp;
+      if (ts) {
+        setSelected(ts);
+        setInputTs(ts);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   const applyInput = () => {
     if (!inputTs) return;
-    const match = timestamps.find((t) => t.startsWith(inputTs));
-    if (match) {
-      setSelected(match);
-      setInputTs(match);
-    }
+    // Directly set the timestamp — the geo API will handle it
+    setSelected(inputTs);
   };
 
   const toggleFullscreen = useCallback(async () => {
@@ -471,31 +440,29 @@ export default function HeatmapExplorer() {
               variant="ghost"
               size="sm"
               onClick={() => stepTimestamp(-1)}
-              disabled={!selected}
+              disabled={isDemo || !selected}
+              title={isDemo ? 'Full access required' : undefined}
               aria-label="Previous slice"
               className="rounded-l-lg rounded-r-none"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <Input
-              list="heatmap-ts"
               value={inputTs}
               onChange={(e) => setInputTs(e.target.value)}
               onBlur={applyInput}
+              onKeyDown={(e) => e.key === 'Enter' && applyInput()}
               placeholder="YYYY-MM-DD HH:mm:ss"
               size="sm"
+              disabled={isDemo}
               className="min-w-[210px] rounded-none border-x-0"
             />
-            <datalist id="heatmap-ts">
-              {timestamps.map((ts) => (
-                <option key={ts} value={ts} />
-              ))}
-            </datalist>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => stepTimestamp(1)}
-              disabled={!selected}
+              disabled={isDemo || !selected}
+              title={isDemo ? 'Full access required' : undefined}
               aria-label="Next slice"
               className="rounded-l-none rounded-r-lg"
             >
@@ -508,7 +475,8 @@ export default function HeatmapExplorer() {
             variant="outline"
             size="sm"
             onClick={() => downloadSlice('json')}
-            disabled={!selected}
+            disabled={isDemo || !selected}
+            title={isDemo ? 'Full access required' : undefined}
             icon={<ArrowDownToLine className="h-3.5 w-3.5" />}
           >
             JSON
@@ -517,7 +485,8 @@ export default function HeatmapExplorer() {
             variant="outline"
             size="sm"
             onClick={() => downloadSlice('csv')}
-            disabled={!selected}
+            disabled={isDemo || !selected}
+            title={isDemo ? 'Full access required' : undefined}
             icon={<ArrowDownToLine className="h-3.5 w-3.5" />}
           >
             CSV
@@ -547,7 +516,7 @@ export default function HeatmapExplorer() {
                   <Spinner size="sm" /> Loading…
                 </span>
               ) : (
-                <span className="text-xs text-foreground-secondary">Heat intensity by power consumption</span>
+                <span className="text-xs text-foreground-secondary">Heat intensity by power consumption/generation</span>
               )}
             </div>
           </div>
@@ -646,6 +615,17 @@ export default function HeatmapExplorer() {
                       </span>
                     )}
                   </button>
+                </div>
+                {/* ESA-IAI-KIT Watermark */}
+                <div className="pointer-events-auto absolute bottom-3 left-1/2 z-10 -translate-x-1/2">
+                  <div className="rounded-lg bg-panel/80 px-2.5 py-1 text-[10px] text-foreground-secondary shadow backdrop-blur">
+                    ©{' '}
+                    <a href="https://www.iai.kit.edu/gruppen_4104.php" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Energiesystemanalyse (ESA)</a>
+                    {', '}
+                    <a href="https://www.iai.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">IAI</a>
+                    {'-'}
+                    <a href="https://www.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">KIT</a>
+                  </div>
                 </div>
                 {hover && (
                   <div

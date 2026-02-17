@@ -1,5 +1,5 @@
 {
-  "name": "epowweb",
+  "name": "smdt",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "legacy:data": "node scripts/convert-legacy-data.js",
-    "pg:seed": "tsx scripts/seed-pg.ts"
+    "db:seed": "tsx scripts/seed-sqlite.ts"
   },
   "dependencies": {
     "@deck.gl/core": "^9.2.6",
@@ -18,6 +18,7 @@
     "@loaders.gl/core": "^4.3.4",
     "@loaders.gl/obj": "^4.3.4",
     "@types/geojson": "^7946.0.16",
+    "better-sqlite3": "^12.6.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
     "fast-xml-parser": "^5.3.3",
@@ -25,7 +26,6 @@
     "maplibre-gl": "^5.16.0",
     "next": "16.1.3",
     "next-themes": "^0.4.6",
-    "pg": "^8.17.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-map-gl": "^8.1.0",
@@ -33,8 +33,8 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
-    "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

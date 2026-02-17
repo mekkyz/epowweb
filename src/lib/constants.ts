@@ -124,6 +124,7 @@ export const ENTITY_LABELS: Record<EntityType, string> = {
 
 export const ROUTES = {
   home: '/',
+  login: '/login',
   heatmap: '/heatmap',
   visualization: (type: EntityType, id: string) => `/visualization/${type}/${id}`,
 } as const;
@@ -161,6 +162,7 @@ export const ERROR_MESSAGES = {
 export const HTTP_STATUS = {
   OK: 200,
   BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
 } as const;

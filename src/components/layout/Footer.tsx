@@ -1,10 +1,11 @@
 'use client';
 
 import { Suspense, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 function FooterContent() {
   const currentYear = new Date().getFullYear();
+  const pathname = usePathname();
   const search = useSearchParams();
   const isEmbedded = useMemo(() => {
     const embedFlag = search?.get('embed') === '1';
@@ -12,7 +13,7 @@ function FooterContent() {
     return embedFlag || inIframe;
   }, [search]);
 
-  if (isEmbedded) return null;
+  if (isEmbedded || pathname === '/login') return null;
 
   return (
     <footer className="border-t border-border bg-background">

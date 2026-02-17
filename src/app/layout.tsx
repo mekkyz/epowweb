@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
-import { Space_Grotesk, Work_Sans } from 'next/font/google';
+import { Google_Sans_Flex, Work_Sans } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { ToastProvider } from '@/components/ui';
 import { WebGLErrorSuppressor } from '@/components/WebGLErrorSuppressor';
 import { ThemeProvider } from '@/context/ThemeProvider';
+import { AuthProvider } from '@/context/AuthProvider';
+import { getSession } from '@/lib/auth';
 
-const display = Space_Grotesk({
+const display = Google_Sans_Flex({
   variable: '--font-display',
   subsets: ['latin'],
 });
@@ -18,16 +20,19 @@ const sans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'ePowWeb | KIT Campus North Power Grid Web-Service',
+  title: 'eASiMOV - ePowWeb - SMDT | KIT Campus North Power Grid Web-Service',
   description:
     'A KIT Campus North power grid and weather datasets.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+  const user = session ? { username: session.username, role: session.role } : null;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -57,13 +62,15 @@ export default function RootLayout({
       <body className={`${sans.variable} ${display.variable} antialiased`}>
         <WebGLErrorSuppressor />
         <ThemeProvider>
-          <ToastProvider>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-          </ToastProvider>
+          <AuthProvider user={user}>
+            <ToastProvider>
+              <div className="flex min-h-screen flex-col">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+            </ToastProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

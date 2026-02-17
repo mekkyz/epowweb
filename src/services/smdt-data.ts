@@ -3,13 +3,15 @@ import path from 'path';
 import dayjs from 'dayjs';
 import { getDataDir, getSmdtConfig } from '@/services/config-loader';
 import {
-  getBoundsPg,
-  hasPg,
-  listHeatmapTimestampsPg,
-  loadAggregatedSeriesPg,
-  loadHeatmapSlicePg,
-  loadMeterSeriesPg,
-} from '@/services/pg-store';
+  getBoundsSqlite,
+  getHeatmapBoundsSqlite,
+  getNeighborTimestampSqlite,
+  hasSqlite,
+  listHeatmapTimestampsSqlite,
+  loadAggregatedSeriesSqlite,
+  loadHeatmapSliceSqlite,
+  loadMeterSeriesSqlite,
+} from '@/services/sqlite-store';
 import {
   BuildingMeta,
   HeatmapPoint,
@@ -54,8 +56,8 @@ export async function loadMeterSeries(
   meterId: string,
   options: SeriesOptions = {},
 ): Promise<MeterReading[]> {
-  if (hasPg()) {
-    return loadMeterSeriesPg(meterId, options);
+  if (hasSqlite()) {
+    return loadMeterSeriesSqlite(meterId, options);
   }
   
   const filePath = path.join(METER_DIR, `${meterId}.csv`);
@@ -100,8 +102,8 @@ export async function loadMeterSeries(
 }
 
 export async function getMeterBounds(meterId: string): Promise<SeriesBounds> {
-  if (hasPg()) {
-    return getBoundsPg([meterId]);
+  if (hasSqlite()) {
+    return getBoundsSqlite([meterId]);
   }
   
   const filePath = path.join(METER_DIR, `${meterId}.csv`);
@@ -129,8 +131,8 @@ export async function loadAggregatedSeries(
   meterIds: string[],
   options: SeriesOptions = {},
 ): Promise<MeterReading[]> {
-  if (hasPg()) {
-    return loadAggregatedSeriesPg(meterIds, options);
+  if (hasSqlite()) {
+    return loadAggregatedSeriesSqlite(meterIds, options);
   }
   
   const seriesList = await Promise.all(meterIds.map((id) => loadMeterSeries(id, options)));
@@ -159,8 +161,8 @@ export async function loadAggregatedSeries(
 }
 
 export async function getAggregatedBounds(meterIds: string[]): Promise<SeriesBounds> {
-  if (hasPg()) {
-    return getBoundsPg(meterIds);
+  if (hasSqlite()) {
+    return getBoundsSqlite(meterIds);
   }
   
   let minStart: string | undefined;
@@ -176,8 +178,8 @@ export async function getAggregatedBounds(meterIds: string[]): Promise<SeriesBou
 }
 
 export async function loadHeatmapSlice(timestamp: string): Promise<HeatmapPoint[]> {
-  if (hasPg()) {
-    return loadHeatmapSlicePg(timestamp);
+  if (hasSqlite()) {
+    return loadHeatmapSliceSqlite(timestamp);
   }
 
   const ts = dayjs(timestamp).isValid() ? dayjs(timestamp) : dayjs(timestamp, 'YYYYMMDD_HHmmss');
@@ -212,9 +214,30 @@ export async function loadHeatmapSlice(timestamp: string): Promise<HeatmapPoint[
   }
 }
 
+export async function getHeatmapBounds(): Promise<{ min: string | null; max: string | null; count: number }> {
+  if (hasSqlite()) {
+    return getHeatmapBoundsSqlite();
+  }
+  const ts = await listHeatmapTimestamps();
+  return { min: ts[0] ?? null, max: ts[ts.length - 1] ?? null, count: ts.length };
+}
+
+export async function getNeighborTimestamp(
+  current: string,
+  direction: 'prev' | 'next',
+): Promise<string | null> {
+  if (hasSqlite()) {
+    return getNeighborTimestampSqlite(current, direction);
+  }
+  const ts = await listHeatmapTimestamps();
+  const idx = ts.indexOf(current);
+  if (idx === -1) return null;
+  return direction === 'next' ? ts[idx + 1] ?? null : ts[idx - 1] ?? null;
+}
+
 export async function listHeatmapTimestamps(): Promise<string[]> {
-  if (hasPg()) {
-    return listHeatmapTimestampsPg();
+  if (hasSqlite()) {
+    return listHeatmapTimestampsSqlite();
   }
 
   if (!fs.existsSync(HEATMAP_DIR)) {

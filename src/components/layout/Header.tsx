@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
-import { Radio, Menu, X, Home, Map, Sun, Moon } from 'lucide-react';
+import { Radio, Menu, X, Home, Map, Sun, Moon, LogOut } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import clsx from 'clsx';
+import { useAuth } from '@/context/AuthProvider';
 
 const navLinks = [
   { href: '/', label: 'Home', icon: Home },
@@ -60,6 +61,7 @@ function ThemeToggle() {
 function HeaderContent() {
   const pathname = usePathname();
   const search = useSearchParams();
+  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isEmbedded = useMemo(() => {
     const embedFlag = search?.get('embed') === '1';
@@ -87,7 +89,7 @@ function HeaderContent() {
     }
   }, [pathname]);
 
-  if (isEmbedded) return null;
+  if (isEmbedded || pathname === '/login') return null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
@@ -104,8 +106,8 @@ function HeaderContent() {
             className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
           >
             <div className="flex flex-col">
-              <span className="font-display text-lg font-bold leading-tight text-foreground">
-                ePowWeb
+              <span className="font-display text-lg font-semibold leading-tight text-foreground">
+                SMDT
               </span>
               <span className="text-[10px] font-medium uppercase tracking-wider text-foreground-tertiary">
                 KIT Campus North Power Grid Web-Service
@@ -141,9 +143,36 @@ function HeaderContent() {
             <div className="ml-2 border-l border-border pl-3">
               <ThemeToggle />
             </div>
+
+            {user && (
+              <div className="ml-2 flex items-center gap-2 border-l border-border pl-3">
+                <span className="text-xs text-foreground-secondary">{user.username}</span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className={clsx(
+                    'flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
+                    'text-foreground-secondary hover:bg-surface-hover hover:text-foreground'
+                  )}
+                  aria-label="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </div>
+            )}
           </nav>
 
           <div className="flex items-center gap-2 md:hidden">
+            {user && (
+              <button
+                type="button"
+                onClick={logout}
+                className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface text-foreground-secondary transition-colors hover:bg-surface-hover hover:text-foreground"
+                aria-label="Sign out"
+              >
+                <LogOut className="h-5 w-5" />
+              </button>
+            )}
             <ThemeToggle />
             <button
               type="button"

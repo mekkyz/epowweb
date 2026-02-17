@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import SeriesChart from '@/components/SeriesChart';
 import { Button, Input, ChartSkeleton, useToast } from '@/components/ui';
+import { useAuth } from '@/context/AuthProvider';
 
 type SeriesType = 'meter' | 'building' | 'station';
 
@@ -27,6 +28,7 @@ interface Props {
 
 export default function SeriesExplorer({ type, id }: Props) {
   const { success, error: showError } = useToast();
+  const { isDemo } = useAuth();
   const [start, setStart] = useState<string | undefined>(undefined);
   const [end, setEnd] = useState<string | undefined>(undefined);
   const [bounds, setBounds] = useState<{ start?: string; end?: string }>({});
@@ -180,6 +182,8 @@ export default function SeriesExplorer({ type, id }: Props) {
                 value={toLocalInput(start)}
                 onChange={(e) => setStart(fromLocalInput(e.target.value))}
                 size="sm"
+                disabled={isDemo}
+                title={isDemo ? 'Full access required' : undefined}
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -192,6 +196,8 @@ export default function SeriesExplorer({ type, id }: Props) {
                 value={toLocalInput(end)}
                 onChange={(e) => setEnd(fromLocalInput(e.target.value))}
                 size="sm"
+                disabled={isDemo}
+                title={isDemo ? 'Full access required' : undefined}
               />
             </div>
           </div>
@@ -203,6 +209,8 @@ export default function SeriesExplorer({ type, id }: Props) {
                 variant="ghost"
                 size="sm"
                 onClick={() => shiftRange(-1)}
+                disabled={isDemo}
+                title={isDemo ? 'Full access required' : undefined}
                 aria-label="Shift range backward"
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -211,6 +219,8 @@ export default function SeriesExplorer({ type, id }: Props) {
                 variant="ghost"
                 size="sm"
                 onClick={() => shiftRange(1)}
+                disabled={isDemo}
+                title={isDemo ? 'Full access required' : undefined}
                 aria-label="Shift range forward"
               >
                 <ChevronRight className="h-4 w-4" />
@@ -220,6 +230,8 @@ export default function SeriesExplorer({ type, id }: Props) {
               variant="secondary"
               size="sm"
               onClick={() => setRefreshNonce((n) => n + 1)}
+              disabled={isDemo}
+              title={isDemo ? 'Full access required' : undefined}
               icon={<RefreshCcw className="h-4 w-4" />}
             >
               Update
@@ -228,6 +240,8 @@ export default function SeriesExplorer({ type, id }: Props) {
               variant="outline"
               size="sm"
               onClick={() => download('json')}
+              disabled={isDemo}
+              title={isDemo ? 'Full access required' : undefined}
               icon={<ArrowDownToLine className="h-4 w-4" />}
             >
               JSON
@@ -236,6 +250,8 @@ export default function SeriesExplorer({ type, id }: Props) {
               variant="outline"
               size="sm"
               onClick={() => download('csv')}
+              disabled={isDemo}
+              title={isDemo ? 'Full access required' : undefined}
               icon={<ArrowDownToLine className="h-4 w-4" />}
             >
               CSV

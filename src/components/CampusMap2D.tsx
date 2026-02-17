@@ -96,7 +96,7 @@ export default function CampusMap2D() {
   const [mapError, setMapError] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showAttribution, setShowAttribution] = useState(false);
-  const [showLegend, setShowLegend] = useState(false);
+  const [showLegend, setShowLegend] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -131,6 +131,39 @@ export default function CampusMap2D() {
     if (ref) {
       const map = ref.getMap();
       handleStyleImageMissing(map);
+
+      // ALT+drag rotation support (same as 3D view)
+      const canvas = map.getCanvasContainer();
+      let dragging = false;
+      let prevX = 0;
+      let prevY = 0;
+
+      canvas.addEventListener('mousedown', (e: MouseEvent) => {
+        if (e.altKey && e.button === 0) {
+          dragging = true;
+          prevX = e.clientX;
+          prevY = e.clientY;
+          canvas.style.cursor = 'grabbing';
+          e.preventDefault();
+        }
+      });
+
+      document.addEventListener('mousemove', (e: MouseEvent) => {
+        if (!dragging) return;
+        const dx = e.clientX - prevX;
+        const dy = e.clientY - prevY;
+        prevX = e.clientX;
+        prevY = e.clientY;
+        map.setBearing(map.getBearing() + dx * 0.5);
+        map.setPitch(Math.max(0, Math.min(60, map.getPitch() - dy * 0.5)));
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (dragging) {
+          dragging = false;
+          canvas.style.cursor = '';
+        }
+      });
     }
   }, [handleStyleImageMissing]);
 
@@ -253,6 +286,18 @@ export default function CampusMap2D() {
         </button>
       </div>
 
+      {/* ESA-IAI-KIT Watermark */}
+      <div className="pointer-events-auto absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
+        <div className="rounded-lg bg-panel/80 px-2.5 py-1 text-[10px] text-foreground-secondary shadow backdrop-blur">
+          ©{' '}
+          <a href="https://www.iai.kit.edu/gruppen_4104.php" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Energiesystemanalyse (ESA)</a>
+          {', '}
+          <a href="https://www.iai.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">IAI</a>
+          {'-'}
+          <a href="https://www.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">KIT</a>
+        </div>
+      </div>
+
       {canRenderMap === null ? (
         <div className="flex h-full flex-col items-center justify-center gap-3">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-surface">
@@ -311,14 +356,12 @@ export default function CampusMap2D() {
         </div>
       )}
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
-        <div className="mx-auto w-fit rounded-2xl bg-panel/90 p-4 text-sm text-foreground-secondary shadow-lg shadow-black/20 dark:shadow-black/40 backdrop-blur">
-          {selectedProps ? (
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.15em] text-foreground-secondary">
-                  Station
-                </p>
+      {selectedProps && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
+          <div className="mx-auto w-fit rounded-2xl bg-panel/90 p-4 text-sm text-foreground-secondary shadow-lg shadow-black/20 dark:shadow-black/40 backdrop-blur">
+            <div className="flex items-stretch gap-4">
+              {/* Left side - Info */}
+              <div className="flex flex-col justify-center">
                 <p className="text-lg font-semibold text-foreground">
                   {selectedProps.id}
                 </p>
@@ -329,25 +372,43 @@ export default function CampusMap2D() {
                   <p className="text-foreground-secondary">{selectedProps.group}</p>
                 )}
               </div>
-              {selectedProps.url && (
-                <a
-                  href={selectedProps.url}
-                  className="pointer-events-auto inline-flex min-w-[150px] items-center justify-center rounded-full border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm hover:bg-surface"
-                >
-                  Open visualization
-                </a>
-              )}
+
+              {/* Divider */}
+              <div className="w-px bg-border" />
+
+              {/* Right side - Visualization & Buttons */}
+              <div className="flex flex-col items-center justify-center gap-2">
+                <span className="rounded-md bg-surface px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground-tertiary">
+                  Visualization
+                </span>
+                {selectedProps.url && (
+                  <div className="pointer-events-auto flex flex-col gap-2">
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById('live-data');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        window.dispatchEvent(new CustomEvent('preview-visualization', { detail: selectedProps.url }));
+                      }}
+                      className="inline-flex items-center justify-center rounded-full border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm hover:bg-surface"
+                    >
+                      Preview
+                    </button>
+                    <a
+                      href={selectedProps.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: 'inherit' }}
+                      className="inline-flex items-center justify-center rounded-full border border-border bg-background px-4 py-1.5 text-xs font-semibold no-underline shadow-sm hover:bg-surface"
+                    >
+                      Open in Tab
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <div className="h-2 w-2 rounded-full bg-emerald-400" />
-              <p>
-                Click any station to see details.
-              </p>
-            </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

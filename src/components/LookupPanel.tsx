@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowUpRight, Sparkles, Building, Gauge, Radio } from 'lucide-react';
+import { ArrowUpRight, Building, Gauge, Radio } from 'lucide-react';
 import {
   buildingOptions,
   meterOptions,
@@ -16,7 +15,6 @@ interface Props {
 }
 
 export default function LookupPanel({ onPreview }: Props) {
-  const router = useRouter();
   const [station, setStation] = useState(stationOptions[0]?.id ?? '');
   const [building, setBuilding] = useState(buildingOptions[0]?.id ?? '');
   const [meter, setMeter] = useState(meterOptions[0]?.id ?? '');
@@ -30,7 +28,7 @@ export default function LookupPanel({ onPreview }: Props) {
       onPreview?.(target);
       return;
     }
-    router.push(target);
+    window.open(target, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -65,10 +63,7 @@ export default function LookupPanel({ onPreview }: Props) {
         />
       </div>
 
-      <div className="flex items-center gap-2 rounded-lg bg-panel border border-border px-4 py-3 text-sm text-foreground-secondary">
-        <Sparkles className="h-4 w-4 flex-shrink-0 text-emerald-400" />
-        <p>Click <strong className="text-foreground">Preview</strong> for visualization below, or <strong className="text-foreground">Open</strong> to view in a full page.</p>
-      </div>
+      
     </div>
   );
 }

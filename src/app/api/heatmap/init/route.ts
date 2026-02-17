@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { listHeatmapTimestamps, loadHeatmapSlice, getMeterMeta } from '@/services/smdt-data';
+import { getHeatmapBounds, loadHeatmapSlice, getMeterMeta } from '@/services/smdt-data';
 import { stationFeatures } from '@/config/grid';
 import { apiLogger } from '@/lib/logger';
 
@@ -11,11 +11,9 @@ const stationsById = new Map(stationFeatures.map((s) => [s.properties.id, s]));
 
 export async function GET() {
   try {
-    const timestamps = await listHeatmapTimestamps();
+    const bounds = await getHeatmapBounds();
 
-    // Select middle timestamp as initial
-    const midIndex = Math.floor(timestamps.length / 2);
-    const initialTimestamp = timestamps[midIndex] ?? timestamps[0] ?? null;
+    const initialTimestamp = bounds.min ?? null;
 
     let featureCollection = null;
     let stats = null;
@@ -60,7 +58,7 @@ export async function GET() {
     }
 
     apiLogger.info('GET /api/heatmap/init', {
-      timestampCount: timestamps.length,
+      timestampCount: bounds.count,
       initialTimestamp,
       stations: stats?.stations ?? 0
     });
@@ -69,7 +67,7 @@ export async function GET() {
       {
         success: true,
         data: {
-          timestamps,
+          bounds: { min: bounds.min, max: bounds.max, count: bounds.count },
           initialTimestamp,
           featureCollection,
           stats,

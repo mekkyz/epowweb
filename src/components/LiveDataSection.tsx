@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import LookupPanel from '@/components/LookupPanel';
 import TimeSeriesPreview from '@/components/TimeSeriesPreview';
 import { meterOptions, stationOptions, buildingOptions } from '@/config/grid';
@@ -11,6 +11,17 @@ export default function LiveDataSection() {
     [],
   );
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(defaultUrl);
+
+  // Listen for preview-visualization events from the map
+  useEffect(() => {
+    const handlePreview = (e: CustomEvent<string>) => {
+      setPreviewUrl(e.detail);
+    };
+    window.addEventListener('preview-visualization', handlePreview as EventListener);
+    return () => {
+      window.removeEventListener('preview-visualization', handlePreview as EventListener);
+    };
+  }, []);
 
   // Extract title from URL
   const previewTitle = useMemo(() => {

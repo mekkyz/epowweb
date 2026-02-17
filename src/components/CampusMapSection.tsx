@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Layers, Box } from 'lucide-react';
+import { Layers, Box, Sparkles } from 'lucide-react';
 import { DynamicCampusMap2D, DynamicCampusMap3D } from './DynamicMaps';
 
 type MapView = '2d' | '3d';
@@ -9,12 +9,12 @@ type MapView = '2d' | '3d';
 const viewConfig = {
   '2d': {
     label: 'Normal View',
-    title: '2D Power Grid',
+    title: 'KIT-CN 20 kV Power Grid',
     color: 'emerald',
   },
   '3d': {
     label: 'Immersive View',
-    title: '3D Station & Cable Network',
+    title: 'KIT-CN 20 kV Power Grid',
     color: 'purple',
   },
 } as const;
@@ -33,7 +33,7 @@ export default function CampusMapSection() {
             <p className="text-xs font-semibold uppercase tracking-widest text-foreground-tertiary">
               {config.label}
             </p>
-            <h2 className="font-display text-2xl font-bold text-foreground">
+            <h2 className="font-display text-2xl font-medium text-foreground">
               {config.title}
             </h2>
           </div>
@@ -84,6 +84,13 @@ export default function CampusMapSection() {
         >
           <DynamicCampusMap3D />
         </div>
+      </div>
+
+      <div className="flex items-center gap-2 rounded-lg bg-panel border border-border px-4 py-3 text-sm text-foreground-secondary">
+        <Sparkles className="h-4 w-4 flex-shrink-0 text-emerald-400" />
+        <p>
+          <strong className="text-foreground">Select a station</strong> for details. Use <strong className="text-foreground">ALT + drag</strong> for view rotation.
+        </p>
       </div>
     </section>
   );

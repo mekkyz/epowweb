@@ -95,7 +95,7 @@ export default function PageHeader({
               </p>
             </div>
           )}
-          <h1 className="font-display text-2xl font-bold text-foreground sm:text-3xl">
+          <h1 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
             {title}
           </h1>
           {subtitle && (

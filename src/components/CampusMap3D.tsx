@@ -92,7 +92,7 @@ export default function CampusMap3D() {
   const [showStations, setShowStations] = useState(true);
   const [selected, setSelected] = useState<{ id?: string; url?: string; description?: string; group?: string } | null>(null);
   const [showAttribution, setShowAttribution] = useState(false);
-  const [showLegend, setShowLegend] = useState(false);
+  const [showLegend, setShowLegend] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [stationMesh, setStationMesh] = useState<any>(null);
 
@@ -503,10 +503,22 @@ export default function CampusMap3D() {
           </button>
         </div>
 
+        {/* ESA-IAI-KIT Watermark */}
+        <div className="pointer-events-auto absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
+          <div className="rounded-lg bg-panel/80 px-2.5 py-1 text-[10px] text-foreground-secondary shadow backdrop-blur">
+            ©{' '}
+            <a href="https://www.iai.kit.edu/gruppen_4104.php" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Energiesystemanalyse (ESA)</a>
+            {', '}
+            <a href="https://www.iai.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">IAI</a>
+            {'-'}
+            <a href="https://www.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">KIT</a>
+          </div>
+        </div>
+
         {/* Station info panel */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
-          <div className="mx-auto w-fit rounded-2xl bg-panel/90 p-4 text-sm text-foreground-secondary shadow-lg shadow-black/20 dark:shadow-black/40 backdrop-blur">
-            {selected ? (
+        {selected && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
+            <div className="mx-auto w-fit rounded-2xl bg-panel/90 p-4 text-sm text-foreground-secondary shadow-lg shadow-black/20 dark:shadow-black/40 backdrop-blur">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.15em] text-foreground-secondary">
@@ -525,22 +537,17 @@ export default function CampusMap3D() {
                 {selected.url && (
                   <a
                     href={selected.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="pointer-events-auto inline-flex min-w-[150px] items-center justify-center rounded-full border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm hover:bg-surface"
                   >
                     Open visualization
                   </a>
                 )}
               </div>
-            ) : (
-              <div className="flex items-center gap-3">
-                <div className="h-2 w-2 rounded-full bg-emerald-400" />
-                <p>
-                  Click any station to see details.
-                </p>
-              </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </MapErrorBoundary>
   );
