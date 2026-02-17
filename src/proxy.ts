@@ -1,12 +1,10 @@
-export const runtime = 'nodejs';
-
 import { NextRequest, NextResponse } from 'next/server';
 import { SESSION_COOKIE_NAME, verifySessionToken } from '@/lib/auth';
 
 const PUBLIC_PATHS = ['/login', '/api/auth'];
 const STATIC_PREFIXES = ['/_next', '/favicon.ico', '/eASiMOV.png', '/ESA-Logo.png'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (STATIC_PREFIXES.some((p) => pathname.startsWith(p))) {
@@ -30,21 +28,23 @@ export function middleware(request: NextRequest) {
   // Protect /admin — only admin users
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
     if (session.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', request.url));
+      return NextResponse.redirect(new URL('/', getOrigin(request)));
     }
   }
 
   return NextResponse.next();
 }
 
+function getOrigin(request: NextRequest): string {
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || 'localhost:3000';
+  const proto = request.headers.get('x-forwarded-proto') || (request.nextUrl.protocol?.replace(':', '') || 'http');
+  return `${proto}://${host}`;
+}
+
 function redirectToLogin(request: NextRequest) {
-  const loginUrl = new URL('/login', request.url);
+  const loginUrl = new URL('/login', getOrigin(request));
   if (request.nextUrl.pathname !== '/') {
     loginUrl.searchParams.set('from', request.nextUrl.pathname);
   }
   return NextResponse.redirect(loginUrl);
 }
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-};

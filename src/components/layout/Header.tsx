@@ -107,7 +107,7 @@ function HeaderContent() {
           >
             <div className="flex flex-col">
               <span className="font-display text-lg font-semibold leading-tight text-foreground">
-                SMDT
+                ePowWeb - SMDT
               </span>
               <span className="text-[10px] font-medium uppercase tracking-wider text-foreground-tertiary">
                 KIT Campus North Power Grid Web-Service

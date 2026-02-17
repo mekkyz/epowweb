@@ -364,7 +364,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-right">
-                <p className="text-xs text-foreground-tertiary">Peak</p>
+                <p className="text-xs text-foreground-tertiary">Max</p>
                 <p className="font-mono text-sm text-amber-400">{maxPower.toFixed(2)} kW</p>
               </div>
               <div className="h-8 w-px bg-border" />

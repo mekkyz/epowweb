@@ -33,7 +33,7 @@ export default function CampusMapSection() {
             <p className="text-xs font-semibold uppercase tracking-widest text-foreground-tertiary">
               {config.label}
             </p>
-            <h2 className="font-display text-2xl font-medium text-foreground">
+            <h2 className="font-display text-2xl font-semibold text-foreground">
               {config.title}
             </h2>
           </div>

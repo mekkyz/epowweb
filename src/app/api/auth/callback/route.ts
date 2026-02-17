@@ -13,16 +13,23 @@ import { createLogger } from '@/lib/logger';
 
 const authLogger = createLogger('Auth');
 
+function getOrigin(request: NextRequest): string {
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || 'localhost:3000';
+  const proto = request.headers.get('x-forwarded-proto') || (request.nextUrl.protocol?.replace(':', '') || 'http');
+  return `${proto}://${host}`;
+}
+
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
   const state = request.nextUrl.searchParams.get('state');
   const storedState = request.cookies.get(STATE_COOKIE_NAME)?.value;
   const from = request.cookies.get(FROM_COOKIE_NAME)?.value || '/';
+  const origin = getOrigin(request);
 
-  // Validate state to prevent CSRF
+  // validate state to prevent CSRF
   if (!code || !state || state !== storedState) {
     authLogger.warn('Invalid OIDC callback', { hasCode: !!code, stateMatch: state === storedState });
-    return NextResponse.redirect(new URL('/login?error=invalid_state', request.url));
+    return NextResponse.redirect(new URL('/login?error=invalid_state', origin));
   }
 
   try {
@@ -39,7 +46,7 @@ export async function GET(request: NextRequest) {
       name: claims.name,
     });
 
-    const response = NextResponse.redirect(new URL(from, request.url));
+    const response = NextResponse.redirect(new URL(from, origin));
 
     response.cookies.set(SESSION_COOKIE_NAME, sessionToken, {
       httpOnly: true,
@@ -56,6 +63,6 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (error) {
     authLogger.error('OIDC callback failed', error);
-    return NextResponse.redirect(new URL('/login?error=auth_failed', request.url));
+    return NextResponse.redirect(new URL('/login?error=auth_failed', origin));
   }
 }

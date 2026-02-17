@@ -41,7 +41,7 @@ export default function Home() {
     <div className="mx-auto max-w-6xl px-4 py-4 md:py-6">
       <section className="py-6">
         <div className="text-center">
-          <h1 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-6xl">
+          <h1 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
             eASiMOV - ePowWeb - SMDT
           </h1>
        

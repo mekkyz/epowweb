@@ -12,6 +12,8 @@ import { getSession } from '@/lib/auth';
 const display = Google_Sans_Flex({
   variable: '--font-display',
   subsets: ['latin'],
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+  adjustFontFallback: false,
 });
 
 const sans = Work_Sans({
