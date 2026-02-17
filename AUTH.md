@@ -1,86 +1,63 @@
-# Authentication — KIT Identity Integration
+# Authentication — KIT OIDC
 
-SMDT currently has local authentication (demo/full accounts). This document outlines the options for integrating KIT single sign-on.
+SMDT uses KIT's OpenID Connect (Keycloak) for authentication. Any KIT user can log in. Access is tiered into three roles.
 
-## Options Overview
+## Roles
 
-| Option | Protocol | Recommended | Effort |
-|--------|----------|-------------|--------|
-| **OpenID Connect** | OAuth 2.0 / JWT | Yes | Low |
-| **Shibboleth** | SAML 2.0 | Fallback | Medium |
-| **KIT-AD LDAP** | LDAP | Not for web apps | High |
-| **KIT LDAP (OpenLDAP)** | LDAP | Not for web apps | High |
+| Role | Who | Access |
+|------|-----|--------|
+| **demo** | Any KIT user (default) | Maps and grid overview visible; interactive controls (series, heatmap) disabled |
+| **full** | Kürzel listed in `auth.db` | Full access to all features |
+| **admin** | Kürzel listed as admin in `auth.db` | Full access + user management at `/admin` |
 
-## Recommended: OpenID Connect (OIDC)
+## How it works
 
-The simplest and most secure option for a Next.js web app.
+1. User clicks "Sign in with KIT Account" on `/login`
+2. Redirected to KIT IdP (`oidc.scc.kit.edu`)
+3. After authentication, KIT redirects back to `/api/auth/callback` with an authorization code
+4. The callback exchanges the code for tokens, extracts `preferred_username` (= KIT Kürzel like `kg2527`)
+5. Looks up the Kürzel in `auth.db` to determine role (default: demo)
+6. Creates an HMAC-signed session cookie (8h expiry)
 
-**Advantages:**
-- Users never enter passwords in our app — they authenticate at KIT's IdP
-- Native NextAuth.js support (built-in provider)
-- Works outside KIT network (HTTPS-based)
-- Minimal code (~30 lines of config)
+## auth.db
 
-**What we need from SCC:**
-- Register SMDT as an OIDC client
-- Receive: `client_id`, `client_secret`, OIDC discovery URL
-- Provide: redirect URI, e.g. `https://<our-domain>/api/auth/callback/kit`
+A small SQLite database at `/data/auth.db` (configurable via `AUTH_DB_PATH`).
 
-**Implementation:**
-- Install `next-auth`
-- Configure a generic OIDC provider in NextAuth.js
-- Add middleware to protect routes
-- Add a login page
+Single table:
+```sql
+CREATE TABLE users (
+  kuerzel TEXT PRIMARY KEY,
+  role    TEXT NOT NULL CHECK(role IN ('full', 'admin'))
+);
+```
 
-**Contact:** `servicedesk@scc.kit.edu`
+Users **not** in this table get demo access. On first startup, the table is seeded from env vars:
+- `AUTH_ADMIN_USERS=cakmak` (comma-separated)
+- `AUTH_FULL_USERS=doe,smith` (comma-separated)
 
-## Fallback: Shibboleth (SAML 2.0)
+After that, admins manage users via the `/admin` page.
 
-Use if SCC does not offer OIDC.
+## Environment variables
 
-**Advantages:**
-- Definitely available — KIT is part of DFN-AAI
-- Enables federation (users from other German universities)
+```
+AUTH_OIDC_CLIENT_ID=esa-smdt-cloud-iai-kit-edu
+AUTH_OIDC_CLIENT_SECRET=<secret>
+AUTH_OIDC_ISSUER=https://oidc.scc.kit.edu/auth/realms/kit
+AUTH_CALLBACK_URL=https://esa-smdt.cloud.iai.kit.edu/api/auth/callback
+AUTH_SECRET=<random-secret-for-session-signing>
+AUTH_ADMIN_USERS=cakmak
+AUTH_FULL_USERS=
+AUTH_DB_PATH=/data/auth.db
+```
 
-**Disadvantages:**
-- No native NextAuth.js support — requires `@node-saml/passport-saml` or similar
-- More complex setup: SAML metadata exchange, XML signing, certificate management
+## OIDC endpoints (derived from issuer)
 
-**What we need from SCC:**
-- Register as a SAML Service Provider (SP)
-- Receive: IdP metadata URL, entity ID
-- Provide: SP metadata (assertion consumer service URL, signing certificate)
+- Authorize: `{issuer}/protocol/openid-connect/auth`
+- Token: `{issuer}/protocol/openid-connect/token`
+- Logout: `{issuer}/protocol/openid-connect/logout`
+- Scopes: `openid profile email`
+- Key claim: `preferred_username` (KIT Kürzel)
 
-## Not Recommended for Web Apps: Direct LDAP
+## Logout
 
-### KIT-AD LDAP
-
-- Server: `kit-ad.scc.kit.edu`
-- Ports: 636 (LDAPS), 389 (STARTTLS), 3269/3268 (Global Catalog)
-- TLS mandatory
-- KIT network only
-- Users authenticate with their KIT credentials (direct bind)
-- Objects should be searched by CN, not referenced statically by DN
-
-### KIT LDAP (OpenLDAP)
-
-- Central directory service connected to KIT Identity Management
-- Requires a proxy service account, requested by the ITB via Service Desk
-- KIT network only
-- Contact: Patrick von der Hagen via `servicedesk@scc.kit.edu`
-
-### Why LDAP is not recommended
-
-- Restricted to KIT network (no external access)
-- Our app would handle user passwords directly
-- Requires managing LDAP connections and session logic manually
-- More bureaucracy (service accounts, ITB approval)
-
-## Next Steps
-
-1. Contact SCC (`servicedesk@scc.kit.edu`):
-   > "We are building a web application (SMDT) and want to use KIT single sign-on.
-   > Do you offer OpenID Connect, or should we use Shibboleth/SAML?
-   > We would prefer OIDC if available."
-2. Once SCC responds, implement the appropriate auth flow
-3. Decide which routes to protect (entire app vs. specific pages)
+Logout clears the session cookie and redirects to the KIT OIDC end-session endpoint, which terminates the SSO session.

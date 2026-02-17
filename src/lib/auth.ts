@@ -8,17 +8,19 @@ const authLogger = createLogger('Auth');
 // Types
 // =============================================================================
 
-export type UserRole = 'demo' | 'full';
+export type UserRole = 'demo' | 'full' | 'admin';
 
 export interface SessionPayload {
   username: string;
   role: UserRole;
+  name?: string;
   exp: number;
 }
 
 export interface AuthUser {
   username: string;
   role: UserRole;
+  name?: string;
 }
 
 // =============================================================================
@@ -28,66 +30,84 @@ export interface AuthUser {
 const SESSION_SECRET =
   process.env.AUTH_SECRET || 'smdt-dev-secret-change-in-production';
 export const SESSION_COOKIE_NAME = 'smdt-session';
+export const STATE_COOKIE_NAME = 'smdt-oidc-state';
+export const FROM_COOKIE_NAME = 'smdt-oidc-from';
 export const SESSION_MAX_AGE = 8 * 60 * 60; // 8 hours
 
 // =============================================================================
-// User store (loaded from env)
+// OIDC Configuration
 // =============================================================================
 
-interface StoredUser {
-  passwordHash: string;
-  role: UserRole;
+const OIDC_ISSUER =
+  process.env.AUTH_OIDC_ISSUER || 'https://oidc.scc.kit.edu/auth/realms/kit';
+const OIDC_CLIENT_ID = process.env.AUTH_OIDC_CLIENT_ID || '';
+const OIDC_CLIENT_SECRET = process.env.AUTH_OIDC_CLIENT_SECRET || '';
+const OIDC_CALLBACK_URL =
+  process.env.AUTH_CALLBACK_URL || 'http://localhost:3000/api/auth/callback';
+
+export const OIDC_ENDPOINTS = {
+  authorize: `${OIDC_ISSUER}/protocol/openid-connect/auth`,
+  token: `${OIDC_ISSUER}/protocol/openid-connect/token`,
+  logout: `${OIDC_ISSUER}/protocol/openid-connect/logout`,
+};
+
+// =============================================================================
+// OIDC Helpers
+// =============================================================================
+
+export function getOidcAuthUrl(state: string): string {
+  const params = new URLSearchParams({
+    client_id: OIDC_CLIENT_ID,
+    response_type: 'code',
+    scope: 'openid profile email',
+    redirect_uri: OIDC_CALLBACK_URL,
+    state,
+  });
+  return `${OIDC_ENDPOINTS.authorize}?${params.toString()}`;
 }
 
-function buildUserStore(): Record<string, StoredUser> {
-  const store: Record<string, StoredUser> = {};
+export async function exchangeCodeForTokens(
+  code: string
+): Promise<{ id_token: string; access_token: string }> {
+  const res = await fetch(OIDC_ENDPOINTS.token, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: OIDC_CALLBACK_URL,
+      client_id: OIDC_CLIENT_ID,
+      client_secret: OIDC_CLIENT_SECRET,
+    }),
+  });
 
-  const demoUser = process.env.AUTH_USER_DEMO || 'cakmak-demo';
-  const demoPass = process.env.AUTH_PASS_DEMO || 'Passwort1';
-  const fullUser = process.env.AUTH_USER_FULL || 'cakmak';
-  const fullPass = process.env.AUTH_PASS_FULL || 'Passwort1';
-
-  store[demoUser] = {
-    passwordHash: crypto.createHash('sha256').update(demoPass).digest('hex'),
-    role: 'demo',
-  };
-  store[fullUser] = {
-    passwordHash: crypto.createHash('sha256').update(fullPass).digest('hex'),
-    role: 'full',
-  };
-
-  return store;
-}
-
-const AUTH_USERS = buildUserStore();
-
-// =============================================================================
-// Credential verification
-// =============================================================================
-
-export function verifyCredentials(
-  username: string,
-  password: string
-): AuthUser | null {
-  const user = AUTH_USERS[username];
-  if (!user) return null;
-
-  const inputHash = crypto
-    .createHash('sha256')
-    .update(password)
-    .digest('hex');
-
-  const inputBuf = Buffer.from(inputHash, 'hex');
-  const storedBuf = Buffer.from(user.passwordHash, 'hex');
-
-  if (
-    inputBuf.length !== storedBuf.length ||
-    !crypto.timingSafeEqual(inputBuf, storedBuf)
-  ) {
-    return null;
+  if (!res.ok) {
+    const text = await res.text();
+    authLogger.error('Token exchange failed', { status: res.status, body: text });
+    throw new Error(`Token exchange failed: ${res.status}`);
   }
 
-  return { username, role: user.role };
+  const data = await res.json();
+  return { id_token: data.id_token, access_token: data.access_token };
+}
+
+export interface IdTokenClaims {
+  sub: string;
+  preferred_username: string;
+  name?: string;
+  given_name?: string;
+  family_name?: string;
+  email?: string;
+}
+
+export function parseIdToken(idToken: string): IdTokenClaims {
+  const parts = idToken.split('.');
+  if (parts.length !== 3) throw new Error('Invalid ID token format');
+
+  const payload = JSON.parse(
+    Buffer.from(parts[1], 'base64url').toString('utf-8')
+  );
+  return payload as IdTokenClaims;
 }
 
 // =============================================================================
@@ -98,6 +118,7 @@ export function createSessionToken(user: AuthUser): string {
   const payload: SessionPayload = {
     username: user.username,
     role: user.role,
+    name: user.name,
     exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE,
   };
 

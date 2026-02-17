@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
-import { Radio, Menu, X, Home, Map, Sun, Moon, LogOut } from 'lucide-react';
+import { Radio, Menu, X, Home, Map, Sun, Moon, LogOut, ShieldCheck } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import clsx from 'clsx';
 import { useAuth } from '@/context/AuthProvider';
@@ -61,7 +61,7 @@ function ThemeToggle() {
 function HeaderContent() {
   const pathname = usePathname();
   const search = useSearchParams();
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isEmbedded = useMemo(() => {
     const embedFlag = search?.get('embed') === '1';
@@ -146,7 +146,21 @@ function HeaderContent() {
 
             {user && (
               <div className="ml-2 flex items-center gap-2 border-l border-border pl-3">
-                <span className="text-xs text-foreground-secondary">{user.username}</span>
+                <span className="text-xs text-foreground-secondary">
+                  {user.name || user.username}
+                </span>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className={clsx(
+                      'flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
+                      'text-foreground-secondary hover:bg-surface-hover hover:text-foreground'
+                    )}
+                    aria-label="Admin panel"
+                  >
+                    <ShieldCheck className="h-4 w-4" />
+                  </Link>
+                )}
                 <button
                   type="button"
                   onClick={logout}

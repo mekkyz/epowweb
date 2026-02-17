@@ -27,6 +27,13 @@ export function middleware(request: NextRequest) {
     return redirectToLogin(request);
   }
 
+  // Protect /admin — only admin users
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
+    if (session.role !== 'admin') {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+  }
+
   return NextResponse.next();
 }
 

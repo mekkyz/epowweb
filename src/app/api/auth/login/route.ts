@@ -1,45 +1,30 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import {
-  verifyCredentials,
-  createSessionToken,
-  SESSION_COOKIE_NAME,
-  SESSION_MAX_AGE,
+  getOidcAuthUrl,
+  STATE_COOKIE_NAME,
+  FROM_COOKIE_NAME,
 } from '@/lib/auth';
-import { successResponse, errorResponse, badRequestResponse } from '@/lib/api-utils';
-import { createLogger } from '@/lib/logger';
-import { HTTP_STATUS } from '@/lib/constants';
 
-const authLogger = createLogger('Auth');
+export async function GET(request: NextRequest) {
+  const from = request.nextUrl.searchParams.get('from') || '/';
+  const state = crypto.randomBytes(32).toString('hex');
 
-export async function POST(request: NextRequest) {
-  let body: { username?: string; password?: string };
-  try {
-    body = await request.json();
-  } catch {
-    return badRequestResponse('Invalid request body');
-  }
+  const response = NextResponse.redirect(getOidcAuthUrl(state));
 
-  const { username, password } = body;
-
-  if (!username || !password) {
-    return badRequestResponse('Username and password are required');
-  }
-
-  const user = verifyCredentials(username, password);
-  if (!user) {
-    authLogger.warn('Failed login attempt', { username });
-    return errorResponse('Invalid credentials', HTTP_STATUS.UNAUTHORIZED, 'INVALID_CREDENTIALS');
-  }
-
-  const token = createSessionToken(user);
-  authLogger.info('User logged in', { username: user.username, role: user.role });
-
-  const response = successResponse({ username: user.username, role: user.role });
-  response.cookies.set(SESSION_COOKIE_NAME, token, {
+  response.cookies.set(STATE_COOKIE_NAME, state, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: SESSION_MAX_AGE,
+    maxAge: 300, // 5 minutes
+    path: '/',
+  });
+
+  response.cookies.set(FROM_COOKIE_NAME, from, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 300,
     path: '/',
   });
 
