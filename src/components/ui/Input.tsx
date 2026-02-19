@@ -35,13 +35,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={clsx(
-            'w-full rounded-lg border bg-surface text-foreground outline-none transition-colors',
+            'w-full rounded-lg border bg-white text-foreground outline-none transition-colors dark:bg-background',
             'placeholder:text-foreground-tertiary',
             'focus:ring-2 focus:ring-accent/50 focus:border-accent/50',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             error
               ? 'border-red-400/60 focus:ring-red-400/50 focus:border-red-400/50'
-              : 'border-border hover:border-border-strong',
+              : 'border-border-strong hover:border-border-strong',
             sizeStyles[size],
             className
           )}

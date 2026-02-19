@@ -381,16 +381,26 @@ export default function CampusMap3D() {
         <DeckGL
           controller
           initialViewState={MAP_3D_VIEW}
-          getTooltip={({ object }) =>
-            object
-              ? {
-                  text:
-                    object?.properties?.id ??
-                    object?.properties?.description ??
-                    'Grid item',
-                }
-              : null
-          }
+          getTooltip={({ object }) => {
+            if (!object) return null;
+            const id = object?.properties?.id ?? '';
+            const desc = object?.properties?.description ?? '';
+            const group = object?.properties?.group ?? '';
+            return {
+              html: `<div style="font-size:14px;font-weight:600;color:var(--foreground)">${id}</div>${desc ? `<div style="color:var(--foreground-secondary)">${desc}</div>` : ''}${group ? `<div style="color:var(--foreground-secondary)">${group}</div>` : ''}`,
+              style: {
+                fontFamily: 'var(--font-sans)',
+                backgroundColor: 'var(--panel)',
+                opacity: '0.9',
+                borderRadius: '8px',
+                padding: '12px',
+                fontSize: '12px',
+                color: 'var(--foreground)',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                backdropFilter: 'blur(8px)',
+              },
+            };
+          }}
           layers={layers}
           onError={handleDeckError}
           onClick={onDeckClick}
@@ -407,10 +417,7 @@ export default function CampusMap3D() {
 
         {/* Badge & Toggles */}
         <div className="pointer-events-auto absolute left-4 top-4 z-10">
-          <div className="flex items-center gap-1 rounded-xl bg-panel/90 p-1 shadow-sm shadow-black/10 backdrop-blur">
-            <span className="rounded-xl bg-foreground px-3 py-1 text-sm font-semibold text-background shadow-sm">
-              3D View
-            </span>
+          <div className="flex items-center gap-1 rounded-lg bg-panel/90 p-1 shadow-sm shadow-black/10 backdrop-blur">
             <button
               onClick={() => setShowLines(!showLines)}
               className={clsx(
@@ -441,7 +448,7 @@ export default function CampusMap3D() {
           <button
             onClick={() => setShowLegend(!showLegend)}
             className={clsx(
-              'flex items-center justify-center rounded-lg bg-panel text-foreground shadow backdrop-blur transition-all',
+              'flex items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all',
               showLegend
                 ? 'h-auto w-auto flex-col items-start gap-2 p-3'
                 : 'h-[29px] w-[29px] text-foreground-secondary hover:bg-surface'
@@ -485,7 +492,7 @@ export default function CampusMap3D() {
           <button
             onClick={() => setShowAttribution(!showAttribution)}
             className={clsx(
-              'flex h-[29px] items-center justify-center rounded-lg bg-panel text-xs shadow backdrop-blur transition-all',
+              'flex h-[29px] items-center justify-center rounded-lg bg-panel/90 text-xs shadow-sm shadow-black/10 backdrop-blur transition-all',
               showAttribution
                 ? 'w-auto gap-2 px-2.5 text-foreground'
                 : 'w-[29px] text-foreground-secondary hover:bg-surface'
@@ -504,26 +511,19 @@ export default function CampusMap3D() {
         </div>
 
         {/* ESA-IAI-KIT Watermark */}
-        <div className="pointer-events-auto absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
-          <div className="rounded-lg bg-panel/80 px-2.5 py-1 text-[10px] text-foreground-secondary shadow backdrop-blur">
-            ©{' '}
-            <a href="https://www.iai.kit.edu/gruppen_4104.php" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Energiesystemanalyse (ESA)</a>
-            {', '}
-            <a href="https://www.iai.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">IAI</a>
-            {'-'}
-            <a href="https://www.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">KIT</a>
+        <div className="pointer-events-none absolute top-3 left-1/2 z-10 -translate-x-1/2">
+          <div className="text-md font-semibold tracking-wide text-foreground/25 drop-shadow-sm select-none">
+            © ESA, IAI-KIT
           </div>
         </div>
 
         {/* Station info panel */}
         {selected && (
           <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
-            <div className="mx-auto w-fit rounded-2xl bg-panel/90 p-4 text-sm text-foreground-secondary shadow-lg shadow-black/20 dark:shadow-black/40 backdrop-blur">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.15em] text-foreground-secondary">
-                    Station
-                  </p>
+            <div className="mx-auto w-fit rounded-lg bg-panel/90 p-4 text-sm text-foreground-secondary shadow-sm shadow-black/10 backdrop-blur">
+              <div className="flex items-stretch gap-4">
+                {/* Left side - Info */}
+                <div className="flex flex-col justify-center">
                   <p className="text-lg font-semibold text-foreground">
                     {selected.id}
                   </p>
@@ -534,16 +534,36 @@ export default function CampusMap3D() {
                     <p className="text-foreground-secondary">{selected.group}</p>
                   )}
                 </div>
-                {selected.url && (
-                  <a
-                    href={selected.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="pointer-events-auto inline-flex min-w-[150px] items-center justify-center rounded-full border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm hover:bg-surface"
-                  >
-                    Open visualization
-                  </a>
-                )}
+
+                {/* Divider */}
+                <div className="w-px bg-border" />
+
+                {/* Right side - Visualization & Buttons */}
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <span className="rounded-md bg-surface px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground-tertiary">
+                    Visualization
+                  </span>
+                  {selected.url && (
+                    <div className="pointer-events-auto flex flex-col gap-2">
+                      <button
+                        onClick={() => {
+                          const el = document.getElementById('live-data');
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                          window.dispatchEvent(new CustomEvent('preview-visualization', { detail: selected.url }));
+                        }}
+                        className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface"
+                      >
+                        Preview
+                      </button>
+                      <button
+                        onClick={() => window.open(selected.url, '_blank', 'noopener,noreferrer')}
+                        className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface"
+                      >
+                        Open in Tab
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

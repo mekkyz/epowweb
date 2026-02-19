@@ -344,6 +344,43 @@ export default function HeatmapExplorer() {
     zoom: 14.5,
   };
 
+  // ALT+drag rotation support (same as 2D/3D views)
+  const handleMapRef = useCallback((ref: { getMap: () => maplibregl.Map } | null) => {
+    if (!ref) return;
+    const map = ref.getMap();
+    const canvas = map.getCanvasContainer();
+    let dragging = false;
+    let prevX = 0;
+    let prevY = 0;
+
+    canvas.addEventListener('mousedown', (e: MouseEvent) => {
+      if (e.altKey && e.button === 0) {
+        dragging = true;
+        prevX = e.clientX;
+        prevY = e.clientY;
+        canvas.style.cursor = 'grabbing';
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener('mousemove', (e: MouseEvent) => {
+      if (!dragging) return;
+      const dx = e.clientX - prevX;
+      const dy = e.clientY - prevY;
+      prevX = e.clientX;
+      prevY = e.clientY;
+      map.setBearing(map.getBearing() + dx * 0.5);
+      map.setPitch(Math.max(0, Math.min(60, map.getPitch() - dy * 0.5)));
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (dragging) {
+        dragging = false;
+        canvas.style.cursor = '';
+      }
+    });
+  }, []);
+
   const stepTimestamp = async (direction: 1 | -1) => {
     if (!selected || loading) return;
     setLoading(true);
@@ -528,6 +565,7 @@ export default function HeatmapExplorer() {
               </div>
             ) : (
               <Map
+                ref={handleMapRef}
                 reuseMaps={false}
                 mapLib={maplibregl}
                 mapStyle={mapStyle}
@@ -565,7 +603,7 @@ export default function HeatmapExplorer() {
                 <button
                   onClick={() => setShowLegend(!showLegend)}
                   className={clsx(
-                    'pointer-events-auto absolute left-3 bottom-3 flex items-center justify-center rounded-lg bg-panel text-foreground shadow backdrop-blur-sm transition-all',
+                    'pointer-events-auto absolute left-3 bottom-3 flex items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all',
                     showLegend
                       ? 'h-auto w-auto flex-col items-start gap-2 p-3'
                       : 'h-[29px] w-[29px] text-foreground-secondary hover:bg-surface'
@@ -599,7 +637,7 @@ export default function HeatmapExplorer() {
                   <button
                     onClick={() => setShowAttribution(!showAttribution)}
                     className={clsx(
-                      'flex h-[29px] items-center justify-center rounded-lg bg-panel text-xs shadow backdrop-blur transition-all',
+                      'flex h-[29px] items-center justify-center rounded-lg bg-panel/90 text-xs shadow-sm shadow-black/10 backdrop-blur transition-all',
                       showAttribution
                         ? 'w-auto gap-2 px-2.5 text-foreground'
                         : 'w-[29px] text-foreground-secondary hover:bg-surface'
@@ -617,29 +655,23 @@ export default function HeatmapExplorer() {
                   </button>
                 </div>
                 {/* ESA-IAI-KIT Watermark */}
-                <div className="pointer-events-auto absolute bottom-3 left-1/2 z-10 -translate-x-1/2">
-                  <div className="rounded-lg bg-panel/80 px-2.5 py-1 text-[10px] text-foreground-secondary shadow backdrop-blur">
-                    ©{' '}
-                    <a href="https://www.iai.kit.edu/gruppen_4104.php" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Energiesystemanalyse (ESA)</a>
-                    {', '}
-                    <a href="https://www.iai.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">IAI</a>
-                    {'-'}
-                    <a href="https://www.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">KIT</a>
+                <div className="pointer-events-none absolute top-3 left-1/2 z-10 -translate-x-1/2">
+                  <div className="text-lg font-semibold tracking-wide text-foreground/25 drop-shadow-sm select-none">
+                    © ESA, IAI-KIT
                   </div>
                 </div>
                 {hover && (
                   <div
-                    className="pointer-events-none absolute z-10 rounded-lg border border-border bg-panel/95 px-3 py-2.5 text-xs text-foreground shadow-xl backdrop-blur-sm"
-                    style={{ left: hover.x + 12, top: hover.y + 12 }}
+                    className="pointer-events-none absolute z-10 rounded-lg bg-panel/90 p-3 text-xs text-foreground shadow-sm shadow-black/10 backdrop-blur"
+                    style={{ left: hover.x + 12, top: hover.y + 12, fontFamily: 'var(--font-sans)' }}
                   >
-                    <div className="mb-1 text-[10px] uppercase tracking-wider text-foreground-tertiary">Station</div>
-                    <div className="font-semibold text-emerald-400">{hover.stationId}</div>
+                    <p className="text-sm font-semibold text-foreground">{hover.stationId}</p>
                     <div className="mt-2 flex items-baseline gap-1">
-                      <span className="text-[10px] uppercase tracking-wider text-foreground-tertiary">Power:</span>
+                      <span className="text-foreground-secondary">Power:</span>
                       <span className="font-mono font-semibold text-foreground">{hover.valueKw.toFixed(2)} kW</span>
                     </div>
                     <div className="mt-1 flex items-baseline gap-1">
-                      <span className="text-[10px] uppercase tracking-wider text-foreground-tertiary">Meters:</span>
+                      <span className="text-foreground-secondary">Meters:</span>
                       <span className="font-mono text-foreground-secondary">{hover.meters}</span>
                     </div>
                   </div>

@@ -24,7 +24,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   ghost:
     'bg-surface text-foreground border-border hover:bg-surface-hover focus-visible:ring-accent/30',
   outline:
-    'bg-transparent text-foreground border-border-strong hover:bg-surface focus-visible:ring-accent/30',
+    'bg-white dark:bg-background text-foreground border-border-strong hover:bg-surface focus-visible:ring-accent/30',
   danger:
     'bg-red-500 text-white border-red-400/60 shadow-sm shadow-red-500/30 hover:bg-red-400 focus-visible:ring-red-400/50',
 };

@@ -98,11 +98,11 @@ function LookupSelect({
           <p className="text-sm font-semibold text-foreground">{label}</p>
         </div>
         <div className="flex gap-1">
-          <Button variant="ghost" size="sm" onClick={onPreview}>
+          <Button variant="outline" size="sm" onClick={onPreview}>
             Preview
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             size="sm"
             onClick={onOpen}
             iconRight={<ArrowUpRight className="h-3 w-3" />}

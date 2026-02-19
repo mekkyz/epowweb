@@ -87,6 +87,25 @@ const stationsLayer: LayerProps = {
   },
 };
 
+const stationLabelsLayer: LayerProps = {
+  id: 'station-labels',
+  type: 'symbol',
+  minzoom: 13,
+  layout: {
+    'text-field': ['get', 'id'],
+    'text-size': ['interpolate', ['linear'], ['zoom'], 13, 9, 16, 13, 18, 16],
+    'text-anchor': 'top',
+    'text-offset': [0, 0.8],
+    'text-allow-overlap': false,
+    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+  },
+  paint: {
+    'text-color': '#1a1a1a',
+    'text-halo-color': '#ffffff',
+    'text-halo-width': 2,
+  },
+};
+
 export default function CampusMap2D() {
   const { resolvedTheme } = useTheme();
   const [showLines, setShowLines] = useState(true);
@@ -97,6 +116,13 @@ export default function CampusMap2D() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showAttribution, setShowAttribution] = useState(false);
   const [showLegend, setShowLegend] = useState(true);
+  const [hover, setHover] = useState<{
+    id: string;
+    description: string;
+    group: string;
+    x: number;
+    y: number;
+  } | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -168,7 +194,7 @@ export default function CampusMap2D() {
   }, [handleStyleImageMissing]);
 
   const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
-  const chipGroup = 'flex items-center gap-1 rounded-xl bg-panel/90 p-1 shadow-sm shadow-black/10 backdrop-blur';
+  const chipGroup = 'flex items-center gap-1 rounded-lg bg-panel/90 p-1 shadow-sm shadow-black/10 backdrop-blur';
 
   const onMapClick = useCallback((event: MapLayerMouseEvent) => {
     const feature = event.features?.find((f) => f.layer.id === 'stations') as
@@ -225,7 +251,7 @@ export default function CampusMap2D() {
         <button
           onClick={() => setShowLegend(!showLegend)}
           className={clsx(
-            'flex items-center justify-center rounded-lg bg-panel text-foreground shadow backdrop-blur transition-all',
+            'flex items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all',
             showLegend
               ? 'h-auto w-auto flex-col items-start gap-2 p-3'
               : 'h-[29px] w-[29px] text-foreground-secondary hover:bg-surface'
@@ -268,7 +294,7 @@ export default function CampusMap2D() {
         <button
           onClick={() => setShowAttribution(!showAttribution)}
           className={clsx(
-            'flex h-[29px] items-center justify-center rounded-lg bg-panel text-xs shadow backdrop-blur transition-all',
+            'flex h-[29px] items-center justify-center rounded-lg bg-panel/90 text-xs shadow-sm shadow-black/10 backdrop-blur transition-all',
             showAttribution
               ? 'w-auto gap-2 px-2.5 text-foreground'
               : 'w-[29px] text-foreground-secondary hover:bg-surface'
@@ -287,14 +313,9 @@ export default function CampusMap2D() {
       </div>
 
       {/* ESA-IAI-KIT Watermark */}
-      <div className="pointer-events-auto absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
-        <div className="rounded-lg bg-panel/80 px-2.5 py-1 text-[10px] text-foreground-secondary shadow backdrop-blur">
-          ©{' '}
-          <a href="https://www.iai.kit.edu/gruppen_4104.php" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Energiesystemanalyse (ESA)</a>
-          {', '}
-          <a href="https://www.iai.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">IAI</a>
-          {'-'}
-          <a href="https://www.kit.edu/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">KIT</a>
+      <div className="pointer-events-none absolute top-3 left-1/2 z-10 -translate-x-1/2">
+        <div className="text-md font-semibold tracking-wide text-foreground/25 drop-shadow-sm select-none">
+          © ESA, IAI-KIT
         </div>
       </div>
 
@@ -321,6 +342,19 @@ export default function CampusMap2D() {
             maxZoom={MAP_ZOOM_LIMITS.max}
             interactiveLayerIds={['stations']}
             onClick={onMapClick}
+            onMouseMove={(evt) => {
+              const f = evt.features?.[0];
+              if (!f) return setHover(null);
+              const props = f.properties as { id?: string; description?: string; group?: string };
+              setHover({
+                id: props.id ?? '',
+                description: props.description ?? '',
+                group: props.group ?? '',
+                x: evt.point.x,
+                y: evt.point.y,
+              });
+            }}
+            onMouseLeave={() => setHover(null)}
             onError={handleMapError}
             style={{ width: '100%', height: '100%' }}
             attributionControl={false}
@@ -339,9 +373,24 @@ export default function CampusMap2D() {
             {showStations && (
               <Source id="grid-stations" type="geojson" data={gridCollections.stations}>
                 <Layer {...stationsLayer} />
+                <Layer {...stationLabelsLayer} />
               </Source>
             )}
             <NavigationControl position="bottom-right" visualizePitch style={{ marginBottom: '52px' }} />
+            {hover && (
+              <div
+                className="pointer-events-none absolute z-10 rounded-lg bg-panel/90 p-3 text-xs text-foreground shadow-sm shadow-black/10 backdrop-blur"
+                style={{ left: hover.x + 12, top: hover.y + 12, fontFamily: 'var(--font-sans)' }}
+              >
+                <p className="text-sm font-semibold text-foreground">{hover.id}</p>
+                {hover.description && (
+                  <p className="text-foreground-secondary">{hover.description}</p>
+                )}
+                {hover.group && (
+                  <p className="text-foreground-secondary">{hover.group}</p>
+                )}
+              </div>
+            )}
           </Map>
         </MapErrorBoundary>
       ) : (
@@ -358,7 +407,7 @@ export default function CampusMap2D() {
 
       {selectedProps && (
         <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
-          <div className="mx-auto w-fit rounded-2xl bg-panel/90 p-4 text-sm text-foreground-secondary shadow-lg shadow-black/20 dark:shadow-black/40 backdrop-blur">
+          <div className="mx-auto w-fit rounded-lg bg-panel/90 p-4 text-sm text-foreground-secondary shadow-sm shadow-black/10 backdrop-blur">
             <div className="flex items-stretch gap-4">
               {/* Left side - Info */}
               <div className="flex flex-col justify-center">
@@ -389,19 +438,16 @@ export default function CampusMap2D() {
                         if (el) el.scrollIntoView({ behavior: 'smooth' });
                         window.dispatchEvent(new CustomEvent('preview-visualization', { detail: selectedProps.url }));
                       }}
-                      className="inline-flex items-center justify-center rounded-full border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm hover:bg-surface"
+                      className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface"
                     >
                       Preview
                     </button>
-                    <a
-                      href={selectedProps.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: 'inherit' }}
-                      className="inline-flex items-center justify-center rounded-full border border-border bg-background px-4 py-1.5 text-xs font-semibold no-underline shadow-sm hover:bg-surface"
+                    <button
+                      onClick={() => window.open(selectedProps.url, '_blank', 'noopener,noreferrer')}
+                      className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface"
                     >
                       Open in Tab
-                    </a>
+                    </button>
                   </div>
                 )}
               </div>

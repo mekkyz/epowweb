@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Area,
-  AreaChart,
+  Bar,
   CartesianGrid,
+  ComposedChart,
+  Line,
   ReferenceArea,
   ResponsiveContainer,
   Tooltip,
@@ -24,6 +26,10 @@ import {
   ZoomIn,
   ZoomOut,
   Move,
+  Spline,
+  Minus,
+  CircleDot,
+  BarChart3,
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -50,6 +56,8 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [chartHeight, setChartHeight] = useState(340);
   const [isInIframe, setIsInIframe] = useState(false);
+  const [chartStyle, setChartStyle] = useState<'curve' | 'line' | 'point' | 'column'>('curve');
+  const [filled, setFilled] = useState(true);
 
   // zoom state
   const [zoomLeft, setZoomLeft] = useState<number | null>(null);
@@ -68,7 +76,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
 
   // debounce chart height update
   useEffect(() => {
-    const targetHeight = isExpanded ? 580 : 340;
+    const targetHeight = isExpanded ? 720 : 340;
     const timer = setTimeout(() => setChartHeight(targetHeight), 50);
     return () => clearTimeout(timer);
   }, [isExpanded]);
@@ -331,6 +339,14 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
     validData.length > 0
       ? validData.reduce((sum, d) => sum + (d.powerKw || 0), 0) / validData.length
       : 0;
+  const minPower =
+    validData.length > 0 ? Math.min(...validData.map((d) => d.powerKw || 0)) : 0;
+  const medianPower = (() => {
+    if (validData.length === 0) return 0;
+    const sorted = validData.map((d) => d.powerKw || 0).sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+  })();
   const maxPower =
     validData.length > 0 ? Math.max(...validData.map((d) => d.powerKw || 0)) : 0;
 
@@ -338,9 +354,13 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
     <div
       id="series-chart-container"
       className={clsx(
-        'overflow-hidden rounded-xl border border-border bg-surface',
-        isExpanded ? 'shadow-2xl' : 'shadow-lg'
+        'overflow-hidden rounded-xl border border-border bg-white shadow-lg dark:bg-background',
       )}
+      style={{
+        margin: isExpanded ? '0 -18vw' : '0 0',
+        transition: 'margin 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        willChange: 'margin',
+      }}
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -359,8 +379,18 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
           {status === 'idle' && data.length > 0 && (
             <>
               <div className="text-right">
+                <p className="text-xs text-foreground-tertiary">Min</p>
+                <p className="font-mono text-sm text-sky-400">{minPower.toFixed(2)} kW</p>
+              </div>
+              <div className="h-8 w-px bg-border" />
+              <div className="text-right">
                 <p className="text-xs text-foreground-tertiary">Avg</p>
                 <p className="font-mono text-sm text-emerald-400">{avgPower.toFixed(2)} kW</p>
+              </div>
+              <div className="h-8 w-px bg-border" />
+              <div className="text-right">
+                <p className="text-xs text-foreground-tertiary">Median</p>
+                <p className="font-mono text-sm text-violet-400">{medianPower.toFixed(2)} kW</p>
               </div>
               <div className="h-8 w-px bg-border" />
               <div className="text-right">
@@ -370,7 +400,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
               <div className="h-8 w-px bg-border" />
             </>
           )}
-          <div className="rounded-md bg-surface px-2 py-1 text-xs text-foreground-secondary">
+          <div className="rounded-md px-2 py-1 text-xs text-foreground-secondary">
             {status === 'loading' && (
               <span className="flex items-center gap-1.5">
                 <Spinner size="sm" /> Loading…
@@ -384,10 +414,47 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
             {status === 'idle' &&
               `${visibleData.length}${isZoomed ? ` / ${data.length}` : ''} points`}
           </div>
+          <div className="flex items-center gap-0.5 rounded-lg border border-border-strong p-0.5">
+            {([
+              { key: 'curve', icon: Spline, label: 'Curve' },
+              { key: 'line', icon: Minus, label: 'Line' },
+              { key: 'point', icon: CircleDot, label: 'Point' },
+              { key: 'column', icon: BarChart3, label: 'Column' },
+            ] as const).map(({ key, icon: Icon, label }) => (
+              <button
+                key={key}
+                onClick={() => setChartStyle(key)}
+                className={clsx(
+                  'flex h-7 w-7 items-center justify-center rounded-md transition-all',
+                  chartStyle === key
+                    ? 'bg-surface text-foreground shadow-sm'
+                    : 'text-foreground-tertiary hover:text-foreground-secondary'
+                )}
+                aria-label={label}
+                title={label}
+              >
+                <Icon className="h-3.5 w-3.5" />
+              </button>
+            ))}
+            <div className="mx-0.5 h-5 w-px bg-border" />
+            <button
+              onClick={() => setFilled((f) => !f)}
+              className={clsx(
+                'flex h-7 items-center justify-center rounded-md px-2 text-xs font-medium transition-all',
+                filled
+                  ? 'bg-surface text-foreground shadow-sm'
+                  : 'text-foreground-tertiary hover:text-foreground-secondary'
+              )}
+              aria-label="Toggle filled"
+              title="Toggle filled"
+            >
+              Filled
+            </button>
+          </div>
           {!isInIframe && (
             <button
               onClick={toggleExpanded}
-              className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-hover text-foreground-secondary transition-all hover:bg-surface hover:text-foreground"
+              className="flex h-7 w-7 items-center justify-center rounded-lg border border-border-strong text-foreground-secondary transition-all hover:bg-surface hover:text-foreground"
               aria-label={isExpanded ? 'Collapse chart' : 'Expand chart'}
             >
               {isExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
@@ -471,16 +538,17 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                 isZoomed && !isPanning && 'cursor-crosshair'
               )}
               style={{
-                height: isExpanded ? 580 : 340,
+                height: isExpanded ? 720 : 340,
                 minWidth: 280,
                 minHeight: 240,
                 transition: 'height 0.35s ease-out',
               }}
             >
               <ResponsiveContainer width="100%" height={chartHeight} minWidth={280} minHeight={240} className="outline-none [&_svg]:outline-none">
-                <AreaChart
+                <ComposedChart
                   data={visibleData}
                   margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                  barCategoryGap={chartStyle === 'column' ? '5%' : undefined}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
@@ -580,14 +648,57 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                       return [`${val} kW`, 'Power Consumption'] as [string, string];
                     }}
                   />
-                  <Area
-                    type="monotone"
-                    dataKey="powerKw"
-                    stroke={COLORS.accent.primary}
-                    strokeWidth={2}
-                    fillOpacity={1}
-                    fill="url(#colorPower)"
-                  />
+                  {chartStyle === 'curve' && (
+                    <Area
+                      type="monotone"
+                      dataKey="powerKw"
+                      stroke={COLORS.accent.primary}
+                      strokeWidth={2}
+                      fillOpacity={filled ? 1 : 0}
+                      fill="url(#colorPower)"
+                    />
+                  )}
+                  {chartStyle === 'line' && filled && (
+                    <Area
+                      type="linear"
+                      dataKey="powerKw"
+                      stroke={COLORS.accent.primary}
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorPower)"
+                    />
+                  )}
+                  {chartStyle === 'line' && !filled && (
+                    <Line
+                      type="linear"
+                      dataKey="powerKw"
+                      stroke={COLORS.accent.primary}
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  )}
+                  {chartStyle === 'point' && (
+                    <Line
+                      type="linear"
+                      dataKey="powerKw"
+                      stroke="transparent"
+                      dot={{ fill: filled ? COLORS.accent.primary : 'transparent', stroke: COLORS.accent.primary, strokeWidth: filled ? 0 : 1, r: 1 }}
+                      activeDot={{ fill: COLORS.accent.primary, stroke: COLORS.accent.primary, r: 2.5 }}
+                      isAnimationActive={false}
+                    />
+                  )}
+                  {chartStyle === 'column' && (
+                    <Bar
+                      dataKey="powerKw"
+                      fill={COLORS.accent.primary}
+                      fillOpacity={filled ? 0.8 : 0.15}
+                      stroke={filled ? 'none' : COLORS.accent.primary}
+                      strokeWidth={filled ? 0 : 1}
+                      radius={[1, 1, 0, 0]}
+                      maxBarSize={visibleData.length > 300 ? 1 : visibleData.length > 100 ? 2 : visibleData.length > 30 ? 4 : 10}
+                      barSize={visibleData.length > 300 ? 1 : undefined}
+                    />
+                  )}
                   {refAreaLeft && refAreaRight && (
                     <ReferenceArea
                       x1={refAreaLeft}
@@ -599,7 +710,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                       fillOpacity={0.15}
                     />
                   )}
-                </AreaChart>
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </>

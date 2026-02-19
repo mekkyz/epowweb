@@ -4,12 +4,16 @@ import { useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import {
   ArrowDownToLine,
+  ImageDown,
   RefreshCcw,
   Calendar,
   Clock,
   ChevronLeft,
   ChevronRight,
+  Plus,
+  Minus,
 } from 'lucide-react';
+import { toPng } from 'html-to-image';
 import SeriesChart from '@/components/SeriesChart';
 import { Button, Input, ChartSkeleton, useToast } from '@/components/ui';
 import { useAuth } from '@/context/AuthProvider';
@@ -34,6 +38,16 @@ export default function SeriesExplorer({ type, id }: Props) {
   const [bounds, setBounds] = useState<{ start?: string; end?: string }>({});
   const [refreshNonce, setRefreshNonce] = useState(0);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [rangeUnit, setRangeUnit] = useState<'day' | 'week' | 'month'>('day');
+
+  const expandRange = (direction: 1 | -1) => {
+    const startDate = dayjs(start || bounds.start);
+    const endDate = dayjs(end || bounds.end);
+    if (!startDate.isValid() || !endDate.isValid()) return;
+    setStart(startDate.add(-direction, rangeUnit).format('YYYY-MM-DD HH:mm:ss'));
+    setEnd(endDate.add(direction, rangeUnit).format('YYYY-MM-DD HH:mm:ss'));
+    setRefreshNonce((n) => n + 1);
+  };
 
   const apiBase =
     type === 'meter'
@@ -156,6 +170,29 @@ export default function SeriesExplorer({ type, id }: Props) {
     }
   };
 
+  const downloadPng = async () => {
+    const container = document.getElementById('series-chart-container');
+    if (!container) {
+      showError('Chart not ready');
+      return;
+    }
+    try {
+      const isDark = document.documentElement.classList.contains('dark');
+      const dataUrl = await toPng(container, {
+        pixelRatio: 2,
+        backgroundColor: isDark ? '#0b1020' : '#ffffff',
+      });
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `${type}-${id}-${Date.now()}.png`;
+      a.click();
+      success('Chart downloaded as PNG');
+    } catch (err) {
+      console.error('PNG download failed:', err);
+      showError('Failed to export chart as PNG');
+    }
+  };
+
   if (initialLoading) {
     return (
       <div className="space-y-6">
@@ -206,7 +243,7 @@ export default function SeriesExplorer({ type, id }: Props) {
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-1">
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => shiftRange(-1)}
                 disabled={isDemo}
@@ -216,7 +253,7 @@ export default function SeriesExplorer({ type, id }: Props) {
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => shiftRange(1)}
                 disabled={isDemo}
@@ -226,8 +263,40 @@ export default function SeriesExplorer({ type, id }: Props) {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => expandRange(-1)}
+                disabled={isDemo}
+                title={isDemo ? 'Full access required' : `Shrink range by 1 ${rangeUnit}`}
+                aria-label="Shrink range"
+              >
+                <Minus className="h-4 w-4" />
+              </Button>
+              <select
+                value={rangeUnit}
+                onChange={(e) => setRangeUnit(e.target.value as 'day' | 'week' | 'month')}
+                disabled={isDemo}
+                className="h-[26px] rounded-lg border border-border-strong bg-white px-2.5 text-xs text-foreground outline-none focus:ring-0 dark:bg-background"
+              >
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+              </select>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => expandRange(1)}
+                disabled={isDemo}
+                title={isDemo ? 'Full access required' : `Expand range by 1 ${rangeUnit}`}
+                aria-label="Expand range"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => setRefreshNonce((n) => n + 1)}
               disabled={isDemo}
@@ -255,6 +324,14 @@ export default function SeriesExplorer({ type, id }: Props) {
               icon={<ArrowDownToLine className="h-4 w-4" />}
             >
               CSV
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={downloadPng}
+              icon={<ImageDown className="h-4 w-4" />}
+            >
+              PNG
             </Button>
           </div>
         </div>

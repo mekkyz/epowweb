@@ -50,9 +50,9 @@ export default function TimeSeriesPreview({ url, title }: Props) {
             <p className="font-semibold text-foreground">{title ?? 'Visualization'}</p>
           </div>
         </div>
-        <Link href={url} passHref>
+        <Link href={url} target="_blank" rel="noopener noreferrer">
           <Button variant="outline" size="sm" iconRight={<ExternalLink className="h-3.5 w-3.5" />}>
-            Open Full View
+            Open in Tab
           </Button>
         </Link>
       </div>
