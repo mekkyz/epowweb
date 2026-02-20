@@ -35,7 +35,7 @@ export class MapErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       const Icon = this.props.fallbackIcon === 'box' ? Box : MapIcon;
       return (
-        <div className="relative flex h-[520px] items-center justify-center overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-panel to-surface">
+        <div className="relative flex h-[520px] items-center justify-center overflow-hidden rounded-xl border border-border bg-gradient-to-br from-panel to-surface">
           <div className="flex flex-col items-center gap-3 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-surface">
               <Icon className="h-8 w-8 text-foreground-tertiary" />

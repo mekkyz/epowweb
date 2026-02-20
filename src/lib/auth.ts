@@ -14,6 +14,7 @@ export interface SessionPayload {
   username: string;
   role: UserRole;
   name?: string;
+  email?: string;
   exp: number;
 }
 
@@ -21,6 +22,7 @@ export interface AuthUser {
   username: string;
   role: UserRole;
   name?: string;
+  email?: string;
 }
 
 // =============================================================================
@@ -98,6 +100,8 @@ export interface IdTokenClaims {
   given_name?: string;
   family_name?: string;
   email?: string;
+  eduperson_scoped_affiliation?: string[];
+  eduperson_principal_name?: string;
 }
 
 export function parseIdToken(idToken: string): IdTokenClaims {
@@ -119,6 +123,7 @@ export function createSessionToken(user: AuthUser): string {
     username: user.username,
     role: user.role,
     name: user.name,
+    email: user.email,
     exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE,
   };
 

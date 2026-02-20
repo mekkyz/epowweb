@@ -1,6 +1,7 @@
 'use client';
 
 import HeatmapExplorer from '@/components/HeatmapExplorer';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 export default function HeatmapPage() {
   return (
@@ -13,7 +14,9 @@ export default function HeatmapPage() {
           KIT-CN 20 kV Power Grid
         </h2>
       </div>
-      <HeatmapExplorer />
+      <ErrorBoundary>
+        <HeatmapExplorer />
+      </ErrorBoundary>
     </div>
   );
 }

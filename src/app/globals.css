@@ -149,3 +149,91 @@ a {
 .light .maplibregl-ctrl.maplibregl-ctrl-attrib a {
   color: #3b82f6;
 }
+
+/* Heatmap timeline slider */
+.heatmap-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) var(--pct, 0%),
+    var(--border-strong) var(--pct, 0%),
+    var(--border-strong) 100%
+  );
+  outline: none;
+  cursor: pointer;
+  will-change: background;
+  touch-action: none;
+  padding: 8px 0;
+  box-sizing: content-box;
+  background-clip: content-box;
+}
+
+.heatmap-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2.5px solid var(--background);
+  box-shadow: 0 0 0 1px var(--accent), 0 1px 3px rgba(0, 0, 0, 0.15);
+  cursor: grab;
+  transition: box-shadow 0.12s ease-out, transform 0.12s ease-out;
+  will-change: transform;
+}
+
+.heatmap-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent), 0 1px 3px rgba(0, 0, 0, 0.15);
+  transform: scale(1.15);
+}
+
+.heatmap-slider:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  transform: scale(1.25);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 20%, transparent), 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.heatmap-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2.5px solid var(--background);
+  box-shadow: 0 0 0 1px var(--accent), 0 1px 3px rgba(0, 0, 0, 0.15);
+  cursor: grab;
+}
+
+.heatmap-slider:active::-moz-range-thumb {
+  cursor: grabbing;
+}
+
+.heatmap-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--border-strong);
+}
+
+.heatmap-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--accent);
+}
+
+.heatmap-slider:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.heatmap-slider:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+  transform: none;
+}
+
+.heatmap-slider:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}

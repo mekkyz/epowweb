@@ -12,6 +12,8 @@ export async function GET() {
       success: true,
       data: { timestamps },
       meta: { count: timestamps.length, timestamp: new Date().toISOString() },
+    }, {
+      headers: { 'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600' },
     });
   } catch (error) {
     apiLogger.error('GET /api/heatmap/available failed', error);

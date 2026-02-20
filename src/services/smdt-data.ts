@@ -29,8 +29,12 @@ export function listConfig(): SmdtConfig {
   return getSmdtConfig();
 }
 
+let meterMetaMap: Map<string, MeterMeta> | null = null;
 export function getMeterMeta(id: string): MeterMeta | undefined {
-  return getSmdtConfig().meters.find((m) => m.id === id);
+  if (!meterMetaMap) {
+    meterMetaMap = new Map(getSmdtConfig().meters.map((m) => [m.id, m]));
+  }
+  return meterMetaMap.get(id);
 }
 
 export function getBuildingMeta(id: string): BuildingMeta | undefined {

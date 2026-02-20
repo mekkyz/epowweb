@@ -228,7 +228,7 @@ export default function CampusMap2D() {
     <div
       id="campus-map-2d-container"
       className={clsx(
-        'relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-surface to-transparent',
+        'relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-surface to-transparent',
         isFullscreen ? 'fixed inset-0 z-50 h-screen w-screen rounded-none' : 'h-[520px]'
       )}
     >

@@ -24,6 +24,9 @@ export type { SkeletonProps } from './Skeleton';
 export { EmptyState } from './EmptyState';
 export type { EmptyStateProps } from './EmptyState';
 
+export { Slider } from './Slider';
+export type { SliderProps } from './Slider';
+
 export { ToggleGroup } from './ToggleGroup';
 export type { ToggleGroupProps, ToggleOption } from './ToggleGroup';
 

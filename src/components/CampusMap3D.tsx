@@ -337,7 +337,7 @@ export default function CampusMap3D() {
   // Show loading state while checking WebGL
   if (webGLSupported === null) {
     return (
-      <div className="relative flex h-[520px] items-center justify-center overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-panel to-surface">
+      <div className="relative flex h-[520px] items-center justify-center overflow-hidden rounded-xl border border-border bg-gradient-to-br from-panel to-surface">
         <div className="flex flex-col items-center gap-3">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-surface">
             <Box className="h-8 w-8 animate-pulse text-foreground-tertiary" />
@@ -351,7 +351,7 @@ export default function CampusMap3D() {
   // Show fallback if WebGL is not supported or deck.gl failed
   if (!webGLSupported || deckError) {
     return (
-      <div className="relative flex h-[520px] items-center justify-center overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-panel to-surface">
+      <div className="relative flex h-[520px] items-center justify-center overflow-hidden rounded-xl border border-border bg-gradient-to-br from-panel to-surface">
         <div className="flex flex-col items-center gap-3 text-center">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-surface">
             <Box className="h-8 w-8 text-foreground-tertiary" />
@@ -374,7 +374,7 @@ export default function CampusMap3D() {
       <div
         id="campus-map-3d-container"
         className={clsx(
-          'relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-surface to-transparent shadow-2xl shadow-emerald-400/10',
+          'relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-surface to-transparent shadow-2xl shadow-emerald-400/10',
           isFullscreen ? 'fixed inset-0 z-50 h-screen w-screen rounded-none' : 'h-[520px]'
         )}
       >

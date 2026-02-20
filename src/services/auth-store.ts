@@ -9,6 +9,8 @@ export type UserRole = 'demo' | 'full' | 'admin';
 interface UserRow {
   kuerzel: string;
   role: 'full' | 'admin';
+  email: string | null;
+  affiliation: string | null;
 }
 
 let db: Database.Database | null = null;
@@ -32,6 +34,11 @@ function getDb(): Database.Database {
       role    TEXT NOT NULL CHECK(role IN ('full', 'admin'))
     )
   `);
+
+  // Migrate: add profile columns if missing
+  for (const col of ['email', 'affiliation', 'name', 'given_name', 'family_name']) {
+    try { db.exec(`ALTER TABLE users ADD COLUMN ${col} TEXT`); } catch { /* column already exists */ }
+  }
 
   seedFromEnv();
   authLogger.info('Auth database ready', { path: dbPath });
@@ -72,7 +79,7 @@ export function getUserRole(kuerzel: string): UserRole {
 
 export function listUsers(): UserRow[] {
   const d = getDb();
-  return d.prepare('SELECT kuerzel, role FROM users ORDER BY role, kuerzel').all() as UserRow[];
+  return d.prepare('SELECT kuerzel, role, email, affiliation FROM users ORDER BY role, kuerzel').all() as UserRow[];
 }
 
 export function setUserRole(kuerzel: string, role: 'full' | 'admin'): void {
@@ -87,4 +94,14 @@ export function removeUser(kuerzel: string): void {
   const d = getDb();
   d.prepare('DELETE FROM users WHERE kuerzel = ?').run(kuerzel);
   authLogger.info('User removed', { kuerzel });
+}
+
+export function updateUserProfile(
+  kuerzel: string,
+  profile: { email?: string; affiliation?: string[] },
+): void {
+  const d = getDb();
+  d.prepare(
+    'UPDATE users SET email = ?, affiliation = ? WHERE kuerzel = ?'
+  ).run(profile.email ?? null, profile.affiliation?.join(', ') ?? null, kuerzel);
 }

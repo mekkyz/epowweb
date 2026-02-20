@@ -3,14 +3,13 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
-import { Radio, Menu, X, Home, Map, Sun, Moon, LogOut, ShieldCheck } from 'lucide-react';
+import { Radio, Menu, X, Home, Sun, Moon, LogOut, ShieldCheck } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import clsx from 'clsx';
 import { useAuth } from '@/context/AuthProvider';
 
 const navLinks = [
   { href: '/', label: 'Home', icon: Home },
-  { href: '/#map', label: 'Campus Map', icon: Map },
   { href: '/heatmap', label: 'Heatmap', icon: Radio },
 ];
 
@@ -29,9 +28,8 @@ function ThemeToggle() {
       type="button"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className={clsx(
-        'relative flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200',
-        'bg-surface hover:bg-surface-hover',
-        'text-foreground-secondary hover:text-foreground',
+        'relative flex h-8 w-8 items-center justify-center rounded-lg transition-all',
+        'text-foreground-secondary hover:bg-surface hover:text-foreground',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background'
       )}
       aria-label={mounted ? (isDark ? 'Switch to light mode' : 'Switch to dark mode') : 'Toggle theme'}
@@ -115,73 +113,70 @@ function HeaderContent() {
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href ||
-                (link.href !== '/' && pathname.startsWith(link.href));
-              const Icon = link.icon;
+          <nav className="hidden items-center gap-2 md:flex">
+            <div className="flex h-10 items-center gap-0.5 rounded-xl border border-border px-1.5">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href ||
+                  (link.href !== '/' && pathname.startsWith(link.href));
+                const Icon = link.icon;
 
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  onMouseEnter={() => handleMouseEnter(link.href)}
-                  className={clsx(
-                    'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all',
-                    isActive
-                      ? 'bg-surface-hover text-foreground shadow-sm'
-                      : 'text-foreground-secondary hover:bg-surface hover:text-foreground'
-                  )}
-                >
-                  <Icon className="h-4 w-4" />
-                  {link.label}
-                </Link>
-              );
-            })}
-
-            <div className="ml-2 border-l border-border pl-3">
-              <ThemeToggle />
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    onMouseEnter={() => handleMouseEnter(link.href)}
+                    className={clsx(
+                      'flex h-8 items-center gap-2 rounded-lg px-3 text-sm font-medium transition-all',
+                      isActive
+                        ? 'bg-surface text-foreground'
+                        : 'text-foreground-secondary hover:bg-surface-hover/50 hover:text-foreground'
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {link.label}
+                  </Link>
+                );
+              })}
             </div>
 
-            {user && (
-              <div className="ml-2 flex items-center gap-2 border-l border-border pl-3">
-                <span className="text-xs text-foreground-secondary">
-                  {user.name || user.username}
-                </span>
-                {isAdmin && (
-                  <Link
-                    href="/admin"
-                    className={clsx(
-                      'flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
-                      'text-foreground-secondary hover:bg-surface-hover hover:text-foreground'
-                    )}
-                    aria-label="Admin panel"
-                  >
-                    <ShieldCheck className="h-4 w-4" />
-                  </Link>
-                )}
-                <button
-                  type="button"
-                  onClick={logout}
-                  className={clsx(
-                    'flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
-                    'text-foreground-secondary hover:bg-surface-hover hover:text-foreground'
+            <div className="flex h-10 items-center gap-0.5 rounded-xl border border-border px-1.5">
+              <ThemeToggle />
+              {user && (
+                <>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      title="Admin panel"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg text-foreground-secondary transition-all hover:bg-surface hover:text-foreground"
+                    >
+                      <ShieldCheck className="h-4 w-4" />
+                    </Link>
                   )}
-                  aria-label="Sign out"
-                >
-                  <LogOut className="h-4 w-4" />
-                </button>
-              </div>
-            )}
+                  <div className="mx-0.5 h-5 w-px bg-border" />
+                  <span className="px-1.5 text-xs font-medium text-foreground-secondary">
+                    {user.name || user.username}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={logout}
+                    title="Sign out"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg text-foreground-secondary transition-all hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950 dark:hover:text-red-400"
+                    aria-label="Sign out"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </button>
+                </>
+              )}
+            </div>
           </nav>
 
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-1 md:hidden">
             {user && (
               <button
                 type="button"
                 onClick={logout}
-                className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface text-foreground-secondary transition-colors hover:bg-surface-hover hover:text-foreground"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-foreground-secondary transition-all hover:bg-surface hover:text-foreground"
                 aria-label="Sign out"
               >
                 <LogOut className="h-5 w-5" />
@@ -190,7 +185,7 @@ function HeaderContent() {
             <ThemeToggle />
             <button
               type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface text-foreground-secondary transition-colors hover:bg-surface-hover hover:text-foreground"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-foreground-secondary transition-all hover:bg-surface hover:text-foreground"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}

@@ -8,7 +8,7 @@ import {
   FROM_COOKIE_NAME,
   SESSION_MAX_AGE,
 } from '@/lib/auth';
-import { getUserRole } from '@/services/auth-store';
+import { getUserRole, updateUserProfile } from '@/services/auth-store';
 import { createLogger } from '@/lib/logger';
 
 const authLogger = createLogger('Auth');
@@ -38,12 +38,21 @@ export async function GET(request: NextRequest) {
     const kuerzel = claims.preferred_username;
     const role = getUserRole(kuerzel);
 
-    authLogger.info('OIDC login successful', { kuerzel, role, name: claims.name });
+    authLogger.info('OIDC login successful', { kuerzel, role, email: claims.email });
+
+    // Persist OIDC profile data for admin panel display
+    if (role !== 'demo') {
+      updateUserProfile(kuerzel, {
+        email: claims.email,
+        affiliation: claims.eduperson_scoped_affiliation,
+      });
+    }
 
     const sessionToken = createSessionToken({
       username: kuerzel,
       role,
       name: claims.name,
+      email: claims.email,
     });
 
     const response = NextResponse.redirect(new URL(from, origin));

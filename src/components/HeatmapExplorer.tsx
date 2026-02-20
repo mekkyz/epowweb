@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Map, { Layer, LayerProps, NavigationControl, Source } from 'react-map-gl/maplibre';
+import MapGL, { Layer, LayerProps, NavigationControl, Source } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import { useTheme } from 'next-themes';
 import {
@@ -13,8 +13,10 @@ import {
   Maximize2,
   Minimize2,
   Info,
+  Play,
+  Pause,
 } from 'lucide-react';
-import { Button, Spinner, Input, useToast } from '@/components/ui';
+import { Button, Spinner, Input, Slider, useToast } from '@/components/ui';
 import { MAP_STYLES } from '@/lib/constants';
 import { useAuth } from '@/context/AuthProvider';
 import clsx from 'clsx';
@@ -28,22 +30,109 @@ type FeatureCollection = {
   }[];
 };
 
-// Module-level cache persists across navigations
-type HeatmapCache = {
+// --- Module-level LRU geo cache (persists across navigations) ---
+class GeoLRUCache {
+  private maxSize: number;
+  private cache: Map<string, FeatureCollection> = new Map();
+
+  constructor(maxSize = 50) {
+    this.maxSize = maxSize;
+  }
+
+  get(timestamp: string): FeatureCollection | undefined {
+    const entry = this.cache.get(timestamp);
+    if (!entry) return undefined;
+    // Move to end (most recently used)
+    this.cache.delete(timestamp);
+    this.cache.set(timestamp, entry);
+    return entry;
+  }
+
+  set(timestamp: string, data: FeatureCollection): void {
+    if (this.cache.has(timestamp)) {
+      this.cache.delete(timestamp);
+    } else if (this.cache.size >= this.maxSize) {
+      const oldest = this.cache.keys().next().value;
+      if (oldest) this.cache.delete(oldest);
+    }
+    this.cache.set(timestamp, data);
+  }
+
+  has(timestamp: string): boolean {
+    return this.cache.has(timestamp);
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+}
+
+const geoCache = new GeoLRUCache(50);
+
+// Metadata cache (bounds, allTimestamps, selected) — separate from geo slices
+type MetadataCache = {
   bounds: { min: string | null; max: string | null; count: number } | null;
   selected: string | null;
-  features: FeatureCollection | null;
+  allTimestamps: string[] | null;
   fetchedAt: number;
 };
-let heatmapCache: HeatmapCache | null = null;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+let metadataCache: MetadataCache | null = null;
+const CACHE_TTL = 5 * 60 * 1000;
 
-function getValidCache(): HeatmapCache | null {
-  if (heatmapCache && Date.now() - heatmapCache.fetchedAt < CACHE_TTL) {
-    return heatmapCache;
+function getValidMetadata(): MetadataCache | null {
+  if (metadataCache && Date.now() - metadataCache.fetchedAt < CACHE_TTL) {
+    return metadataCache;
   }
   return null;
 }
+
+// --- Prefetch infrastructure ---
+let prefetchAbort: AbortController | null = null;
+
+async function prefetchGeo(timestamps: string[], readyRef: { current: boolean }): Promise<void> {
+  if (!readyRef.current) return;
+  prefetchAbort?.abort();
+  prefetchAbort = new AbortController();
+  const signal = prefetchAbort.signal;
+
+  for (const ts of timestamps) {
+    if (signal.aborted) return;
+    if (geoCache.has(ts)) continue;
+
+    try {
+      const res = await fetch(
+        `/api/heatmap/geo?timestamp=${encodeURIComponent(ts)}`,
+        { signal, priority: 'low' } as RequestInit,
+      );
+      if (!res.ok || signal.aborted) return;
+      const body = await res.json();
+      const fc = body.data?.featureCollection ?? null;
+      if (fc && !signal.aborted) {
+        geoCache.set(ts, fc);
+      }
+    } catch {
+      return; // Aborted or network error
+    }
+  }
+}
+
+/** Extract date part "YYYY-MM-DD" from "YYYY-MM-DD HH:mm:ss" */
+function extractDate(ts: string): string {
+  return ts.slice(0, 10);
+}
+
+/** Extract time part "HH:mm" from "YYYY-MM-DD HH:mm:ss" */
+function extractTime(ts: string): string {
+  return ts.slice(11, 16);
+}
+
+const SPEED_OPTIONS = [
+  { label: '0.5x', ms: 2000 },
+  { label: '1x', ms: 1000 },
+  { label: '2x', ms: 500 },
+  { label: '5x', ms: 200 },
+  { label: '10x', ms: 100 },
+] as const;
 
 export default function HeatmapExplorer() {
   const { resolvedTheme } = useTheme();
@@ -51,13 +140,23 @@ export default function HeatmapExplorer() {
   const { isDemo } = useAuth();
 
   // Initialize state from cache if valid (instant restore on navigation)
-  const [bounds, setBounds] = useState<{ min: string | null; max: string | null; count: number } | null>(() => getValidCache()?.bounds ?? null);
-  const [selected, setSelected] = useState<string | null>(() => getValidCache()?.selected ?? null);
-  const [inputTs, setInputTs] = useState<string>(() => getValidCache()?.selected ?? '');
-  const [features, setFeatures] = useState<FeatureCollection | null>(() => getValidCache()?.features ?? null);
+  const [bounds, setBounds] = useState<{ min: string | null; max: string | null; count: number } | null>(() => getValidMetadata()?.bounds ?? null);
+  const [selected, setSelected] = useState<string | null>(() => getValidMetadata()?.selected ?? null);
+  const [features, setFeatures] = useState<FeatureCollection | null>(() => {
+    const meta = getValidMetadata();
+    return meta?.selected ? geoCache.get(meta.selected) ?? null : null;
+  });
+  const [allTimestamps, setAllTimestamps] = useState<string[]>(() => getValidMetadata()?.allTimestamps ?? []);
+  const [selectedDate, setSelectedDate] = useState<string>(''); // YYYY-MM-DD
+  const [sliderIndex, setSliderIndex] = useState(0); // index into dayTimestamps
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playSpeed, setPlaySpeed] = useState(1); // index into SPEED_OPTIONS
   const [loading, setLoading] = useState(false);
-  const hasCachedData = useRef(!!getValidCache()?.features);
-  const lastLoadedTs = useRef<string | null>(getValidCache()?.selected ?? null);
+  const hasCachedData = useRef(!!getValidMetadata()?.selected && !!geoCache.get(getValidMetadata()!.selected!));
+  const lastLoadedTs = useRef<string | null>(getValidMetadata()?.selected ?? null);
+
+  // Prefetch readiness gate — true only after init + available complete
+  const readyRef = useRef(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [hover, setHover] = useState<{
@@ -69,6 +168,8 @@ export default function HeatmapExplorer() {
   } | null>(null);
   const [showLegend, setShowLegend] = useState(false);
   const [showAttribution, setShowAttribution] = useState(false);
+  const [thresholdMin, setThresholdMin] = useState(0);
+  const [thresholdMax, setThresholdMax] = useState(800);
   const [canRenderMap] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     try {
@@ -84,6 +185,38 @@ export default function HeatmapExplorer() {
     }
   });
 
+  // Debounce ref for slider
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Ref to signal when a geo fetch completes (for playback to await)
+  const geoLoadResolveRef = useRef<(() => void) | null>(null);
+
+  // Keep slider index accessible synchronously in async playback loop
+  const sliderIndexRef = useRef(sliderIndex);
+  sliderIndexRef.current = sliderIndex;
+
+  // Track last slider direction for directional prefetch
+  const lastSliderIdxRef = useRef(0);
+
+  // AbortController for the primary geo fetch
+  const geoAbortRef = useRef<AbortController | null>(null);
+
+  // Timestamps filtered to the selected day (slider/playback scope)
+  const dayTimestamps = useMemo(() => {
+    if (!selectedDate || allTimestamps.length === 0) return [];
+    return allTimestamps.filter((ts) => ts.startsWith(selectedDate));
+  }, [allTimestamps, selectedDate]);
+
+  // Keep dayTimestamps accessible in prefetch without re-triggering effects
+  const dayTimestampsRef = useRef(dayTimestamps);
+  dayTimestampsRef.current = dayTimestamps;
+
+  // All unique dates that have data (for date picker min/max)
+  const availableDates = useMemo(() => {
+    const dates = new Set(allTimestamps.map((ts) => extractDate(ts)));
+    return Array.from(dates).sort();
+  }, [allTimestamps]);
+
   // Map style follows app theme
   const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
   const mapStyle = useMemo(() => MAP_STYLES[mapStyleType].detailed, [mapStyleType]);
@@ -96,10 +229,21 @@ export default function HeatmapExplorer() {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
+  // Fetch init first (fast), then available timestamps in background (non-blocking)
   useEffect(() => {
-    // Skip fetch if we initialized from cache
     if (hasCachedData.current) {
       hasCachedData.current = false;
+      readyRef.current = true;
+      const cached = getValidMetadata();
+      if (cached?.selected) {
+        setSelectedDate(extractDate(cached.selected));
+      }
+      if (cached?.allTimestamps && cached.selected) {
+        const day = extractDate(cached.selected);
+        const dayTs = cached.allTimestamps.filter((ts) => ts.startsWith(day));
+        const idx = dayTs.indexOf(cached.selected);
+        if (idx >= 0) setSliderIndex(idx);
+      }
       return;
     }
 
@@ -107,31 +251,61 @@ export default function HeatmapExplorer() {
     const load = async () => {
       setLoading(true);
       try {
-        const res = await fetch('/api/heatmap/init');
-        if (!res.ok) throw new Error(`Failed to load heatmap data (${res.status})`);
-        const body = await res.json();
+        const initRes = await fetch('/api/heatmap/init', {
+          signal: AbortSignal.timeout(10000),
+        });
         if (!active) return;
-
-        const b = body.data?.bounds ?? null;
-        const initial = body.data?.initialTimestamp ?? null;
-        const fc = body.data?.featureCollection ?? null;
+        if (!initRes.ok) throw new Error(`Failed to load heatmap data (${initRes.status})`);
+        const initBody = await initRes.json();
+        const b = initBody.data?.bounds ?? null;
+        const initial = initBody.data?.initialTimestamp ?? null;
+        const fc = initBody.data?.featureCollection ?? null;
 
         setBounds(b);
         setSelected(initial);
-        setInputTs(initial ?? '');
+        if (initial) setSelectedDate(extractDate(initial));
         if (fc) {
           setFeatures(fc);
           lastLoadedTs.current = initial;
+          // Store initial slice in geo LRU cache
+          if (initial) geoCache.set(initial, fc);
         }
 
-        // Save to cache
-        heatmapCache = { bounds: b, selected: initial, features: fc, fetchedAt: Date.now() };
+        metadataCache = { bounds: b, selected: initial, allTimestamps: null, fetchedAt: Date.now() };
       } catch (err) {
         console.error('Failed to load heatmap data:', err);
         showError('Failed to load heatmap data');
       } finally {
         if (active) setLoading(false);
       }
+
+      // Fetch available timestamps in background (non-blocking)
+      try {
+        const availRes = await fetch('/api/heatmap/available', {
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!active) return;
+        if (availRes.ok) {
+          const availBody = await availRes.json();
+          const timestamps: string[] = availBody.data?.timestamps ?? [];
+          setAllTimestamps(timestamps);
+
+          const sel = metadataCache?.selected;
+          if (sel && timestamps.length > 0) {
+            const day = extractDate(sel);
+            const dayTs = timestamps.filter((ts) => ts.startsWith(day));
+            const idx = dayTs.indexOf(sel);
+            setSliderIndex(idx >= 0 ? idx : 0);
+          }
+
+          if (metadataCache) metadataCache.allTimestamps = timestamps;
+        }
+      } catch (err) {
+        console.warn('Failed to load available timestamps:', err);
+      }
+
+      // All init done — enable prefetching
+      if (active) readyRef.current = true;
     };
     load();
     return () => {
@@ -139,58 +313,266 @@ export default function HeatmapExplorer() {
     };
   }, [showError]);
 
-  // Keep input in sync with selected timestamp
-  useEffect(() => {
-    if (selected) {
-      setInputTs(selected);
-    }
-  }, [selected]);
-
+  // Load geo data when selected changes — with LRU cache fast path
   useEffect(() => {
     if (!selected) {
       setFeatures(null);
       lastLoadedTs.current = null;
       return;
     }
-    // Skip if we already loaded data for this timestamp
-    if (selected === lastLoadedTs.current) {
+    if (selected === lastLoadedTs.current) return;
+
+    // Fast path: LRU cache hit → apply instantly, no network, no spinner
+    const cached = geoCache.get(selected);
+    if (cached) {
+      setFeatures(cached);
+      lastLoadedTs.current = selected;
+      if (metadataCache) metadataCache.selected = selected;
+      geoLoadResolveRef.current?.();
+      geoLoadResolveRef.current = null;
+      // Trigger prefetch for next few timestamps
+      if (readyRef.current) {
+        const dts = dayTimestampsRef.current;
+        const idx = dts.indexOf(selected);
+        if (idx >= 0) {
+          prefetchGeo(dts.slice(idx + 1, idx + 4), readyRef);
+        }
+      }
       return;
     }
+
+    // Cache miss: fetch from network
+    geoAbortRef.current?.abort();
+    const controller = new AbortController();
+    geoAbortRef.current = controller;
     let active = true;
 
     const load = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/heatmap/geo?timestamp=${encodeURIComponent(selected)}`);
+        const res = await fetch(
+          `/api/heatmap/geo?timestamp=${encodeURIComponent(selected)}`,
+          { signal: controller.signal },
+        );
         if (!res.ok) throw new Error(`Failed to load slice (${res.status})`);
         const body = await res.json();
         if (!active) return;
         const payload = body.data ?? body;
-        const fc = payload.featureCollection ?? null;
+        const fc: FeatureCollection = payload.featureCollection ?? { type: 'FeatureCollection', features: [] };
 
-        setFeatures(fc ?? { type: 'FeatureCollection', features: [] });
+        geoCache.set(selected, fc);
+        setFeatures(fc);
         lastLoadedTs.current = selected;
+        if (metadataCache) metadataCache.selected = selected;
+
+        // Trigger prefetch for next few timestamps
+        if (readyRef.current) {
+          const dts = dayTimestampsRef.current;
+          const idx = dts.indexOf(selected);
+          if (idx >= 0) {
+            prefetchGeo(dts.slice(idx + 1, idx + 4), readyRef);
+          }
+        }
       } catch (err) {
+        if ((err as Error).name === 'AbortError') return;
         console.error('Failed to load heatmap data:', err);
         showError('Failed to load heatmap data');
+        // Keep previous features on error — don't clear the map
       } finally {
         if (active) setLoading(false);
+        geoLoadResolveRef.current?.();
+        geoLoadResolveRef.current = null;
       }
     };
 
     load();
     return () => {
       active = false;
+      controller.abort();
     };
   }, [selected, showError]);
 
-  // Ensure selected/input stay in sync if state was cleared
+  // Ensure selected stays in sync if state was cleared
   useEffect(() => {
     if (!selected && bounds?.min) {
       setSelected(bounds.min);
-      setInputTs(bounds.min);
     }
   }, [selected, bounds]);
+
+  // Keep slider index in sync when selected changes externally
+  useEffect(() => {
+    if (selected && dayTimestamps.length > 0) {
+      const idx = dayTimestamps.indexOf(selected);
+      if (idx >= 0 && idx !== sliderIndex) {
+        setSliderIndex(idx);
+      }
+    }
+  }, [selected, dayTimestamps]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // --- Navigation helpers (all local, no API calls) ---
+  const stepByIndex = useCallback((delta: number) => {
+    const newIdx = Math.max(0, Math.min(dayTimestamps.length - 1, sliderIndex + delta));
+    setSliderIndex(newIdx);
+    setSelected(dayTimestamps[newIdx] ?? null);
+  }, [sliderIndex, dayTimestamps]);
+
+  // Slider change — instant if cached, debounced otherwise
+  const onSliderChange = useCallback((val: number) => {
+    const direction = val > lastSliderIdxRef.current ? 1 : -1;
+    lastSliderIdxRef.current = val;
+    setSliderIndex(val);
+
+    const ts = dayTimestamps[val];
+    if (!ts) return;
+
+    // Instant: cached → apply immediately, no debounce
+    const cached = geoCache.get(ts);
+    if (cached) {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      setFeatures(cached);
+      lastLoadedTs.current = ts;
+      setSelected(ts);
+
+      // Prefetch 3 in drag direction
+      const start = direction > 0 ? val + 1 : Math.max(0, val - 3);
+      const end = direction > 0 ? val + 4 : val;
+      const toPrefetch = dayTimestamps.slice(start, end);
+      prefetchGeo(direction > 0 ? toPrefetch : [...toPrefetch].reverse(), readyRef);
+      return;
+    }
+
+    // Not cached: debounce the fetch
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setSelected(ts);
+    }, 100);
+  }, [dayTimestamps]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      prefetchAbort?.abort();
+      geoAbortRef.current?.abort();
+    };
+  }, []);
+
+  // Date picker change — switches to a new day
+  const onDateChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const day = e.target.value; // YYYY-MM-DD
+    if (!day || allTimestamps.length === 0) return;
+    setSelectedDate(day);
+    // Select the first timestamp of that day
+    const firstOfDay = allTimestamps.find((ts) => ts.startsWith(day));
+    if (firstOfDay) {
+      setSliderIndex(0);
+      setSelected(firstOfDay);
+    }
+  }, [allTimestamps]);
+
+  // Navigate to prev/next available day, preserving the current time-of-day
+  const stepByDay = useCallback((delta: -1 | 1) => {
+    if (availableDates.length === 0) return;
+    const idx = availableDates.indexOf(selectedDate);
+    const nextIdx = idx + delta;
+    if (nextIdx < 0 || nextIdx >= availableDates.length) return;
+    const day = availableDates[nextIdx];
+    setSelectedDate(day);
+
+    const newDayTs = allTimestamps.filter((ts) => ts.startsWith(day));
+    if (newDayTs.length === 0) return;
+
+    // Try to land on the same time-of-day, or the closest available timestamp
+    const currentTime = selected ? selected.slice(11) : '';
+    let bestIdx = 0;
+    if (currentTime) {
+      for (let i = 0; i < newDayTs.length; i++) {
+        const t = newDayTs[i].slice(11);
+        if (t === currentTime) { bestIdx = i; break; }
+        if (t <= currentTime) bestIdx = i;
+      }
+    }
+
+    setSliderIndex(bestIdx);
+    setSelected(newDayTs[bestIdx]);
+  }, [availableDates, selectedDate, allTimestamps, selected]);
+
+  // --- Playback ---
+  const playingRef = useRef(false);
+  const playSpeedRef = useRef(playSpeed);
+  playSpeedRef.current = playSpeed;
+
+  useEffect(() => {
+    playingRef.current = isPlaying;
+    if (!isPlaying) return;
+
+    let active = true;
+    const ts = dayTimestamps;
+
+    // Prefetch first batch ahead of play cursor
+    const startIdx = sliderIndexRef.current;
+    prefetchGeo(ts.slice(startIdx + 1, startIdx + 6), readyRef);
+
+    const advance = async () => {
+      if (!active || !playingRef.current) return;
+
+      const prev = sliderIndexRef.current;
+      const next = prev + 1;
+
+      if (next >= ts.length) {
+        setIsPlaying(false);
+        return;
+      }
+
+      const nextTs = ts[next];
+
+      // Kick off prefetch for next 5 beyond current (fire-and-forget)
+      prefetchGeo(ts.slice(next + 1, next + 6), readyRef);
+
+      // Cache hit → apply instantly, only wait speed delay
+      const cached = geoCache.get(nextTs);
+      if (cached) {
+        setSliderIndex(next);
+        setFeatures(cached);
+        lastLoadedTs.current = nextTs;
+        setSelected(nextTs);
+        await new Promise((r) => setTimeout(r, SPEED_OPTIONS[playSpeedRef.current].ms));
+      } else {
+        // Cache miss → wait for both fetch + speed delay
+        const geoLoaded = new Promise<void>((resolve) => {
+          geoLoadResolveRef.current = resolve;
+        });
+        setSliderIndex(next);
+        setSelected(nextTs);
+        await Promise.all([
+          geoLoaded,
+          new Promise((r) => setTimeout(r, SPEED_OPTIONS[playSpeedRef.current].ms)),
+        ]);
+      }
+
+      if (!active || !playingRef.current) return;
+      advance();
+    };
+
+    advance();
+
+    return () => {
+      active = false;
+      prefetchAbort?.abort();
+      geoLoadResolveRef.current?.();
+      geoLoadResolveRef.current = null;
+    };
+  }, [isPlaying, dayTimestamps]);
+
+  // Stop playback on any manual interaction
+  const stopPlayback = useCallback(() => {
+    if (isPlaying) setIsPlaying(false);
+  }, [isPlaying]);
+
+  // Helper: lerp a value between min/max to a 0-1 fraction
+  const tFrac = useCallback((frac: number) => {
+    return thresholdMin + frac * (thresholdMax - thresholdMin);
+  }, [thresholdMin, thresholdMax]);
 
   // Heatmap layer - professional vibrant green-yellow-red style
   const heatmapLayer: LayerProps = useMemo(
@@ -199,19 +581,17 @@ export default function HeatmapExplorer() {
       type: 'heatmap',
       maxzoom: 17,
       paint: {
-        // Weight by power consumption - exponential for sharp hotspots
         'heatmap-weight': [
           'interpolate',
           ['exponential', 2],
           ['get', 'valueKw'],
-          0, 0.1,
-          50, 0.3,
-          150, 0.5,
-          300, 0.75,
-          500, 0.9,
-          800, 1,
+          tFrac(0), 0.1,
+          tFrac(0.06), 0.3,
+          tFrac(0.19), 0.5,
+          tFrac(0.38), 0.75,
+          tFrac(0.63), 0.9,
+          tFrac(1), 1,
         ],
-        // Higher intensity for more engaging colors
         'heatmap-intensity': [
           'interpolate',
           ['linear'],
@@ -220,7 +600,6 @@ export default function HeatmapExplorer() {
           14, 2.8,
           16, 3.5,
         ],
-        // Vibrant green-yellow-orange-red - more saturated
         'heatmap-color': [
           'interpolate',
           ['linear'],
@@ -236,7 +615,6 @@ export default function HeatmapExplorer() {
           0.88, 'rgba(255, 20, 0, 1)',
           1, 'rgba(180, 0, 0, 1)',
         ],
-        // Larger radius for smooth coverage
         'heatmap-radius': [
           'interpolate',
           ['linear'],
@@ -246,14 +624,12 @@ export default function HeatmapExplorer() {
           16, 60,
           18, 80,
         ],
-        // Keep heatmap visible at all zoom levels
         'heatmap-opacity': 0.85,
       },
     }),
-    [],
+    [tFrac],
   );
 
-  // Glow layer behind circles for eye-catching effect
   const circleGlowLayer: LayerProps = useMemo(
     () => ({
       id: 'heat-circles-glow',
@@ -272,19 +648,18 @@ export default function HeatmapExplorer() {
           'interpolate',
           ['linear'],
           ['get', 'valueKw'],
-          0, '#00ff00',
-          150, '#ffff00',
-          300, '#ff9600',
-          500, '#ff1e00',
+          tFrac(0), '#00ff00',
+          tFrac(0.33), '#ffff00',
+          tFrac(0.5), '#ff9600',
+          tFrac(0.83), '#ff1e00',
         ],
         'circle-opacity': 0.4,
         'circle-blur': 1,
       },
     }),
-    [],
+    [tFrac],
   );
 
-  // Circle layer for individual stations - crisp markers
   const circleLayer: LayerProps = useMemo(
     () => ({
       id: 'heat-circles',
@@ -299,20 +674,19 @@ export default function HeatmapExplorer() {
           16, 10,
           18, 16,
         ],
-        // Same green-yellow-red color scheme
         'circle-color': [
           'interpolate',
           ['linear'],
           ['get', 'valueKw'],
-          0, '#00ff00',
-          50, '#80ff00',
-          100, '#c8ff00',
-          150, '#ffff00',
-          200, '#ffc800',
-          300, '#ff9600',
-          400, '#ff5000',
-          500, '#ff1e00',
-          700, '#c80000',
+          tFrac(0), '#00ff00',
+          tFrac(0.07), '#80ff00',
+          tFrac(0.13), '#c8ff00',
+          tFrac(0.19), '#ffff00',
+          tFrac(0.25), '#ffc800',
+          tFrac(0.38), '#ff9600',
+          tFrac(0.5), '#ff5000',
+          tFrac(0.63), '#ff1e00',
+          tFrac(0.88), '#c80000',
         ],
         'circle-opacity': 1,
         'circle-stroke-width': [
@@ -327,7 +701,7 @@ export default function HeatmapExplorer() {
         'circle-stroke-opacity': 1,
       },
     }),
-    [mapStyleType],
+    [mapStyleType, tFrac],
   );
 
   const list = useMemo(() => {
@@ -344,7 +718,7 @@ export default function HeatmapExplorer() {
     zoom: 14.5,
   };
 
-  // ALT+drag rotation support (same as 2D/3D views)
+  // ALT+drag rotation support
   const handleMapRef = useCallback((ref: { getMap: () => maplibregl.Map } | null) => {
     if (!ref) return;
     const map = ref.getMap();
@@ -380,30 +754,6 @@ export default function HeatmapExplorer() {
       }
     });
   }, []);
-
-  const stepTimestamp = async (direction: 1 | -1) => {
-    if (!selected || loading) return;
-    setLoading(true);
-    try {
-      const dir = direction === 1 ? 'next' : 'prev';
-      const res = await fetch(`/api/heatmap/step?current=${encodeURIComponent(selected)}&direction=${dir}`);
-      if (!res.ok) return;
-      const body = await res.json();
-      const ts = body.data?.timestamp;
-      if (ts) {
-        setSelected(ts);
-        setInputTs(ts);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const applyInput = () => {
-    if (!inputTs) return;
-    // Directly set the timestamp — the geo API will handle it
-    setSelected(inputTs);
-  };
 
   const toggleFullscreen = useCallback(async () => {
     const container = document.getElementById('heatmap-explorer-container');
@@ -458,55 +808,126 @@ export default function HeatmapExplorer() {
     }
   };
 
+  // Current timestamp for display
+  const currentTs = dayTimestamps[sliderIndex] ?? selected ?? '';
+  const currentTime = currentTs ? extractTime(currentTs) : '';
+  const minDateAvail = availableDates[0] ?? '';
+  const maxDateAvail = availableDates[availableDates.length - 1] ?? '';
+  const minTime = dayTimestamps[0] ? extractTime(dayTimestamps[0]) : '';
+  const maxTime = dayTimestamps.length > 0 ? extractTime(dayTimestamps[dayTimestamps.length - 1]) : '';
+
   return (
     <div
       id="heatmap-explorer-container"
       className={clsx(
-        'space-y-6',
+        'space-y-4',
         isFullscreen && 'fixed inset-0 z-50 flex h-screen w-screen flex-col bg-background p-4'
       )}
     >
-      {/* Controls */}
-      <div className="flex flex-wrap items-center gap-4">
-        <div className="flex flex-1 flex-wrap items-center gap-3">
-          <label className="text-xs font-semibold uppercase tracking-[0.12em] text-foreground-secondary">
-            Timestamp
-          </label>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => stepTimestamp(-1)}
-              disabled={isDemo || !selected}
-              title={isDemo ? 'Full access required' : undefined}
-              aria-label="Previous slice"
-              className="rounded-l-lg rounded-r-none"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Input
-              value={inputTs}
-              onChange={(e) => setInputTs(e.target.value)}
-              onBlur={applyInput}
-              onKeyDown={(e) => e.key === 'Enter' && applyInput()}
-              placeholder="YYYY-MM-DD HH:mm:ss"
-              size="sm"
-              disabled={isDemo}
-              className="min-w-[210px] rounded-none border-x-0"
-            />
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => stepTimestamp(1)}
-              disabled={isDemo || !selected}
-              title={isDemo ? 'Full access required' : undefined}
-              aria-label="Next slice"
-              className="rounded-l-none rounded-r-lg"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+      {/* Controls Row 1: Date picker + Playback + Actions */}
+      <div className="flex flex-wrap items-center gap-3">
+        {/* Date picker with prev/next day */}
+        <div className="flex items-center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { stopPlayback(); stepByDay(-1); }}
+            disabled={isDemo || availableDates.indexOf(selectedDate) <= 0}
+            title={isDemo ? 'Full access required' : 'Previous day'}
+            aria-label="Previous day"
+            className="rounded-r-none border-r-0"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => { stopPlayback(); onDateChange(e); }}
+            disabled={isDemo}
+            min={minDateAvail || undefined}
+            max={maxDateAvail || undefined}
+            className="h-full rounded-none border border-x-0 border-border-strong bg-white px-2.5 py-1 text-xs text-foreground outline-none focus:ring-0 dark:bg-background"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { stopPlayback(); stepByDay(1); }}
+            disabled={isDemo || availableDates.indexOf(selectedDate) >= availableDates.length - 1}
+            title={isDemo ? 'Full access required' : 'Next day'}
+            aria-label="Next day"
+            className="rounded-l-none border-l-0"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
+
+        {/* Timestamp step controls */}
+        <div className="flex items-center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { stopPlayback(); stepByIndex(-1); }}
+            disabled={isDemo || sliderIndex <= 0}
+            title={isDemo ? 'Full access required' : 'Previous timestamp'}
+            aria-label="Previous timestamp"
+            className="rounded-r-none border-r-0"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="flex h-full items-center border border-x-0 border-border-strong bg-white px-2.5 py-1 text-xs tabular-nums text-foreground dark:bg-background">
+            {currentTime || '—'}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { stopPlayback(); stepByIndex(1); }}
+            disabled={isDemo || sliderIndex >= dayTimestamps.length - 1}
+            title={isDemo ? 'Full access required' : 'Next timestamp'}
+            aria-label="Next timestamp"
+            className="rounded-l-none border-l-0"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Playback controls */}
+        <div className="flex items-center gap-1">
+          <Button
+            variant={isPlaying ? 'primary' : 'outline'}
+            size="sm"
+            onClick={() => setIsPlaying(!isPlaying)}
+            disabled={isDemo || dayTimestamps.length === 0 || sliderIndex >= dayTimestamps.length - 1}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+            title={isPlaying ? 'Pause playback' : 'Play through day'}
+          >
+            {isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+          </Button>
+        </div>
+
+        {/* Speed selector */}
+        <div className="flex items-center rounded-lg border border-border-strong">
+          {SPEED_OPTIONS.map((opt, i) => (
+            <button
+              key={opt.label}
+              onClick={() => setPlaySpeed(i)}
+              className={clsx(
+                'px-2 py-1 text-xs font-medium transition-colors',
+                i === 0 && 'rounded-l-[7px]',
+                i === SPEED_OPTIONS.length - 1 && 'rounded-r-[7px]',
+                playSpeed === i
+                  ? 'bg-foreground text-background'
+                  : 'bg-white text-foreground-secondary hover:text-foreground dark:bg-background'
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Download + Fullscreen */}
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -538,33 +959,46 @@ export default function HeatmapExplorer() {
         </div>
       </div>
 
+      {/* Timeline slider — scoped to selected day */}
+      <div className="space-y-1">
+        <Slider
+          min={0}
+          max={Math.max(dayTimestamps.length - 1, 0)}
+          value={sliderIndex}
+          onChange={(val) => { stopPlayback(); onSliderChange(val); }}
+          disabled={isDemo || dayTimestamps.length === 0}
+        />
+        <div className="flex items-center justify-between text-[10px] text-foreground-tertiary">
+          <span>{minTime}</span>
+          <span className="font-medium text-foreground-secondary">{currentTime}</span>
+          <span>{maxTime}</span>
+        </div>
+      </div>
+
       {/* Map and List Grid */}
       <div className={clsx(
         'grid gap-6',
         isFullscreen ? 'flex-1 lg:grid-cols-1' : 'lg:grid-cols-[1.5fr,1fr]'
       )}>
         {/* Map Panel */}
-        <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-lg">
-          <div className="flex items-center justify-between border-b border-border px-4 py-3">
-            <span className="text-sm font-medium text-foreground">Map View</span>
-            <div className="flex items-center gap-3">
-              {loading ? (
-                <span className="inline-flex items-center gap-2 text-xs text-foreground-secondary">
-                  <Spinner size="sm" /> Loading…
-                </span>
-              ) : (
-                <span className="text-xs text-foreground-secondary">Heat intensity by power consumption/generation</span>
-              )}
+        <div className={clsx(
+          'relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-surface to-transparent',
+          isFullscreen ? 'h-[calc(100vh-200px)]' : 'h-[520px]'
+        )}>
+          {loading && (
+            <div className="pointer-events-none absolute top-3 right-3 z-10">
+              <span className="inline-flex items-center gap-2 rounded-lg bg-panel/90 px-3 py-1.5 text-xs text-foreground-secondary shadow-sm shadow-black/10 backdrop-blur">
+                <Spinner size="sm" /> Loading…
+              </span>
             </div>
-          </div>
-          <div className={clsx(isFullscreen ? 'h-[calc(100vh-140px)]' : 'h-[520px]')}>
+          )}
             {!canRenderMap ? (
               <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
                 <div className="text-sm text-foreground-secondary">WebGL is not available</div>
                 <div className="text-xs text-foreground-tertiary">Heatmap view requires WebGL support</div>
               </div>
             ) : (
-              <Map
+              <MapGL
                 ref={handleMapRef}
                 reuseMaps={false}
                 mapLib={maplibregl}
@@ -600,39 +1034,78 @@ export default function HeatmapExplorer() {
                   </Source>
                 )}
                 <NavigationControl position="bottom-right" style={{ marginBottom: '52px' }} />
-                <button
-                  onClick={() => setShowLegend(!showLegend)}
-                  className={clsx(
-                    'pointer-events-auto absolute left-3 bottom-3 flex items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all',
-                    showLegend
-                      ? 'h-auto w-auto flex-col items-start gap-2 p-3'
-                      : 'h-[29px] w-[29px] text-foreground-secondary hover:bg-surface'
-                  )}
-                  aria-label={showLegend ? 'Hide legend' : 'Show legend'}
-                >
-                  {showLegend ? (
-                    <>
-                      <div className="flex items-center gap-1.5 text-xs font-semibold">
-                        <Info className="h-3.5 w-3.5" />
-                        Power Density
+                {showLegend ? (
+                  <div
+                    className="pointer-events-auto absolute left-3 bottom-3 flex w-48 flex-col gap-2.5 rounded-lg bg-panel/90 p-3 text-foreground shadow-sm shadow-black/10 backdrop-blur"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      onClick={() => setShowLegend(false)}
+                      className="flex items-center gap-1.5 text-xs font-semibold"
+                    >
+                      <Info className="h-3.5 w-3.5" />
+                      Heat Intensity
+                    </button>
+                    <p className="text-[10px] leading-tight text-foreground-secondary">Power consumption/generation</p>
+                    <div className="flex flex-col gap-1">
+                      <div
+                        className="h-2.5 rounded-sm"
+                        style={{
+                          background: 'linear-gradient(to right, #00ff00, #ffff00, #ffa500, #ff0000, #b40000)',
+                        }}
+                      />
+                      <div className="flex justify-between text-[10px] font-mono text-foreground-secondary">
+                        <span>{thresholdMin} kW</span>
+                        <span>{thresholdMax} kW</span>
                       </div>
-                      <div className="flex flex-col gap-2 text-xs text-foreground-secondary">
-                        <div
-                          className="h-3 w-24 rounded-sm"
-                          style={{
-                            background: 'linear-gradient(to right, #4169e1, #00ffff, #00ff00, #ffff00, #ffa500, #ff0000)',
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-medium text-foreground-secondary">Min</span>
+                        <input
+                          type="number"
+                          value={thresholdMin}
+                          onChange={(e) => {
+                            const v = Math.max(0, Math.min(Number(e.target.value), thresholdMax - 1));
+                            setThresholdMin(v);
                           }}
+                          min={0}
+                          max={thresholdMax - 1}
+                          step={10}
+                          className="h-6 w-20 rounded border border-border bg-background px-1.5 text-right text-[11px] font-mono text-foreground outline-none focus:border-accent"
                         />
-                        <div className="flex justify-between text-[10px] font-mono">
-                          <span>Low</span>
-                          <span>High</span>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
+                      </label>
+                      <label className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-medium text-foreground-secondary">Max</span>
+                        <input
+                          type="number"
+                          value={thresholdMax}
+                          onChange={(e) => {
+                            const v = Math.max(thresholdMin + 1, Number(e.target.value));
+                            setThresholdMax(v);
+                          }}
+                          min={thresholdMin + 1}
+                          step={10}
+                          className="h-6 w-20 rounded border border-border bg-background px-1.5 text-right text-[11px] font-mono text-foreground outline-none focus:border-accent"
+                        />
+                      </label>
+                    </div>
+                    <button
+                      onClick={() => { setThresholdMin(0); setThresholdMax(800); }}
+                      className="self-end text-[10px] font-medium text-foreground-tertiary transition-colors hover:text-foreground-secondary"
+                    >
+                      Reset defaults
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowLegend(true)}
+                    className="pointer-events-auto absolute left-3 bottom-3 flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-panel/90 text-foreground-secondary shadow-sm shadow-black/10 backdrop-blur transition-all hover:bg-surface"
+                    aria-label="Show legend"
+                  >
                     <Info className="h-3.5 w-3.5" />
-                  )}
-                </button>
+                  </button>
+                )}
                 <div className="pointer-events-auto absolute bottom-3 right-[10px]">
                   <button
                     onClick={() => setShowAttribution(!showAttribution)}
@@ -676,9 +1149,8 @@ export default function HeatmapExplorer() {
                     </div>
                   </div>
                 )}
-              </Map>
+              </MapGL>
             )}
-          </div>
         </div>
 
         {/* Station List Panel - hidden in fullscreen */}
