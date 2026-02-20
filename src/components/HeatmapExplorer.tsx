@@ -953,6 +953,8 @@ export default function HeatmapExplorer() {
             variant="outline"
             size="sm"
             onClick={toggleFullscreen}
+            disabled={isDemo}
+            title={isDemo ? 'Full access required' : undefined}
             aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
             icon={isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
           />

@@ -8,6 +8,7 @@ import { WebGLErrorSuppressor } from '@/components/WebGLErrorSuppressor';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import { AuthProvider } from '@/context/AuthProvider';
 import { getSession } from '@/lib/auth';
+import RolePreview from '@/components/RolePreview';
 
 const display = Google_Sans_Flex({
   variable: '--font-display',
@@ -71,6 +72,7 @@ export default async function RootLayout({
                 <main className="flex-1">{children}</main>
                 <Footer />
               </div>
+              {process.env.NODE_ENV === 'development' && <RolePreview />}
             </ToastProvider>
           </AuthProvider>
         </ThemeProvider>

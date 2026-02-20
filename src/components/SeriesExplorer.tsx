@@ -329,6 +329,8 @@ export default function SeriesExplorer({ type, id }: Props) {
               variant="outline"
               size="sm"
               onClick={downloadPng}
+              disabled={isDemo}
+              title={isDemo ? 'Full access required' : undefined}
               icon={<ImageDown className="h-4 w-4" />}
             >
               PNG

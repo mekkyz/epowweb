@@ -1,8 +1,9 @@
 'use client';
 
-import { createContext, useContext, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useCallback, useMemo, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import type { UserRole } from '@/lib/auth';
+import { useRolePreview } from '@/components/RolePreview';
 
 export interface AuthUser {
   username: string;
@@ -35,6 +36,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children, user }: AuthProviderProps) {
   const router = useRouter();
+  const previewRole = useRolePreview();
 
   const logout = useCallback(async () => {
     const res = await fetch('/api/auth/logout', { method: 'POST' });
@@ -49,11 +51,20 @@ export function AuthProvider({ children, user }: AuthProviderProps) {
     }
   }, [router]);
 
+  const effectiveUser = useMemo<AuthUser | null>(() => {
+    // In development, allow role preview to override the role
+    if (previewRole) {
+      const base = user ?? { username: 'preview', name: 'Preview User' };
+      return { ...base, role: previewRole };
+    }
+    return user;
+  }, [user, previewRole]);
+
   const value: AuthContextValue = {
-    user,
-    isAuthenticated: !!user,
-    isDemo: user?.role === 'demo',
-    isAdmin: user?.role === 'admin',
+    user: effectiveUser,
+    isAuthenticated: !!effectiveUser,
+    isDemo: effectiveUser?.role === 'demo',
+    isAdmin: effectiveUser?.role === 'admin',
     logout,
   };
 

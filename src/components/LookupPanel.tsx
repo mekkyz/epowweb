@@ -8,6 +8,7 @@ import {
   stationOptions,
 } from '@/config/grid';
 import { Button, Select } from '@/components/ui';
+import { useAuth } from '@/context/AuthProvider';
 import type { EntityType } from '@/lib/constants';
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function LookupPanel({ onPreview }: Props) {
+  const { isDemo } = useAuth();
   const [station, setStation] = useState(stationOptions[0]?.id ?? '');
   const [building, setBuilding] = useState(buildingOptions[0]?.id ?? '');
   const [meter, setMeter] = useState(meterOptions[0]?.id ?? '');
@@ -42,6 +44,7 @@ export default function LookupPanel({ onPreview }: Props) {
           options={stationOptions}
           onPreview={() => openTarget('station', true)}
           onOpen={() => openTarget('station')}
+          disabled={isDemo}
         />
         <LookupSelect
           label="Buildings"
@@ -51,6 +54,7 @@ export default function LookupPanel({ onPreview }: Props) {
           options={buildingOptions}
           onPreview={() => openTarget('building', true)}
           onOpen={() => openTarget('building')}
+          disabled={isDemo}
         />
         <LookupSelect
           label="Meters"
@@ -60,6 +64,7 @@ export default function LookupPanel({ onPreview }: Props) {
           options={meterOptions}
           onPreview={() => openTarget('meter', true)}
           onOpen={() => openTarget('meter')}
+          disabled={isDemo}
         />
       </div>
 
@@ -76,6 +81,7 @@ function LookupSelect({
   options,
   onPreview,
   onOpen,
+  disabled,
 }: {
   label: string;
   icon: React.ReactNode;
@@ -84,6 +90,7 @@ function LookupSelect({
   onChange: (next: string) => void;
   onPreview: () => void;
   onOpen: () => void;
+  disabled?: boolean;
 }) {
   const selectOptions = options.map((opt) => ({
     value: opt.id,
@@ -116,6 +123,7 @@ function LookupSelect({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         size="sm"
+        disabled={disabled}
         aria-label={`Select ${label.toLowerCase()}`}
       />
     </div>
