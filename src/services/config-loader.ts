@@ -40,7 +40,7 @@ export function getDataDir(): string {
 /**
  * Returns the config file path, checking environment variable first
  */
-export function getConfigFile(): string {
+function getConfigFile(): string {
   if (process.env.SMDT_CONFIG_FILE) {
     configLogger.debug('Using SMDT_CONFIG_FILE from environment', { path: process.env.SMDT_CONFIG_FILE });
     return process.env.SMDT_CONFIG_FILE;

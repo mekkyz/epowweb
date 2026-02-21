@@ -1,7 +1,6 @@
 import fs from 'fs';
 import Database from 'better-sqlite3';
-import { SeriesOptions, SeriesBounds } from '@/services/smdt-data';
-import { HeatmapPoint, MeterReading } from '@/types/smdt';
+import { HeatmapPoint, MeterReading, SeriesBounds, SeriesOptions } from '@/types/smdt';
 import { dbLogger } from '@/lib/logger';
 
 let db: Database.Database | null = null;

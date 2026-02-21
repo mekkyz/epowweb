@@ -43,3 +43,14 @@ export interface HeatmapPoint {
   valueKw: number | null;
   unit: string;
 }
+
+export interface SeriesOptions {
+  start?: string;
+  end?: string;
+  limit?: number;
+}
+
+export interface SeriesBounds {
+  start?: string;
+  end?: string;
+}

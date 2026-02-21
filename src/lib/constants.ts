@@ -18,8 +18,6 @@ export const MAP_STYLES = {
   },
 } as const;
 
-export type MapDetailLevel = 'minimal' | 'detailed';
-
 export const DEFAULT_MAP_VIEW = {
   longitude: 8.4346,
   latitude: 49.099,
@@ -44,18 +42,6 @@ export const MAP_ZOOM_LIMITS = {
 // =============================================================================
 // API Configuration
 // =============================================================================
-
-export const API_ENDPOINTS = {
-  meters: '/api/meters',
-  meterSeries: (id: string) => `/api/meters/${id}/series`,
-  buildings: '/api/buildings',
-  buildingSeries: (id: string) => `/api/buildings/${id}/series`,
-  stations: '/api/stations',
-  stationSeries: (id: string) => `/api/stations/${id}/series`,
-  heatmap: '/api/heatmap',
-  heatmapAvailable: '/api/heatmap/available',
-  heatmapGeo: '/api/heatmap/geo',
-} as const;
 
 export const API_DEFAULTS = {
   seriesLimit: 2000,
@@ -95,52 +81,11 @@ export const COLORS = {
 } as const;
 
 // =============================================================================
-// Heatmap Thresholds (kW)
-// =============================================================================
-
-export const HEATMAP_THRESHOLDS = {
-  low: 0,
-  medium: 50,
-  high: 120,
-  peak: 250,
-} as const;
-
-// =============================================================================
 // UI Constants
 // =============================================================================
 
 export const ENTITY_TYPES = ['station', 'building', 'meter'] as const;
 export type EntityType = (typeof ENTITY_TYPES)[number];
-
-export const ENTITY_LABELS: Record<EntityType, string> = {
-  station: 'Station',
-  building: 'Building',
-  meter: 'Meter',
-} as const;
-
-// =============================================================================
-// Route Paths
-// =============================================================================
-
-export const ROUTES = {
-  home: '/',
-  login: '/login',
-  heatmap: '/heatmap',
-  visualization: (type: EntityType, id: string) => `/visualization/${type}/${id}`,
-} as const;
-
-// =============================================================================
-// Anemos Weather Layers
-// =============================================================================
-
-export const ANEMOS_LAYERS = ['radiation', 'temperature', 'wind'] as const;
-export type AnemosLayer = (typeof ANEMOS_LAYERS)[number];
-
-export const ANEMOS_LAYER_TITLES: Record<AnemosLayer, string> = {
-  radiation: 'Solar radiation (10 min)',
-  temperature: 'Air temperature',
-  wind: 'Wind speed',
-} as const;
 
 // =============================================================================
 // Error Messages

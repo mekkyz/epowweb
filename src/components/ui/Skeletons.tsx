@@ -1,56 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
 import clsx from 'clsx';
-import { Map as MapIcon } from 'lucide-react';
-
-interface MapSkeletonProps {
-  height?: string;
-  className?: string;
-}
-
-export function MapSkeleton({ height = 'h-[520px]', className }: MapSkeletonProps) {
-  return (
-    <div
-      className={clsx(
-        'relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-panel to-surface',
-        height,
-        className
-      )}
-    >
-      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-surface-hover to-transparent" />
-
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `
-            linear-gradient(var(--border) 1px, transparent 1px),
-            linear-gradient(90deg, var(--border) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-        }}
-      />
-
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-surface backdrop-blur">
-          <MapIcon className="h-8 w-8 text-foreground-tertiary" />
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <div className="h-2 w-32 animate-pulse rounded-full bg-surface-hover" />
-          <div className="h-2 w-24 animate-pulse rounded-full bg-surface" />
-        </div>
-      </div>
-
-      <div className="absolute bottom-4 right-4 flex flex-col gap-1 rounded-xl bg-panel p-1 backdrop-blur">
-        <div className="h-8 w-8 rounded-lg bg-surface-hover" />
-        <div className="h-8 w-8 rounded-lg bg-surface-hover" />
-      </div>
-    </div>
-  );
-}
 
 const CHART_BAR_HEIGHTS = [45, 72, 38, 65, 55, 80, 42, 68, 35, 75, 50, 60];
-const CARD_LINE_WIDTHS = [85, 70, 95, 75, 80];
 
 interface ChartSkeletonProps {
   height?: string;
@@ -99,39 +51,6 @@ export function ChartSkeleton({ height = 'h-[340px]', className }: ChartSkeleton
             <div key={i} className="h-2 w-10 animate-pulse rounded bg-surface-hover" />
           ))}
         </div>
-      </div>
-    </div>
-  );
-}
-
-interface CardSkeletonProps {
-  className?: string;
-  lines?: number;
-}
-
-export function CardSkeleton({ className, lines = 3 }: CardSkeletonProps) {
-  const lineWidths = useMemo(
-    () => CARD_LINE_WIDTHS.slice(0, lines),
-    [lines]
-  );
-
-  return (
-    <div
-      className={clsx(
-        'rounded-xl border border-border bg-panel p-4',
-        className
-      )}
-    >
-      <div className="h-3 w-20 animate-pulse rounded bg-surface-hover" />
-      <div className="mt-2 h-6 w-16 animate-pulse rounded bg-panel" />
-      <div className="mt-3 space-y-2">
-        {lineWidths.map((width, i) => (
-          <div
-            key={i}
-            className="h-2 animate-pulse rounded bg-surface-hover"
-            style={{ width: `${width}%` }}
-          />
-        ))}
       </div>
     </div>
   );

@@ -1,10 +1,11 @@
 import fs from 'fs';
 import Database from 'better-sqlite3';
 import { createLogger } from '@/lib/logger';
+import type { UserRole } from '@/lib/auth';
 
 const authLogger = createLogger('AuthStore');
 
-export type UserRole = 'demo' | 'full' | 'admin';
+export type { UserRole };
 
 interface UserRow {
   kuerzel: string;

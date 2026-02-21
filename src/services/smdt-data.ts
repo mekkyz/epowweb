@@ -17,6 +17,8 @@ import {
   HeatmapPoint,
   MeterMeta,
   MeterReading,
+  SeriesBounds,
+  SeriesOptions,
   SmdtConfig,
   StationMeta,
 } from '@/types/smdt';
@@ -45,16 +47,7 @@ export function getStationMeta(id: string): StationMeta | undefined {
   return getSmdtConfig().stations.find((s) => s.id === id);
 }
 
-export interface SeriesOptions {
-  start?: string;
-  end?: string;
-  limit?: number;
-}
-
-export interface SeriesBounds {
-  start?: string;
-  end?: string;
-}
+export type { SeriesOptions, SeriesBounds };
 
 export async function loadMeterSeries(
   meterId: string,
