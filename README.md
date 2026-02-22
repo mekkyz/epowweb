@@ -1,6 +1,6 @@
 # SMDT (Next.js)
 
-Next.js + Tailwind rebuild of the smdt-legacy frontend. It covers the KIT Campus North power grid (stations, buildings, meters, lines), interactive 2D/3D maps, legacy time-series visualizations, the heatmap endpoint, and Anemos weather layers.
+Next.js + Tailwind rebuild of the smdt-legacy frontend. It covers the KIT Campus North power grid (stations, buildings, meters, lines), interactive 2D/3D maps, legacy time-series visualizations, and the heatmap endpoint.
 
 ## Quick start
 
@@ -19,11 +19,11 @@ The server auto-selects the richest dataset available:
 3) Otherwise use the bundled sample data under `./data/smdt-sample` + `./data/smdt-config/KIT_CN.xml`.
 
 - When `data/smdt.db` exists (or `SMDT_SQLITE_PATH` points to a DB file), all series/heatmap APIs use SQLite. The CSV fallback is only used if the DB is missing.
-- Optional legacy hooks (currently unused by the UI): `NEXT_PUBLIC_BACKEND_BASE`, `NEXT_PUBLIC_HEATMAP_BASE`, `NEXT_PUBLIC_ANEMOS_BASE`.
+- Optional legacy hooks (currently unused by the UI): `NEXT_PUBLIC_BACKEND_BASE`, `NEXT_PUBLIC_HEATMAP_BASE`.
 
 ### Data
 
-- Grid data lives in `src/data/legacy-grid.json`, converted from the original `data/legacy/KITCN.geojson` (run `npm run legacy:data` to regenerate).
+- Grid data lives in `src/config/legacy-grid.json`, converted from the original `data/legacy/KITCN.geojson` (run `npm run legacy:data` to regenerate).
 - Power data: seed SQLite from `DatenSM`/`DatenSM_time` via `npm run db:seed` (reads from `SMDT_DATA_DIR` or the bundled sample dir). It recreates the DB from scratch and is safe to rerun.
 - Config in `data/smdt-config/KIT_CN.xml`. Point `SMDT_CONFIG_FILE` at a different XML if needed.
 - If the SQLite DB is missing, the APIs fall back to CSV reads from `SMDT_DATA_DIR`.
@@ -34,7 +34,6 @@ The server auto-selects the richest dataset available:
 - **Live data lookup** for stations/buildings/meters with inline visualizations powered by the new TypeScript APIs.
 - **3D map** (deck.gl + MapLibre) extruding stations and cables.
 - **Heatmap explorer** reading from SQLite when available (or the `DatenSM_time` CSVs).
-- **Anemos weather preview** (radiation/wind/temperature) with launch links.
 - **TypeScript backend APIs** under `/api` backed by SQLite (with CSV fallback):
   - `/api/meters/:id/series` (per-meter time-series)
   - `/api/buildings/:id/series` and `/api/stations/:id/series` (aggregated sums based on `KIT_CN.xml`)

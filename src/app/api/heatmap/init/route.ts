@@ -1,13 +1,10 @@
 import { NextResponse } from 'next/server';
-import { getHeatmapBounds, loadHeatmapSlice, getMeterMeta } from '@/services/smdt-data';
-import { stationFeatures } from '@/config/grid';
+import { getHeatmapBounds, loadHeatmapSlice } from '@/services/smdt-data';
 import { apiLogger } from '@/lib/logger';
+import { aggregateSliceByStation } from '@/app/api/_lib/aggregate-heatmap';
 
 // Cache the response for 60 seconds on the server
 export const revalidate = 60;
-
-// Pre-build station lookup map once
-const stationsById = new Map(stationFeatures.map((s) => [s.properties.id, s]));
 
 export async function GET() {
   try {
@@ -20,41 +17,9 @@ export async function GET() {
 
     if (initialTimestamp) {
       const slice = await loadHeatmapSlice(initialTimestamp);
-
-      // Aggregate heatmap points by station
-      const bucket = new Map<
-        string,
-        { stationId: string; value: number; count: number; coordinates: [number, number] }
-      >();
-
-      slice.forEach((p) => {
-        const meta = getMeterMeta(p.meterId);
-        const stationId = meta?.stationId;
-        if (!stationId) return;
-
-        const station = stationsById.get(stationId);
-        if (!station?.geometry || station.geometry.type !== 'Point') return;
-
-        const coords = station.geometry.coordinates as [number, number];
-        const entry = bucket.get(stationId);
-        const val = p.valueKw ?? 0;
-
-        if (!entry) {
-          bucket.set(stationId, { stationId, value: val, count: 1, coordinates: coords });
-        } else {
-          entry.value += val;
-          entry.count += 1;
-        }
-      });
-
-      const features = Array.from(bucket.values()).map((b) => ({
-        type: 'Feature' as const,
-        geometry: { type: 'Point' as const, coordinates: b.coordinates },
-        properties: { stationId: b.stationId, valueKw: b.value, meters: b.count },
-      }));
-
-      featureCollection = { type: 'FeatureCollection' as const, features };
-      stats = { stations: features.length, meters: slice.length };
+      const result = aggregateSliceByStation(slice);
+      featureCollection = result.featureCollection;
+      stats = result.stats;
     }
 
     apiLogger.info('GET /api/heatmap/init', {

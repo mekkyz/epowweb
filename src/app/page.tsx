@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import CampusMapSection from '@/components/CampusMapSection';
 import LiveDataSection from '@/components/LiveDataSection';
-// import AnemosPanel from '@/components/AnemosPanel';
 import { gridData } from '@/config/grid';
 import { Activity, Building2, Gauge, Cable } from 'lucide-react';
 
@@ -117,41 +116,6 @@ export default function Home() {
         <LiveDataSection />
       </section>
 
-      {/* Weather Section
-      <section className="mt-14 space-y-5">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-sky-400/20 to-sky-600/20 ring-1 ring-sky-400/30">
-            <Activity className="h-6 w-6 text-sky-400" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-foreground-tertiary">
-              Weather Data
-            </p>
-            <h2 className="font-display text-2xl font-semibold text-foreground">
-              Anemos Atmospheric Layers
-            </h2>
-          </div>
-        </div>
-        <AnemosPanel />
-      </section> */}
-
-      {/* Heatmap CTA */}
-      {/* <section className="mt-14">
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-panel p-8">
-          <div className="relative flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-              <h3 className="mt-2 font-display text-2xl font-semibold text-foreground">
-                20 kV Load Heatmap
-              </h3>
-            <Link
-              href="/heatmap"
-              className="group inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface px-6 py-3 text-sm font-semibold text-foreground shadow-lg shadow-black/10 backdrop-blur transition-all hover:bg-surface-hover hover:shadow-xl dark:shadow-black/20"
-            >
-              Open Heatmap
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </Link>
-          </div>
-        </div>
-      </section> */}
     </div>
   );
 }

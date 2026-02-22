@@ -26,17 +26,8 @@ export default function AdminPanel() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    let cancelled = false;
-    fetch('/api/admin/users')
-      .then((res) => res.json())
-      .then((body) => {
-        if (cancelled) return;
-        if (body.success) setUsers(body.data);
-        setLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data load
+  useEffect(() => { fetchUsers(); }, []);
 
   const handleAdd = async (e: FormEvent) => {
     e.preventDefault();

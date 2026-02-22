@@ -1,10 +1,8 @@
 import legacyGrid from '@/config/legacy-grid.json';
 import type {
-  Building,
   GridCollections,
   LegacyGridData,
   LineFeature,
-  Meter,
   StationFeature,
 } from '@/types/grid';
 
@@ -70,14 +68,6 @@ export const stationById = new Map<string, StationFeature>(
   gridData.stations.map((s) => [s.properties.id, s]),
 );
 
-export const buildingById = new Map<string, Building>(
-  gridData.buildings.map((b) => [b.id, b]),
-);
-
-export const meterById = new Map<string, Meter>(
-  gridData.meters.map((m) => [m.id, m]),
-);
-
 // =============================================================================
 // Select Options for UI Components
 // =============================================================================
@@ -109,8 +99,20 @@ export const meterOptions = gridData.meters
 
 export const lineFeatures = gridData.lines as LineFeature[];
 export const stationFeatures = gridData.stations as StationFeature[];
-export const meters = gridData.meters as Meter[];
-export const buildings = gridData.buildings as Building[];
+
+// =============================================================================
+// Grid Legend (shared by 2D and 3D map components)
+// =============================================================================
+
+export const GRID_LEGEND = [
+  { color: '#aaff00', label: 'Ring 1 – Südring' },
+  { color: '#00aaff', label: 'Ring 2 – Ring B' },
+  { color: '#ffff00', label: 'Ring 3 – Ring A' },
+  { color: '#ff5500', label: 'Ring 4 – Nordring' },
+  { color: '#ff0000', label: 'Ring 5 – WAK' },
+  { color: '#ff0099', label: 'Ring 6 – Kopfstationen' },
+  { color: '#aaaaff', label: 'Ring 7 – ITU' },
+] as const;
 
 // =============================================================================
 // Utility Functions

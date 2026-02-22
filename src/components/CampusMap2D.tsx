@@ -11,42 +11,12 @@ import Map, {
 import maplibregl from 'maplibre-gl';
 import clsx from 'clsx';
 import { useTheme } from 'next-themes';
-import { gridCollections } from '@/config/grid';
+import { gridCollections, GRID_LEGEND } from '@/config/grid';
 import { MAP_STYLES, DEFAULT_MAP_VIEW, MAP_ZOOM_LIMITS, COLORS } from '@/lib/constants';
+import { checkWebGLSupport } from '@/lib/webgl';
 import { MapErrorBoundary } from '@/components/MapErrorBoundary';
 import { Map as MapIcon, Maximize2, Minimize2, Info } from 'lucide-react';
 import type { Feature, Point } from 'geojson';
-
-const GRID_LEGEND = [
-  { color: '#aaff00', label: 'Ring 1 – Südring' },
-  { color: '#00aaff', label: 'Ring 2 – Ring B' },
-  { color: '#ffff00', label: 'Ring 3 – Ring A' },
-  { color: '#ff5500', label: 'Ring 4 – Nordring' },
-  { color: '#ff0000', label: 'Ring 5 – WAK' },
-  { color: '#ff0099', label: 'Ring 6 – Kopfstationen' },
-  { color: '#aaaaff', label: 'Ring 7 – ITU' },
-] as const;
-
-function checkWebGLSupport(): boolean {
-  if (typeof window === 'undefined') return false;
-  try {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-    if (!gl) return false;
-    
-    const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-    if (!maxTextureSize || maxTextureSize < 2048) return false;
-    
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const lib = maplibregl as any;
-    if (lib.supported && !lib.supported({ failIfMajorPerformanceCaveat: false })) {
-      return false;
-    }
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 const lineLayer: LayerProps = {
   id: 'lines',

@@ -6,7 +6,7 @@ const path = require('path');
 const vm = require('vm');
 
 const legacyPath = path.join(__dirname, '..', 'data', 'legacy', 'KITCN.geojson');
-const outputPath = path.join(__dirname, '..', 'src', 'data', 'legacy-grid.json');
+const outputPath = path.join(__dirname, '..', 'src', 'config', 'legacy-grid.json');
 
 const raw = fs.readFileSync(legacyPath, 'utf8');
 const context = {};

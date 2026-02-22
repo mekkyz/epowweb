@@ -44,44 +44,12 @@ import { Map } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import { useTheme } from 'next-themes';
 import { hexToRgb } from '@/lib/color';
-import { lineFeatures, stationFeatures } from '@/config/grid';
+import { lineFeatures, stationFeatures, GRID_LEGEND } from '@/config/grid';
 import { MAP_STYLES, MAP_3D_VIEW } from '@/lib/constants';
+import { checkWebGLSupport } from '@/lib/webgl';
 import { MapErrorBoundary } from '@/components/MapErrorBoundary';
 import { Box, Maximize2, Minimize2, Info } from 'lucide-react';
 import clsx from 'clsx';
-
-
-const GRID_LEGEND = [
-  { color: '#aaff00', label: 'Ring 1 – Südring' },
-  { color: '#00aaff', label: 'Ring 2 – Ring B' },
-  { color: '#ffff00', label: 'Ring 3 – Ring A' },
-  { color: '#ff5500', label: 'Ring 4 – Nordring' },
-  { color: '#ff0000', label: 'Ring 5 – WAK' },
-  { color: '#ff0099', label: 'Ring 6 – Kopfstationen' },
-  { color: '#aaaaff', label: 'Ring 7 – ITU' },
-] as const;
-
-function checkWebGLSupport(): boolean {
-  if (typeof window === 'undefined') return false;
-  try {
-    const canvas = document.createElement('canvas');
-    const gl =
-      (canvas.getContext('webgl2') as WebGLRenderingContext | null) ||
-      (canvas.getContext('webgl') as WebGLRenderingContext | null);
-    if (!gl) return false;
-
-    // Light probe to catch truly broken contexts; ignore value thresholds
-    try {
-      gl.getParameter(gl.MAX_TEXTURE_SIZE);
-    } catch {
-      // if it fails, still allow maplibre/deck.gl to handle gracefully
-    }
-
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 export default function CampusMap3D() {
   const { resolvedTheme } = useTheme();

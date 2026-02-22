@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Button, Spinner, Input, Slider, useToast } from '@/components/ui';
 import { MAP_STYLES } from '@/lib/constants';
+import { checkWebGLSupport } from '@/lib/webgl';
 import { useAuth } from '@/context/AuthProvider';
 import clsx from 'clsx';
 
@@ -170,20 +171,7 @@ export default function HeatmapExplorer() {
   const [showAttribution, setShowAttribution] = useState(false);
   const [thresholdMin, setThresholdMin] = useState(0);
   const [thresholdMax, setThresholdMax] = useState(800);
-  const [canRenderMap] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const lib = maplibregl as any;
-      const supported = lib.supported?.({ failIfMajorPerformanceCaveat: false }) ?? true;
-      const canvas = document.createElement('canvas');
-      const gl =
-        canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      return supported && !!gl;
-    } catch {
-      return false;
-    }
-  });
+  const [canRenderMap] = useState<boolean>(() => checkWebGLSupport());
 
   // Debounce ref for slider
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
