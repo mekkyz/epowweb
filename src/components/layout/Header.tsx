@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { Radio, Menu, X, Home, Sun, Moon, LogOut, ShieldCheck } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import clsx from 'clsx';
 import { useAuth } from '@/context/AuthProvider';
+import { useIsEmbedded } from '@/hooks/useIsEmbedded';
 
 const navLinks = [
   { href: '/', label: 'Home', icon: Home },
@@ -58,14 +59,9 @@ function ThemeToggle() {
 
 function HeaderContent() {
   const pathname = usePathname();
-  const search = useSearchParams();
   const { user, isAdmin, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isEmbedded = useMemo(() => {
-    const embedFlag = search?.get('embed') === '1';
-    const inIframe = typeof window !== 'undefined' && window.self !== window.top;
-    return embedFlag || inIframe;
-  }, [search]);
+  const isEmbedded = useIsEmbedded();
 
   const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.includes('#')) {

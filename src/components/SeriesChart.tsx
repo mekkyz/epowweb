@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Area,
   Bar,
@@ -32,11 +32,7 @@ import {
   BarChart3,
 } from 'lucide-react';
 import clsx from 'clsx';
-
-type ChartMouseEvent = {
-  activeLabel?: string | number | null;
-  [key: string]: unknown;
-};
+import { useChartZoom } from '@/components/chart/useChartZoom';
 
 interface SeriesPoint {
   start: string;
@@ -59,22 +55,26 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
   const [chartStyle, setChartStyle] = useState<'curve' | 'line' | 'point' | 'column'>('curve');
   const [filled, setFilled] = useState(true);
 
-  // zoom state
-  const [zoomLeft, setZoomLeft] = useState<number | null>(null);
-  const [zoomRight, setZoomRight] = useState<number | null>(null);
-  const [refAreaLeft, setRefAreaLeft] = useState<string | null>(null);
-  const [refAreaRight, setRefAreaRight] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isPanning, setIsPanning] = useState(false);
-  const [panStartX, setPanStartX] = useState<number | null>(null);
-  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const {
+    chartContainerRef,
+    visibleData,
+    isZoomed,
+    zoomPercentage,
+    isDragging,
+    isPanning,
+    refAreaLeft,
+    refAreaRight,
+    zoomBy,
+    resetZoom,
+    containerHandlers,
+    chartHandlers,
+  } = useChartZoom({ data, resetKey: fetchUrl });
 
   useEffect(() => {
     setMounted(true);
     setIsInIframe(window.self !== window.top);
   }, []);
 
-  // debounce chart height update
   useEffect(() => {
     const targetHeight = isExpanded ? 720 : 340;
     const timer = setTimeout(() => setChartHeight(targetHeight), 50);
@@ -83,14 +83,17 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
 
   // Theme-aware chart colors
   const isDark = resolvedTheme === 'dark';
-  const chartColors = {
-    grid: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)',
-    axisStroke: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.3)',
-    axisTick: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.6)',
-    tooltipBg: isDark ? 'rgba(11, 16, 32, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-    tooltipBorder: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.15)',
-    tooltipText: isDark ? '#fff' : '#000',
-  };
+  const chartColors = useMemo(
+    () => ({
+      grid: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)',
+      axisStroke: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.3)',
+      axisTick: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.6)',
+      tooltipBg: isDark ? 'rgba(11, 16, 32, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+      tooltipBorder: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.15)',
+      tooltipText: isDark ? '#fff' : '#000',
+    }),
+    [isDark],
+  );
 
   useEffect(() => {
     if (!fetchUrl) return;
@@ -111,7 +114,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
           series.map((row) => ({
             start: row.start,
             powerKw: row.powerKw ?? row.power ?? null,
-          }))
+          })),
         );
         setStatus('idle');
       } catch (err) {
@@ -129,200 +132,24 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
     setIsExpanded((prev) => !prev);
   }, []);
 
-  // compute visible data based on zoom
-  const visibleData = useMemo(() => {
-    if (zoomLeft === null || zoomRight === null) return data;
-    return data.slice(zoomLeft, zoomRight + 1);
-  }, [data, zoomLeft, zoomRight]);
+  // Memoized stats from visible data
+  const stats = useMemo(() => {
+    const valid = visibleData.filter((d) => d.powerKw !== null);
+    if (valid.length === 0) return { min: 0, avg: 0, median: 0, max: 0 };
 
-  const isZoomed = zoomLeft !== null && zoomRight !== null;
+    const values = valid.map((d) => d.powerKw || 0);
+    const sum = values.reduce((a, b) => a + b, 0);
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    const median = sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
 
-  // calculate zoom percentage
-  const zoomPercentage = useMemo(() => {
-    if (!isZoomed || data.length === 0) return 100;
-    return Math.round((visibleData.length / data.length) * 100);
-  }, [isZoomed, visibleData.length, data.length]);
-
-  // reset zoom
-  const resetZoom = useCallback(() => {
-    setZoomLeft(null);
-    setZoomRight(null);
-    setRefAreaLeft(null);
-    setRefAreaRight(null);
-  }, []);
-
-  // reset zoom when data changes
-  useEffect(() => {
-    resetZoom();
-  }, [fetchUrl, resetZoom]);
-
-  // zoom by a factor (positive = zoom in, negative = zoom out)
-  const zoomBy = useCallback(
-    (factor: number, centerRatio = 0.5) => {
-      if (data.length < 3) return;
-
-      const currentLeft = zoomLeft ?? 0;
-      const currentRight = zoomRight ?? data.length - 1;
-      const currentRange = currentRight - currentLeft;
-      const centerIndex = currentLeft + centerRatio * currentRange;
-
-      const zoomFactor = factor > 0 ? 0.7 : 1.4;
-      const newRange = Math.max(10, Math.min(data.length, currentRange * zoomFactor));
-
-      let newLeft = Math.round(centerIndex - centerRatio * newRange);
-      let newRight = Math.round(centerIndex + (1 - centerRatio) * newRange);
-
-      // clamp to valid bounds
-      if (newLeft < 0) {
-        newRight = Math.min(data.length - 1, newRight - newLeft);
-        newLeft = 0;
-      }
-      if (newRight >= data.length) {
-        newLeft = Math.max(0, newLeft - (newRight - data.length + 1));
-        newRight = data.length - 1;
-      }
-
-      // if fully zoomed out, reset
-      if (newLeft === 0 && newRight === data.length - 1) {
-        resetZoom();
-      } else {
-        setZoomLeft(newLeft);
-        setZoomRight(newRight);
-      }
-    },
-    [data.length, zoomLeft, zoomRight, resetZoom]
-  );
-
-  // native wheel event listener to properly prevent scroll in iframes
-  useEffect(() => {
-    const container = chartContainerRef.current;
-    if (!container || data.length < 3) return;
-
-    const handleWheelEvent = (e: WheelEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const rect = container.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const chartWidth = rect.width - 70;
-      const relativeX = Math.max(0, Math.min(1, (mouseX - 60) / chartWidth));
-
-      zoomBy(e.deltaY < 0 ? 1 : -1, relativeX);
+    return {
+      min: Math.min(...values),
+      avg: sum / valid.length,
+      median,
+      max: Math.max(...values),
     };
-
-    container.addEventListener('wheel', handleWheelEvent, { passive: false });
-    return () => container.removeEventListener('wheel', handleWheelEvent);
-  }, [data.length, zoomBy]);
-
-  // pan handlers for dragging when zoomed
-  const handlePanStart = useCallback(
-    (e: React.MouseEvent) => {
-      if (!isZoomed) return;
-      // only start pan with middle mouse or when holding shift
-      if (e.button === 1 || e.shiftKey) {
-        e.preventDefault();
-        setIsPanning(true);
-        setPanStartX(e.clientX);
-      }
-    },
-    [isZoomed]
-  );
-
-  const handlePanMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!isPanning || panStartX === null || !isZoomed) return;
-
-      const container = chartContainerRef.current;
-      if (!container) return;
-
-      const deltaX = e.clientX - panStartX;
-      const chartWidth = container.getBoundingClientRect().width - 70;
-      const currentRange = (zoomRight ?? 0) - (zoomLeft ?? 0);
-      const panAmount = Math.round((deltaX / chartWidth) * currentRange * -1);
-
-      if (Math.abs(panAmount) < 1) return;
-
-      let newLeft = (zoomLeft ?? 0) + panAmount;
-      let newRight = (zoomRight ?? 0) + panAmount;
-
-      // clamp to bounds
-      if (newLeft < 0) {
-        newRight -= newLeft;
-        newLeft = 0;
-      }
-      if (newRight >= data.length) {
-        newLeft -= newRight - data.length + 1;
-        newRight = data.length - 1;
-      }
-
-      setZoomLeft(Math.max(0, newLeft));
-      setZoomRight(Math.min(data.length - 1, newRight));
-      setPanStartX(e.clientX);
-    },
-    [isPanning, panStartX, isZoomed, zoomLeft, zoomRight, data.length]
-  );
-
-  const handlePanEnd = useCallback(() => {
-    setIsPanning(false);
-    setPanStartX(null);
-  }, []);
-
-  // drag-to-select handlers
-  const handleMouseDown = useCallback((e: ChartMouseEvent) => {
-    if (e?.activeLabel !== undefined) {
-      const label = String(e.activeLabel);
-      setRefAreaLeft(label);
-      setRefAreaRight(label);
-      setIsDragging(true);
-    }
-  }, []);
-
-  const handleMouseMove = useCallback(
-    (e: ChartMouseEvent) => {
-      if (isDragging && e?.activeLabel !== undefined) {
-        setRefAreaRight(String(e.activeLabel));
-      }
-    },
-    [isDragging]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    if (!isDragging || !refAreaLeft || !refAreaRight) {
-      setIsDragging(false);
-      setRefAreaLeft(null);
-      setRefAreaRight(null);
-      return;
-    }
-
-    setIsDragging(false);
-
-    // find indices in original data
-    const leftIdx = data.findIndex((d) => d.start === refAreaLeft);
-    const rightIdx = data.findIndex((d) => d.start === refAreaRight);
-
-    if (leftIdx === -1 || rightIdx === -1) {
-      setRefAreaLeft(null);
-      setRefAreaRight(null);
-      return;
-    }
-
-    const minIdx = Math.min(leftIdx, rightIdx);
-    const maxIdx = Math.max(leftIdx, rightIdx);
-
-    // only zoom if selection is meaningful
-    if (maxIdx - minIdx >= 2) {
-      setZoomLeft(minIdx);
-      setZoomRight(maxIdx);
-    }
-
-    setRefAreaLeft(null);
-    setRefAreaRight(null);
-  }, [isDragging, refAreaLeft, refAreaRight, data]);
-
-  // double-click to reset
-  const handleDoubleClick = useCallback(() => {
-    if (isZoomed) resetZoom();
-  }, [isZoomed, resetZoom]);
+  }, [visibleData]);
 
   if (!fetchUrl || !mounted) {
     return (
@@ -333,29 +160,10 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
     );
   }
 
-  // calculate stats from visible data
-  const validData = visibleData.filter((d) => d.powerKw !== null);
-  const avgPower =
-    validData.length > 0
-      ? validData.reduce((sum, d) => sum + (d.powerKw || 0), 0) / validData.length
-      : 0;
-  const minPower =
-    validData.length > 0 ? Math.min(...validData.map((d) => d.powerKw || 0)) : 0;
-  const medianPower = (() => {
-    if (validData.length === 0) return 0;
-    const sorted = validData.map((d) => d.powerKw || 0).sort((a, b) => a - b);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
-  })();
-  const maxPower =
-    validData.length > 0 ? Math.max(...validData.map((d) => d.powerKw || 0)) : 0;
-
   return (
     <div
       id="series-chart-container"
-      className={clsx(
-        'overflow-hidden rounded-xl border border-border bg-white shadow-lg dark:bg-background',
-      )}
+      className="overflow-hidden rounded-xl border border-border bg-white shadow-lg dark:bg-background"
       style={{
         margin: isExpanded ? '0 -18vw' : '0 0',
         transition: 'margin 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -378,26 +186,20 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
         <div className="flex items-center gap-3">
           {status === 'idle' && data.length > 0 && (
             <>
-              <div className="text-right">
-                <p className="text-xs text-foreground-tertiary">Min</p>
-                <p className="font-mono text-sm text-sky-400">{minPower.toFixed(2)} kW</p>
-              </div>
-              <div className="h-8 w-px bg-border" />
-              <div className="text-right">
-                <p className="text-xs text-foreground-tertiary">Avg</p>
-                <p className="font-mono text-sm text-emerald-400">{avgPower.toFixed(2)} kW</p>
-              </div>
-              <div className="h-8 w-px bg-border" />
-              <div className="text-right">
-                <p className="text-xs text-foreground-tertiary">Median</p>
-                <p className="font-mono text-sm text-violet-400">{medianPower.toFixed(2)} kW</p>
-              </div>
-              <div className="h-8 w-px bg-border" />
-              <div className="text-right">
-                <p className="text-xs text-foreground-tertiary">Max</p>
-                <p className="font-mono text-sm text-amber-400">{maxPower.toFixed(2)} kW</p>
-              </div>
-              <div className="h-8 w-px bg-border" />
+              {([
+                { label: 'Min', value: stats.min, color: 'text-sky-400' },
+                { label: 'Avg', value: stats.avg, color: 'text-emerald-400' },
+                { label: 'Median', value: stats.median, color: 'text-violet-400' },
+                { label: 'Max', value: stats.max, color: 'text-amber-400' },
+              ] as const).map(({ label, value, color }) => (
+                <div key={label} className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-xs text-foreground-tertiary">{label}</p>
+                    <p className={`font-mono text-sm ${color}`}>{value.toFixed(2)} kW</p>
+                  </div>
+                  <div className="h-8 w-px bg-border" />
+                </div>
+              ))}
             </>
           )}
           <div className="rounded-md px-2 py-1 text-xs text-foreground-secondary">
@@ -428,7 +230,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                   'flex h-7 w-7 items-center justify-center rounded-md transition-all',
                   chartStyle === key
                     ? 'bg-surface text-foreground shadow-sm'
-                    : 'text-foreground-tertiary hover:text-foreground-secondary'
+                    : 'text-foreground-tertiary hover:text-foreground-secondary',
                 )}
                 aria-label={label}
                 title={label}
@@ -443,7 +245,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                 'flex h-7 items-center justify-center rounded-md px-2 text-xs font-medium transition-all',
                 filled
                   ? 'bg-surface text-foreground shadow-sm'
-                  : 'text-foreground-tertiary hover:text-foreground-secondary'
+                  : 'text-foreground-tertiary hover:text-foreground-secondary',
               )}
               aria-label="Toggle filled"
               title="Toggle filled"
@@ -457,24 +259,28 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
               className="flex h-7 w-7 items-center justify-center rounded-lg border border-border-strong text-foreground-secondary transition-all hover:bg-surface hover:text-foreground"
               aria-label={isExpanded ? 'Collapse chart' : 'Expand chart'}
             >
-              {isExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+              {isExpanded ? (
+                <Minimize2 className="h-4 w-4" />
+              ) : (
+                <Maximize2 className="h-4 w-4" />
+              )}
             </button>
           )}
         </div>
       </div>
 
-      {/* chart */}
+      {/* Chart */}
       <div className="relative p-4">
         {status === 'loading' && data.length === 0 ? (
           <ChartSkeleton />
         ) : (
           <>
-            {/* zoom controls - floating overlay */}
+            {/* Zoom controls overlay */}
             {data.length > 10 && (
               <div
                 className={clsx(
                   'absolute right-6 top-6 z-10 flex items-center gap-1 rounded-lg border border-border bg-panel/95 p-1 shadow-lg backdrop-blur-sm transition-opacity',
-                  isDragging ? 'opacity-30' : 'opacity-100'
+                  isDragging ? 'opacity-30' : 'opacity-100',
                 )}
               >
                 <button
@@ -515,7 +321,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
               </div>
             )}
 
-            {/* pan hint when zoomed */}
+            {/* Pan hint when zoomed */}
             {isZoomed && !isDragging && (
               <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 rounded-full border border-border bg-panel/90 px-3 py-1.5 text-xs text-foreground-tertiary shadow-lg backdrop-blur-sm">
                 <span className="flex items-center gap-2">
@@ -527,15 +333,11 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
 
             <div
               ref={chartContainerRef}
-              onDoubleClick={handleDoubleClick}
-              onMouseDown={handlePanStart}
-              onMouseMove={handlePanMove}
-              onMouseUp={handlePanEnd}
-              onMouseLeave={handlePanEnd}
+              {...containerHandlers}
               className={clsx(
                 'select-none outline-none',
                 isPanning && 'cursor-grabbing',
-                isZoomed && !isPanning && 'cursor-crosshair'
+                isZoomed && !isPanning && 'cursor-crosshair',
               )}
               style={{
                 height: isExpanded ? 720 : 340,
@@ -544,15 +346,18 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                 transition: 'height 0.35s ease-out',
               }}
             >
-              <ResponsiveContainer width="100%" height={chartHeight} minWidth={280} minHeight={240} className="outline-none [&_svg]:outline-none">
+              <ResponsiveContainer
+                width="100%"
+                height={chartHeight}
+                minWidth={280}
+                minHeight={240}
+                className="outline-none [&_svg]:outline-none"
+              >
                 <ComposedChart
                   data={visibleData}
                   margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                   barCategoryGap={chartStyle === 'column' ? '5%' : undefined}
-                  onMouseDown={handleMouseDown}
-                  onMouseMove={handleMouseMove}
-                  onMouseUp={handleMouseUp}
-                  onMouseLeave={handleMouseUp}
+                  {...chartHandlers}
                 >
                   <defs>
                     <linearGradient id="colorPower" x1="0" y1="0" x2="0" y2="1">
@@ -571,25 +376,19 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                     dataKey="start"
                     tickFormatter={(value) => {
                       if (!value) return '';
-
                       const isMultiDay =
                         visibleData.length > 1 &&
                         visibleData[0]?.start?.slice(0, 10) !==
                           visibleData[visibleData.length - 1]?.start?.slice(0, 10);
-
                       const time = value.slice(11, 16);
-
                       if (isMultiDay) {
                         const hour = parseInt(time.slice(0, 2));
                         if ((hour >= 0 && hour < 6) || hour === 12) {
-                          const month = value.slice(5, 7);
-                          const day = value.slice(8, 10);
-                          return `${month}/${day} ${time}`;
+                          return `${value.slice(5, 7)}/${value.slice(8, 10)} ${time}`;
                         }
                         return time;
-                      } else {
-                        return time;
                       }
+                      return time;
                     }}
                     stroke={chartColors.axisStroke}
                     tick={{ fill: chartColors.axisTick, fontSize: 10 }}
@@ -682,8 +481,17 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                       type="linear"
                       dataKey="powerKw"
                       stroke="transparent"
-                      dot={{ fill: filled ? COLORS.accent.primary : 'transparent', stroke: COLORS.accent.primary, strokeWidth: filled ? 0 : 1, r: 1 }}
-                      activeDot={{ fill: COLORS.accent.primary, stroke: COLORS.accent.primary, r: 2.5 }}
+                      dot={{
+                        fill: filled ? COLORS.accent.primary : 'transparent',
+                        stroke: COLORS.accent.primary,
+                        strokeWidth: filled ? 0 : 1,
+                        r: 1,
+                      }}
+                      activeDot={{
+                        fill: COLORS.accent.primary,
+                        stroke: COLORS.accent.primary,
+                        r: 2.5,
+                      }}
                       isAnimationActive={false}
                     />
                   )}
@@ -695,7 +503,15 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                       stroke={filled ? 'none' : COLORS.accent.primary}
                       strokeWidth={filled ? 0 : 1}
                       radius={[1, 1, 0, 0]}
-                      maxBarSize={visibleData.length > 300 ? 1 : visibleData.length > 100 ? 2 : visibleData.length > 30 ? 4 : 10}
+                      maxBarSize={
+                        visibleData.length > 300
+                          ? 1
+                          : visibleData.length > 100
+                            ? 2
+                            : visibleData.length > 30
+                              ? 4
+                              : 10
+                      }
                       barSize={visibleData.length > 300 ? 1 : undefined}
                     />
                   )}

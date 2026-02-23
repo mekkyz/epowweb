@@ -9,6 +9,9 @@ export type { SelectProps, SelectOption } from './Select';
 export { Input } from './Input';
 export type { InputProps } from './Input';
 
+export { FormField } from './form-utils';
+export type { FieldSize } from './form-utils';
+
 export { Badge } from './Badge';
 export type { BadgeProps, BadgeVariant, BadgeSize } from './Badge';
 

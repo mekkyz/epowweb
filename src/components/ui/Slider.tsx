@@ -26,7 +26,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
         onChange={(e) => onChange(Number(e.target.value))}
         disabled={disabled}
         style={{ '--pct': `${pct}%` } as React.CSSProperties}
-        className={clsx('heatmap-slider', className)}
+        className={clsx('slider-track', className)}
         {...props}
       />
     );

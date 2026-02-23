@@ -1,7 +1,10 @@
 @import "tailwindcss";
 @import "maplibre-gl/dist/maplibre-gl.css";
 
-/* Dark theme */
+/* ============================================
+   Theme tokens (dark default / light override)
+   ============================================ */
+
 :root {
   --background: #050b18;
   --background-body: #0a1222;
@@ -21,7 +24,6 @@
   --selection-text: #0b1020;
 }
 
-/* Light theme */
 .light {
   --background: #ffffff;
   --background-body: #f8fafc;
@@ -60,6 +62,10 @@
   --font-display: var(--font-display);
 }
 
+/* ============================================
+   Base / reset styles
+   ============================================ */
+
 html {
   scrollbar-gutter: stable;
 }
@@ -83,7 +89,10 @@ a {
   color: var(--selection-text);
 }
 
-/* MapLibre Dark mode*/
+/* ============================================
+   Third-party overrides — MapLibre controls
+   ============================================ */
+
 .maplibregl-ctrl-group {
   border: none;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
@@ -95,9 +104,9 @@ a {
 
 .maplibregl-ctrl-group button {
   background: transparent;
-  color: #e5ecf4;
+  color: var(--foreground);
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border);
 }
 
 .maplibregl-ctrl-group button:last-child {
@@ -105,21 +114,20 @@ a {
 }
 
 .maplibregl-ctrl-group button:not(:disabled):hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--surface-hover);
 }
 
 .maplibregl-ctrl.maplibregl-ctrl-attrib {
   background: rgba(12, 18, 36, 0.8);
-  color: #e5ecf4;
+  color: var(--foreground);
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
 }
 
 .maplibregl-ctrl.maplibregl-ctrl-attrib a {
-  color: #cfe0ff;
+  color: var(--accent-2);
 }
 
-/* MapLibre Light mode */
 .light .maplibregl-ctrl-group {
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
@@ -127,9 +135,9 @@ a {
 
 .light .maplibregl-ctrl-group button {
   background: transparent;
-  color: #0f172a;
+  color: var(--foreground);
   border: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--border);
 }
 
 .light .maplibregl-ctrl-group button:last-child {
@@ -137,103 +145,110 @@ a {
 }
 
 .light .maplibregl-ctrl-group button:not(:disabled):hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--surface-hover);
 }
 
 .light .maplibregl-ctrl.maplibregl-ctrl-attrib {
   background: rgba(255, 255, 255, 0.95);
-  color: #334155;
+  color: var(--foreground-secondary);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .light .maplibregl-ctrl.maplibregl-ctrl-attrib a {
-  color: #3b82f6;
+  color: var(--accent-2);
 }
 
-/* Heatmap timeline slider */
-.heatmap-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 6px;
-  border-radius: 9999px;
-  background: linear-gradient(
-    to right,
-    var(--accent) 0%,
-    var(--accent) var(--pct, 0%),
-    var(--border-strong) var(--pct, 0%),
-    var(--border-strong) 100%
-  );
-  outline: none;
-  cursor: pointer;
-  will-change: background;
-  touch-action: none;
-  padding: 8px 0;
-  box-sizing: content-box;
-  background-clip: content-box;
-}
+/* ============================================
+   Component CSS — Slider (range input)
+   Needs global scope for pseudo-element selectors
+   that cannot be expressed in Tailwind.
+   ============================================ */
 
-.heatmap-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 2.5px solid var(--background);
-  box-shadow: 0 0 0 1px var(--accent), 0 1px 3px rgba(0, 0, 0, 0.15);
-  cursor: grab;
-  transition: box-shadow 0.12s ease-out, transform 0.12s ease-out;
-  will-change: transform;
-}
+@layer components {
+  .slider-track {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      to right,
+      var(--accent) 0%,
+      var(--accent) var(--pct, 0%),
+      var(--border-strong) var(--pct, 0%),
+      var(--border-strong) 100%
+    );
+    outline: none;
+    cursor: pointer;
+    will-change: background;
+    touch-action: none;
+    padding: 8px 0;
+    box-sizing: content-box;
+    background-clip: content-box;
+  }
 
-.heatmap-slider::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent), 0 1px 3px rgba(0, 0, 0, 0.15);
-  transform: scale(1.15);
-}
+  .slider-track::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2.5px solid var(--background);
+    box-shadow: 0 0 0 1px var(--accent), 0 1px 3px rgba(0, 0, 0, 0.15);
+    cursor: grab;
+    transition: box-shadow 0.12s ease-out, transform 0.12s ease-out;
+    will-change: transform;
+  }
 
-.heatmap-slider:active::-webkit-slider-thumb {
-  cursor: grabbing;
-  transform: scale(1.25);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 20%, transparent), 0 1px 3px rgba(0, 0, 0, 0.15);
-}
+  .slider-track::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent), 0 1px 3px rgba(0, 0, 0, 0.15);
+    transform: scale(1.15);
+  }
 
-.heatmap-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 2.5px solid var(--background);
-  box-shadow: 0 0 0 1px var(--accent), 0 1px 3px rgba(0, 0, 0, 0.15);
-  cursor: grab;
-}
+  .slider-track:active::-webkit-slider-thumb {
+    cursor: grabbing;
+    transform: scale(1.25);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 20%, transparent), 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
 
-.heatmap-slider:active::-moz-range-thumb {
-  cursor: grabbing;
-}
+  .slider-track::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2.5px solid var(--background);
+    box-shadow: 0 0 0 1px var(--accent), 0 1px 3px rgba(0, 0, 0, 0.15);
+    cursor: grab;
+  }
 
-.heatmap-slider::-moz-range-track {
-  height: 6px;
-  border-radius: 9999px;
-  background: var(--border-strong);
-}
+  .slider-track:active::-moz-range-thumb {
+    cursor: grabbing;
+  }
 
-.heatmap-slider::-moz-range-progress {
-  height: 6px;
-  border-radius: 9999px;
-  background: var(--accent);
-}
+  .slider-track::-moz-range-track {
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--border-strong);
+  }
 
-.heatmap-slider:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+  .slider-track::-moz-range-progress {
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--accent);
+  }
 
-.heatmap-slider:disabled::-webkit-slider-thumb {
-  cursor: not-allowed;
-  transform: none;
-}
+  .slider-track:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 
-.heatmap-slider:disabled::-moz-range-thumb {
-  cursor: not-allowed;
+  .slider-track:disabled::-webkit-slider-thumb {
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .slider-track:disabled::-moz-range-thumb {
+    cursor: not-allowed;
+  }
 }

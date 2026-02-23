@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import CampusMapSection from '@/components/CampusMapSection';
 import LiveDataSection from '@/components/LiveDataSection';
+import PageHeader from '@/components/layout/PageHeader';
 import { gridData } from '@/config/grid';
-import { Activity, Building2, Gauge, Cable } from 'lucide-react';
+import { Activity, Building2, Gauge, Cable, type LucideIcon } from 'lucide-react';
 
 const stats = [
   {
@@ -26,14 +27,31 @@ const stats = [
     icon: Gauge,
     color: 'text-amber-400',
   },
-  { 
-    label: 'Lines', 
-    value: gridData.lines.length, 
+  {
+    label: 'Lines',
+    value: gridData.lines.length,
     hint: '20 kV and head cables',
     icon: Cable,
     color: 'text-purple-400',
   },
 ];
+
+function StatCard({ icon: Icon, color, value, label, hint }: {
+  icon: LucideIcon;
+  color: string;
+  value: number;
+  label: string;
+  hint: string;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-0.5 rounded-lg bg-panel px-3 py-3 ring-1 ring-border shadow-sm sm:h-[120px] sm:px-6 sm:py-2">
+      <Icon className={`h-4 w-4 ${color}`} />
+      <span className="font-display text-xl font-semibold text-foreground">{value}</span>
+      <span className="text-xs text-foreground-tertiary">{label}</span>
+      <span className="text-[10px] leading-tight text-foreground-tertiary/70">{hint}</span>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
@@ -43,7 +61,7 @@ export default function Home() {
           <h1 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
             eASiMOV - ePowWeb - SMDT
           </h1>
-       
+
         </div>
 
         <div className="mt-6 hidden items-center justify-between sm:flex">
@@ -56,20 +74,9 @@ export default function Home() {
             priority
           />
 
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={stat.label}
-                className="flex h-[120px] flex-col items-center justify-center gap-0.5 rounded-lg bg-panel px-6 py-2 ring-1 ring-border shadow-sm"
-              >
-                <Icon className={`h-4 w-4 ${stat.color}`} />
-                <span className="font-display text-xl font-semibold text-foreground">{stat.value}</span>
-                <span className="text-xs text-foreground-tertiary">{stat.label}</span>
-                <span className="text-[10px] leading-tight text-foreground-tertiary/70">{stat.hint}</span>
-              </div>
-            );
-          })}
+          {stats.map((stat) => (
+            <StatCard key={stat.label} {...stat} />
+          ))}
 
           <Image
             src="/ESA-Logo.png"
@@ -82,37 +89,16 @@ export default function Home() {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-2 sm:hidden">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={stat.label}
-                className="flex flex-col items-center justify-center gap-0.5 rounded-lg bg-panel px-3 py-3 ring-1 ring-border shadow-sm"
-              >
-                <Icon className={`h-4 w-4 ${stat.color}`} />
-                <span className="font-display text-xl font-semibold text-foreground">{stat.value}</span>
-                <span className="text-xs text-foreground-tertiary">{stat.label}</span>
-                <span className="text-[10px] leading-tight text-foreground-tertiary/70">{stat.hint}</span>
-              </div>
-            );
-          })}
+          {stats.map((stat) => (
+            <StatCard key={stat.label} {...stat} />
+          ))}
         </div>
       </section>
 
       <CampusMapSection />
 
       <section id="live-data" className="mt-14 scroll-mt-20 space-y-5">
-        <div className="flex items-center gap-4">
-
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-foreground-tertiary">
-              Visualization
-            </p>
-            <h2 className="font-display text-2xl font-semibold text-foreground">
-              Station, Building & Meter Previews
-            </h2>
-          </div>
-        </div>
+        <PageHeader label="Visualization" title="Station, Building & Meter Previews" className="mb-0" />
         <LiveDataSection />
       </section>
 

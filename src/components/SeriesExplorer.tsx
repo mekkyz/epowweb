@@ -15,8 +15,9 @@ import {
 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import SeriesChart from '@/components/SeriesChart';
-import { Button, Input, ChartSkeleton, useToast } from '@/components/ui';
+import { Button, Input, Select, ChartSkeleton, useToast } from '@/components/ui';
 import { useAuth } from '@/context/AuthProvider';
+import { downloadBlob } from '@/lib/download';
 
 type SeriesType = 'meter' | 'building' | 'station';
 
@@ -93,8 +94,8 @@ export default function SeriesExplorer({ type, id }: Props) {
   }, [apiBase]);
 
   const fetchUrl = useMemo(() => {
-    const startParam = formatForApi(start);
-    const endParam = formatForApi(end);
+    const startParam = fromLocalInput(start);
+    const endParam = fromLocalInput(end);
     const params = new URLSearchParams();
     if (startParam) params.set('start', startParam);
     if (endParam) params.set('end', endParam);
@@ -130,13 +131,11 @@ export default function SeriesExplorer({ type, id }: Props) {
         [];
 
       if (format === 'json') {
-        const blob = new Blob([JSON.stringify(series, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${type}-${id}-${Date.now()}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
+        downloadBlob(
+          JSON.stringify(series, null, 2),
+          `${type}-${id}-${Date.now()}.json`,
+          'application/json',
+        );
       } else {
         const rows = ['start,end,powerKw,powerOriginalKw,energyKwh,energyOriginalKwh,errorCode'];
         (series as unknown[]).forEach((row) => {
@@ -155,13 +154,7 @@ export default function SeriesExplorer({ type, id }: Props) {
             ].join(','),
           );
         });
-        const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${type}-${id}-${Date.now()}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+        downloadBlob(rows.join('\n'), `${type}-${id}-${Date.now()}.csv`, 'text/csv');
       }
       success(`Data downloaded as ${format.toUpperCase()}`);
     } catch (err) {
@@ -274,16 +267,17 @@ export default function SeriesExplorer({ type, id }: Props) {
               >
                 <Minus className="h-4 w-4" />
               </Button>
-              <select
+              <Select
+                options={[
+                  { value: 'day', label: 'Day' },
+                  { value: 'week', label: 'Week' },
+                  { value: 'month', label: 'Month' },
+                ]}
                 value={rangeUnit}
                 onChange={(e) => setRangeUnit(e.target.value as 'day' | 'week' | 'month')}
                 disabled={isDemo}
-                className="h-[26px] rounded-lg border border-border-strong bg-white px-2.5 text-xs text-foreground outline-none focus:ring-0 dark:bg-background"
-              >
-                <option value="day">Day</option>
-                <option value="week">Week</option>
-                <option value="month">Month</option>
-              </select>
+                size="sm"
+              />
               <Button
                 variant="outline"
                 size="sm"
@@ -365,13 +359,7 @@ function toLocalInput(ts?: string) {
   return d.isValid() ? d.format('YYYY-MM-DDTHH:mm') : '';
 }
 
-function fromLocalInput(val: string) {
-  if (!val) return undefined;
-  const d = dayjs(val);
-  return d.isValid() ? d.format('YYYY-MM-DD HH:mm:ss') : undefined;
-}
-
-function formatForApi(val?: string) {
+function fromLocalInput(val?: string) {
   if (!val) return undefined;
   const d = dayjs(val);
   return d.isValid() ? d.format('YYYY-MM-DD HH:mm:ss') : undefined;

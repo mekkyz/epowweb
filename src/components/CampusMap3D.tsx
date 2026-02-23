@@ -8,6 +8,15 @@ import { SimpleMeshLayer } from '@deck.gl/mesh-layers';
 import { OBJLoader } from '@loaders.gl/obj';
 import { load } from '@loaders.gl/core';
 import type { LineFeature } from '@/types/grid';
+import { Map } from 'react-map-gl/maplibre';
+import maplibregl from 'maplibre-gl';
+import { useTheme } from 'next-themes';
+import { hexToRgb } from '@/lib/color';
+import { lineFeatures, stationFeatures } from '@/config/grid';
+import { MAP_STYLES, MAP_3D_VIEW } from '@/lib/constants';
+import { Box } from 'lucide-react';
+import MapShell from './map/MapShell';
+import { useSuppressMissingImages } from './map/useMapControls';
 
 function lineToPolygon(coordinates: [number, number][], width: number): [number, number][][] {
   if (coordinates.length < 2) return [];
@@ -28,7 +37,6 @@ function lineToPolygon(coordinates: [number, number][], width: number): [number,
     const px = (-dy / len) * halfWidth;
     const py = (dx / len) * halfWidth;
 
-
     polygons.push([
       [x1 + px, y1 + py],
       [x2 + px, y2 + py],
@@ -40,132 +48,39 @@ function lineToPolygon(coordinates: [number, number][], width: number): [number,
 
   return polygons;
 }
-import { Map } from 'react-map-gl/maplibre';
-import maplibregl from 'maplibre-gl';
-import { useTheme } from 'next-themes';
-import { hexToRgb } from '@/lib/color';
-import { lineFeatures, stationFeatures, GRID_LEGEND } from '@/config/grid';
-import { MAP_STYLES, MAP_3D_VIEW } from '@/lib/constants';
-import { checkWebGLSupport } from '@/lib/webgl';
-import { MapErrorBoundary } from '@/components/MapErrorBoundary';
-import { Box, Maximize2, Minimize2, Info } from 'lucide-react';
-import clsx from 'clsx';
 
 export default function CampusMap3D() {
   const { resolvedTheme } = useTheme();
-  const [webGLSupported, setWebGLSupported] = useState<boolean | null>(null);
-  const [deckError, setDeckError] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showLines, setShowLines] = useState(true);
-  const [showStations, setShowStations] = useState(true);
   const [selected, setSelected] = useState<{ id?: string; url?: string; description?: string; group?: string } | null>(null);
-  const [showAttribution, setShowAttribution] = useState(false);
-  const [showLegend, setShowLegend] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [stationMesh, setStationMesh] = useState<any>(null);
 
-  // Map style follows app theme - always use detailed style with 3D buildings
+  const suppressMissing = useSuppressMissingImages();
+
   const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
   const mapStyle = useMemo(() => MAP_STYLES[mapStyleType].detailed, [mapStyleType]);
 
-  // Load 3D station sign mesh
   useEffect(() => {
     load('/3d/StationSign.obj', OBJLoader)
-      .then((mesh) => {
-        setStationMesh(mesh);
-      })
-      .catch((err) => {
-        console.warn('Failed to load station mesh, falling back to columns:', err);
-      });
+      .then((mesh) => setStationMesh(mesh))
+      .catch((err) => console.warn('Failed to load station mesh, falling back to columns:', err));
   }, []);
 
-  useEffect(() => {
-    // Delay WebGL check slightly to ensure browser is ready
-    const timer = setTimeout(() => {
-      const supported = checkWebGLSupport();
-      setWebGLSupported(supported);
-    }, 50);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  // If context gets lost later, fail gracefully
-  useEffect(() => {
-    const handler = (event: Event) => {
-      event.preventDefault();
-      setDeckError(true);
-    };
-    if (typeof window !== 'undefined') {
-      window.addEventListener('webglcontextlost', handler as EventListener, { passive: false });
-    }
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('webglcontextlost', handler as EventListener);
-      }
-    };
-  }, []);
-
-  const handleDeckError = useCallback(() => {
-    setDeckError(true);
-  }, []);
-
-  const toggleFullscreen = useCallback(async () => {
-    const container = document.getElementById('campus-map-3d-container');
-    if (!container) return;
-
-    try {
-      if (!document.fullscreenElement) {
-        await container.requestFullscreen();
-      } else {
-        await document.exitFullscreen();
-      }
-    } catch (err) {
-      console.error('Failed to toggle fullscreen:', err);
-    }
-  }, []);
-
-  const onDeckClick = useCallback((info: PickingInfo) => {
-    if (info.object && info.layer?.id === 'grid-stations-3d') {
-      const props = info.object.properties;
-      setSelected(props ?? null);
-    } else {
-      setSelected(null);
-    }
-  }, []);
-
-  // Suppress missing sprite image warnings from OpenFreeMap tiles
   const handleMapRef = useCallback((ref: { getMap: () => maplibregl.Map } | null) => {
-    if (ref) {
-      const map = ref.getMap();
-      map.on('styleimagemissing', (e) => {
-        const emptyImage = { width: 1, height: 1, data: new Uint8Array(4) };
-        if (!map.hasImage(e.id)) {
-          map.addImage(e.id, emptyImage);
-        }
-      });
-    }
-  }, []);
+    if (ref) suppressMissing(ref);
+  }, [suppressMissing]);
 
   const onMapLoad = useCallback((evt: { target: maplibregl.Map }) => {
     const map = evt.target;
 
     const setupMap = () => {
-      // Add realistic lighting for 3D buildings
       map.setLight({
         anchor: 'viewport',
         color: '#ffffff',
         intensity: 0.4,
-        position: [1.5, 180, 45] // azimuthal angle, polar angle, radial distance
+        position: [1.5, 180, 45],
       });
 
-      // Find the building source - could be 'openmaptiles' or other OSM-based sources
       const sources = map.getStyle()?.sources || {};
       const buildingSource = Object.keys(sources).find(
         key => sources[key].type === 'vector' &&
@@ -177,7 +92,6 @@ export default function CampusMap3D() {
         return;
       }
 
-      // Add 3D buildings layer if it doesn't exist
       if (!map.getLayer('3d-buildings')) {
         const layers = map.getStyle()?.layers;
         const labelLayerId = layers?.find(
@@ -193,41 +107,31 @@ export default function CampusMap3D() {
               type: 'fill-extrusion',
               minzoom: 13,
               paint: {
-                // Realistic building colors - tan/beige for most buildings, darker for taller ones
                 'fill-extrusion-color': [
                   'case',
-                  // Industrial/large buildings - darker gray
                   ['>', ['coalesce', ['get', 'render_height'], 10], 30],
                   '#7a7a7a',
-                  // Medium buildings - warm gray/tan
                   ['>', ['coalesce', ['get', 'render_height'], 10], 15],
                   '#9a9590',
-                  // Regular buildings - light beige/cream
                   '#b8b4ad'
                 ],
                 'fill-extrusion-height': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
+                  'interpolate', ['linear'], ['zoom'],
                   13, 0,
                   13.5, ['coalesce', ['get', 'render_height'], 10]
                 ],
                 'fill-extrusion-base': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
+                  'interpolate', ['linear'], ['zoom'],
                   13, 0,
                   13.5, ['coalesce', ['get', 'render_min_height'], 0]
                 ],
                 'fill-extrusion-opacity': 0.92,
-                // Vertical gradient for depth - darker at base, lighter at top
                 'fill-extrusion-vertical-gradient': true
               }
             },
             labelLayerId
           );
 
-          // Add building outlines/edges for more definition
           if (!map.getLayer('3d-buildings-outline')) {
             map.addLayer(
               {
@@ -251,11 +155,9 @@ export default function CampusMap3D() {
         }
       }
 
-      // Store map reference for later use
       (window as unknown as { campusMap3D?: maplibregl.Map }).campusMap3D = map;
     };
 
-    // Wait for style to fully load
     if (!map.isStyleLoaded()) {
       map.once('styledata', setupMap);
     } else {
@@ -263,14 +165,21 @@ export default function CampusMap3D() {
     }
   }, []);
 
+  const onDeckClick = useCallback((info: PickingInfo) => {
+    if (info.object && info.layer?.id === 'grid-stations-3d') {
+      setSelected(info.object.properties ?? null);
+    } else {
+      setSelected(null);
+    }
+  }, []);
+
   const layers = useMemo(
     () => [
-      // 3D extruded lines matching legacy implementation
-      showLines && new SolidPolygonLayer({
+      new SolidPolygonLayer({
         id: 'grid-lines-3d',
         data: lineFeatures.flatMap((line: LineFeature) => {
           const coords = line.geometry.coordinates as [number, number][];
-          const polygons = lineToPolygon(coords, 2); // 2 meters width
+          const polygons = lineToPolygon(coords, 2);
           return polygons.map(polygon => ({
             polygon,
             color: line.properties?.color,
@@ -279,12 +188,11 @@ export default function CampusMap3D() {
         getPolygon: (d: { polygon: [number, number][] }) => d.polygon,
         getFillColor: (d: { color?: string }) => [...hexToRgb(d.color), 255] as [number, number, number, number],
         extruded: true,
-        getElevation: 4, // 4 meters height
+        getElevation: 4,
         pickable: true,
         parameters: { depthTest: true },
       }),
-      // Use 3D mesh for stations when loaded
-      showStations && stationMesh && new SimpleMeshLayer({
+      stationMesh && new SimpleMeshLayer({
         id: 'grid-stations-3d',
         data: stationFeatures,
         mesh: stationMesh,
@@ -293,250 +201,73 @@ export default function CampusMap3D() {
           ...hexToRgb(station.properties?.color, [100, 212, 163]),
           255,
         ] as [number, number, number, number],
-        getOrientation: [0, 0, 90], // Rotate to stand upright
-        sizeScale: 8, // Larger scale to match legacy appearance
+        getOrientation: [0, 0, 90],
+        sizeScale: 8,
         pickable: true,
         parameters: { depthTest: true },
       }),
     ].filter(Boolean),
-    [showLines, showStations, stationMesh],
+    [stationMesh],
   );
 
-  // Show loading state while checking WebGL
-  if (webGLSupported === null) {
-    return (
-      <div className="relative flex h-[520px] items-center justify-center overflow-hidden rounded-xl border border-border bg-gradient-to-br from-panel to-surface">
-        <div className="flex flex-col items-center gap-3">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-surface">
-            <Box className="h-8 w-8 animate-pulse text-foreground-tertiary" />
-          </div>
-          <p className="text-sm text-foreground-tertiary">Loading 3D view...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show fallback if WebGL is not supported or deck.gl failed
-  if (!webGLSupported || deckError) {
-    return (
-      <div className="relative flex h-[520px] items-center justify-center overflow-hidden rounded-xl border border-border bg-gradient-to-br from-panel to-surface">
-        <div className="flex flex-col items-center gap-3 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-surface">
-            <Box className="h-8 w-8 text-foreground-tertiary" />
-          </div>
-          <p className="text-sm font-medium text-foreground-secondary">3D View Unavailable</p>
-          <p className="max-w-xs text-xs text-foreground-tertiary">
-            WebGL is not available in this browser. Try using a different browser or enabling hardware acceleration.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <MapErrorBoundary
-      fallbackIcon="box"
-      title="3D View Unavailable"
-      description="Unable to render the 3D map. Try refreshing the page."
+    <MapShell
+      containerId="campus-map-3d-container"
+      placeholderIcon={Box}
+      loadingLabel="Loading 3D view..."
+      errorTitle="3D View Unavailable"
+      errorDescription="Unable to render the 3D map. Try refreshing the page."
+      selectedStation={selected}
+      className="shadow-2xl shadow-emerald-400/10"
     >
-      <div
-        id="campus-map-3d-container"
-        className={clsx(
-          'relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-surface to-transparent shadow-2xl shadow-emerald-400/10',
-          isFullscreen ? 'fixed inset-0 z-50 h-screen w-screen rounded-none' : 'h-[520px]'
-        )}
-      >
-        <DeckGL
-          controller
-          initialViewState={MAP_3D_VIEW}
-          getTooltip={({ object }) => {
-            if (!object) return null;
-            const id = object?.properties?.id ?? '';
-            const desc = object?.properties?.description ?? '';
-            const group = object?.properties?.group ?? '';
-            return {
-              html: `<div style="font-size:14px;font-weight:600;color:var(--foreground)">${id}</div>${desc ? `<div style="color:var(--foreground-secondary)">${desc}</div>` : ''}${group ? `<div style="color:var(--foreground-secondary)">${group}</div>` : ''}`,
-              style: {
-                fontFamily: 'var(--font-sans)',
-                backgroundColor: 'var(--panel)',
-                opacity: '0.9',
-                borderRadius: '8px',
-                padding: '12px',
-                fontSize: '12px',
-                color: 'var(--foreground)',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                backdropFilter: 'blur(8px)',
-              },
-            };
-          }}
-          layers={layers}
-          onError={handleDeckError}
-          onClick={onDeckClick}
-        >
-          <Map
-            ref={handleMapRef}
-            reuseMaps
-            mapLib={maplibregl}
-            mapStyle={mapStyle}
-            onLoad={onMapLoad}
-            attributionControl={false}
-          />
-        </DeckGL>
+      {({ showLines, showStations, onError }) => {
+        // Filter layers based on toggles
+        const activeLayers = layers.filter((l) => {
+          if (!l) return false;
+          if (l.id === 'grid-lines-3d' && !showLines) return false;
+          if (l.id === 'grid-stations-3d' && !showStations) return false;
+          return true;
+        });
 
-        {/* Badge & Toggles */}
-        <div className="pointer-events-auto absolute left-4 top-4 z-10">
-          <div className="flex items-center gap-1 rounded-lg bg-panel/90 p-1 shadow-sm shadow-black/10 backdrop-blur">
-            <button
-              onClick={() => setShowLines(!showLines)}
-              className={clsx(
-                'rounded-xl px-3 py-1 text-sm font-semibold transition',
-                showLines
-                  ? 'bg-foreground text-background shadow-sm'
-                  : 'text-foreground-secondary hover:text-foreground'
-              )}
-            >
-              Grid
-            </button>
-            <button
-              onClick={() => setShowStations(!showStations)}
-              className={clsx(
-                'rounded-xl px-3 py-1 text-sm font-semibold transition',
-                showStations
-                  ? 'bg-foreground text-background shadow-sm'
-                  : 'text-foreground-secondary hover:text-foreground'
-              )}
-            >
-              Stations
-            </button>
-          </div>
-        </div>
-
-        {/* Legend */}
-        <div className="pointer-events-auto absolute bottom-4 left-4 z-10">
-          <button
-            onClick={() => setShowLegend(!showLegend)}
-            className={clsx(
-              'flex items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all',
-              showLegend
-                ? 'h-auto w-auto flex-col items-start gap-2 p-3'
-                : 'h-[29px] w-[29px] text-foreground-secondary hover:bg-surface'
-            )}
-            aria-label={showLegend ? 'Hide legend' : 'Show legend'}
+        return (
+          <DeckGL
+            controller
+            initialViewState={MAP_3D_VIEW}
+            getTooltip={({ object }) => {
+              if (!object) return null;
+              const id = object?.properties?.id ?? '';
+              const desc = object?.properties?.description ?? '';
+              const group = object?.properties?.group ?? '';
+              return {
+                html: `<div style="font-size:14px;font-weight:600;color:var(--foreground)">${id}</div>${desc ? `<div style="color:var(--foreground-secondary)">${desc}</div>` : ''}${group ? `<div style="color:var(--foreground-secondary)">${group}</div>` : ''}`,
+                style: {
+                  fontFamily: 'var(--font-sans)',
+                  backgroundColor: 'var(--panel)',
+                  opacity: '0.9',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '12px',
+                  color: 'var(--foreground)',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                  backdropFilter: 'blur(8px)',
+                },
+              };
+            }}
+            layers={activeLayers}
+            onError={onError}
+            onClick={onDeckClick}
           >
-            {showLegend ? (
-              <>
-                <div className="flex items-center gap-1.5 text-xs font-semibold">
-                  <Info className="h-3.5 w-3.5" />
-                  20 kV Kabelringe
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  {GRID_LEGEND.map((item) => (
-                    <div key={item.color} className="flex items-center gap-2">
-                      <div
-                        className="h-3 w-3 rounded-full ring-1 ring-black/20"
-                        style={{ backgroundColor: item.color }}
-                      />
-                      <span className="text-xs text-foreground-secondary">{item.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <Info className="h-3.5 w-3.5" />
-            )}
-          </button>
-        </div>
-
-        <button
-          onClick={toggleFullscreen}
-          className="pointer-events-auto absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all hover:bg-panel hover:shadow-md"
-          aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-        >
-          {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-        </button>
-
-        {/* Collapsible Attribution */}
-        <div className="pointer-events-auto absolute bottom-4 right-[10px] z-10">
-          <button
-            onClick={() => setShowAttribution(!showAttribution)}
-            className={clsx(
-              'flex h-[29px] items-center justify-center rounded-lg bg-panel/90 text-xs shadow-sm shadow-black/10 backdrop-blur transition-all',
-              showAttribution
-                ? 'w-auto gap-2 px-2.5 text-foreground'
-                : 'w-[29px] text-foreground-secondary hover:bg-surface'
-            )}
-            aria-label={showAttribution ? 'Hide attribution' : 'Show attribution'}
-          >
-            <Info className="h-3.5 w-3.5 flex-shrink-0" />
-            {showAttribution && (
-              <span>
-                © <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">OpenFreeMap</a>
-                {' '}·{' '}
-                <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">OpenStreetMap</a>
-              </span>
-            )}
-          </button>
-        </div>
-
-        {/* ESA-IAI-KIT Watermark */}
-        <div className="pointer-events-none absolute top-3 left-1/2 z-10 -translate-x-1/2">
-          <div className="text-md font-semibold tracking-wide text-foreground/25 drop-shadow-sm select-none">
-            © ESA, IAI-KIT
-          </div>
-        </div>
-
-        {/* Station info panel */}
-        {selected && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
-            <div className="mx-auto w-fit rounded-lg bg-panel/90 p-4 text-sm text-foreground-secondary shadow-sm shadow-black/10 backdrop-blur">
-              <div className="flex items-stretch gap-4">
-                {/* Left side - Info */}
-                <div className="flex flex-col justify-center">
-                  <p className="text-lg font-semibold text-foreground">
-                    {selected.id}
-                  </p>
-                  <p className="text-foreground-secondary">
-                    {selected.description || 'Power node'}
-                  </p>
-                  {selected.group && (
-                    <p className="text-foreground-secondary">{selected.group}</p>
-                  )}
-                </div>
-
-                {/* Divider */}
-                <div className="w-px bg-border" />
-
-                {/* Right side - Visualization & Buttons */}
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <span className="rounded-md bg-surface px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground-tertiary">
-                    Visualization
-                  </span>
-                  {selected.url && (
-                    <div className="pointer-events-auto flex flex-col gap-2">
-                      <button
-                        onClick={() => {
-                          const el = document.getElementById('live-data');
-                          if (el) el.scrollIntoView({ behavior: 'smooth' });
-                          window.dispatchEvent(new CustomEvent('preview-visualization', { detail: selected.url }));
-                        }}
-                        className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface"
-                      >
-                        Preview
-                      </button>
-                      <button
-                        onClick={() => window.open(selected.url, '_blank', 'noopener,noreferrer')}
-                        className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface"
-                      >
-                        Open in Tab
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </MapErrorBoundary>
+            <Map
+              ref={handleMapRef}
+              reuseMaps
+              mapLib={maplibregl}
+              mapStyle={mapStyle}
+              onLoad={onMapLoad}
+              attributionControl={false}
+            />
+          </DeckGL>
+        );
+      }}
+    </MapShell>
   );
 }

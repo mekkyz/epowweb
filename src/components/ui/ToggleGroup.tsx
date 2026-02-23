@@ -36,15 +36,15 @@ function ToggleGroupInner<T extends string>(
   const isLight = variant === 'light';
 
   const activeStyles = isLight
-    ? 'bg-slate-800 text-white shadow-sm'
+    ? 'bg-foreground text-background shadow-sm'
     : 'bg-background text-foreground shadow-sm ring-1 ring-border';
 
   const inactiveStyles = isLight
-    ? 'bg-transparent text-slate-600 hover:text-slate-900'
+    ? 'bg-transparent text-foreground-secondary hover:text-foreground'
     : 'bg-transparent text-foreground-secondary hover:text-foreground';
 
   const containerStyles = isLight
-    ? 'bg-white/90 shadow-sm shadow-black/10 backdrop-blur'
+    ? 'bg-panel/90 shadow-sm shadow-black/10 backdrop-blur'
     : 'bg-surface shadow-sm shadow-black/10 dark:shadow-black/30 backdrop-blur';
 
   return (

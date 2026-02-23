@@ -1,17 +1,13 @@
 'use client';
 
-import { Suspense, useMemo } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import { usePathname } from 'next/navigation';
+import { useIsEmbedded } from '@/hooks/useIsEmbedded';
 
 function FooterContent() {
   const currentYear = new Date().getFullYear();
   const pathname = usePathname();
-  const search = useSearchParams();
-  const isEmbedded = useMemo(() => {
-    const embedFlag = search?.get('embed') === '1';
-    const inIframe = typeof window !== 'undefined' && window.self !== window.top;
-    return embedFlag || inIframe;
-  }, [search]);
+  const isEmbedded = useIsEmbedded();
 
   if (isEmbedded || pathname === '/login') return null;
 
