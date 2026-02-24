@@ -1,12 +1,13 @@
-import legacyGrid from '@/config/legacy-grid.json';
+import gridRaw from '@/config/grid-data.json';
 import type {
   GridCollections,
-  LegacyGridData,
+  GridData,
   LineFeature,
+  RawGridData,
   StationFeature,
 } from '@/types/grid';
 
-const raw = legacyGrid as LegacyGridData;
+const raw = gridRaw as RawGridData;
 
 // =============================================================================
 // Data Processing - Deduplicate and enrich with URLs
@@ -39,7 +40,7 @@ const uniqueLines = dedupe(raw.lines, (l) => l.properties.id);
 /**
  * Complete grid data with all entities
  */
-export const gridData: LegacyGridData = {
+export const gridData: GridData = {
   meters: uniqueMeters,
   buildings: uniqueBuildings,
   stations: uniqueStations,

@@ -30,7 +30,16 @@ export interface LineProperties {
 
 export type LineFeature = Feature<LineString, LineProperties>;
 
-export interface LegacyGridData {
+/** Raw shape of grid-data.json (no url fields — grid.ts adds them). */
+export interface RawGridData {
+  meters: Omit<Meter, 'url'>[];
+  buildings: Omit<Building, 'url'>[];
+  stations: Feature<Point, Omit<StationProperties, 'url'>>[];
+  lines: LineFeature[];
+}
+
+/** Enriched grid data with url fields added by grid.ts. */
+export interface GridData {
   meters: Meter[];
   buildings: Building[];
   stations: StationFeature[];
