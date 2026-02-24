@@ -14,14 +14,14 @@ import { Button, Slider } from '@/components/ui';
 import { SPEED_OPTIONS } from './useHeatmapData';
 
 interface HeatmapControlsProps {
-  // Date navigation
+  // date navigation
   selectedDate: string;
   onDateChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   minDateAvail: string;
   maxDateAvail: string;
   availableDates: string[];
   stepByDay: (delta: -1 | 1) => void;
-  // Timestamp navigation
+  // timestamp navigation
   sliderIndex: number;
   dayTimestamps: string[];
   currentTime: string;
@@ -29,17 +29,17 @@ interface HeatmapControlsProps {
   maxTime: string;
   stepByIndex: (delta: number) => void;
   onSliderChange: (val: number) => void;
-  // Playback
+  // playback
   isPlaying: boolean;
   setIsPlaying: (v: boolean) => void;
   playSpeed: number;
   setPlaySpeed: (v: number) => void;
   stopPlayback: () => void;
-  // Actions
+  // actions
   onDownload: (format: 'json' | 'csv') => void;
   isFullscreen: boolean;
   toggleFullscreen: () => void;
-  // Restrictions
+  // restrictions
   isDemo: boolean;
   hasSelected: boolean;
 }
@@ -71,9 +71,9 @@ export default function HeatmapControls({
 }: HeatmapControlsProps) {
   return (
     <>
-      {/* Controls Row: Date picker + Playback + Actions */}
+      {/* controls row: date picker + playback + actions */}
       <div className="flex flex-wrap items-center gap-3">
-        {/* Date picker with prev/next day */}
+        {/* date picker with prev/next day */}
         <div className="flex items-center">
           <Button
             variant="outline"
@@ -108,7 +108,7 @@ export default function HeatmapControls({
           </Button>
         </div>
 
-        {/* Timestamp step controls */}
+        {/* timestamp step controls */}
         <div className="flex items-center">
           <Button
             variant="outline"
@@ -137,7 +137,7 @@ export default function HeatmapControls({
           </Button>
         </div>
 
-        {/* Playback controls */}
+        {/* playback controls */}
         <div className="flex items-center gap-1">
           <Button
             variant={isPlaying ? 'primary' : 'outline'}
@@ -151,7 +151,7 @@ export default function HeatmapControls({
           </Button>
         </div>
 
-        {/* Speed selector */}
+        {/* speed selector */}
         <div className="flex items-center rounded-lg border border-border-strong">
           {SPEED_OPTIONS.map((opt, i) => (
             <button
@@ -173,7 +173,7 @@ export default function HeatmapControls({
 
         <div className="flex-1" />
 
-        {/* Download + Fullscreen */}
+        {/* download + fullscreen */}
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -207,7 +207,7 @@ export default function HeatmapControls({
         </div>
       </div>
 
-      {/* Timeline slider */}
+      {/* timeline slider */}
       <div className="space-y-1">
         <Slider
           min={0}

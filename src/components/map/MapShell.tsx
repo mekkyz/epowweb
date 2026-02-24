@@ -23,25 +23,25 @@ interface StationInfo {
 }
 
 interface MapShellProps {
-  /** Unique ID for the fullscreen container */
+  /** unique id for the fullscreen container */
   containerId: string;
-  /** Icon for loading/error placeholders */
+  /** icon for loading/error placeholders */
   placeholderIcon: LucideIcon;
-  /** Label shown during loading */
+  /** label shown during loading */
   loadingLabel?: string;
-  /** Error boundary title */
+  /** error boundary title */
   errorTitle?: string;
-  /** Error boundary description */
+  /** error boundary description */
   errorDescription?: string;
-  /** Whether to show Grid/Stations toggle chips */
+  /** whether to show Grid/Stations toggle chips */
   showLayerToggles?: boolean;
-  /** Whether to show the grid legend */
+  /** whether to show the grid legend */
   showGridLegend?: boolean;
-  /** Selected station for the info panel */
+  /** selected station for the info panel */
   selectedStation?: StationInfo | null;
-  /** Extra class name for the container */
+  /** extra class name for the container */
   className?: string;
-  /** The map content to render (receives layer toggle state) */
+  /** the map content to render (receives layer toggle state) */
   children: (props: {
     showLines: boolean;
     showStations: boolean;
@@ -83,7 +83,7 @@ export default function MapShell({
         className
       )}
     >
-      {/* Layer toggle chips */}
+      {/* layer toggle chips */}
       {showLayerToggles && (
         <div className="pointer-events-auto absolute left-4 top-4 z-10 flex flex-wrap gap-2">
           <div className={chipGroup}>
@@ -93,19 +93,19 @@ export default function MapShell({
         </div>
       )}
 
-      {/* Fullscreen button */}
+      {/* fullscreen button */}
       <MapFullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
 
-      {/* Attribution */}
+      {/* attribution */}
       <MapAttribution />
 
-      {/* Watermark */}
+      {/* watermark */}
       <MapWatermark />
 
-      {/* Grid legend */}
+      {/* grid legend */}
       {showGridLegend && <GridLegend />}
 
-      {/* Map content or fallback */}
+      {/* map content or fallback */}
       {webGLSupported === null ? (
         <MapPlaceholder icon={placeholderIcon} label={loadingLabel} animate />
       ) : webGLSupported && !mapError ? (
@@ -124,7 +124,7 @@ export default function MapShell({
         />
       )}
 
-      {/* Station info panel */}
+      {/* station info panel */}
       <StationInfoPanel station={selectedStation ?? null} />
     </div>
   );

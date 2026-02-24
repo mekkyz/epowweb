@@ -5,10 +5,7 @@ import clsx from 'clsx';
 import { Info, Maximize2, Minimize2 } from 'lucide-react';
 import { GRID_LEGEND } from '@/config/grid';
 
-/* ============================================
-   ToggleChip — on/off filter chip for map layers
-   ============================================ */
-
+/* togglechip — on/off filter chip for map layers */
 export function ToggleChip({
   active,
   label,
@@ -33,10 +30,7 @@ export function ToggleChip({
   );
 }
 
-/* ============================================
-   MapFullscreenButton
-   ============================================ */
-
+/* map fullscreen button */
 export function MapFullscreenButton({
   isFullscreen,
   onToggle,
@@ -55,10 +49,7 @@ export function MapFullscreenButton({
   );
 }
 
-/* ============================================
-   MapAttribution — collapsible OpenFreeMap/OSM
-   ============================================ */
-
+/* map attribution — collapsible OpenFreeMap/OSM */
 export function MapAttribution() {
   const [show, setShow] = useState(false);
 
@@ -87,10 +78,7 @@ export function MapAttribution() {
   );
 }
 
-/* ============================================
-   MapWatermark — ESA/IAI-KIT copyright
-   ============================================ */
-
+/* map watermark — ESA/IAI-KIT copyright */
 export function MapWatermark() {
   return (
     <div className="pointer-events-none absolute top-3 left-1/2 z-10 -translate-x-1/2">
@@ -101,10 +89,7 @@ export function MapWatermark() {
   );
 }
 
-/* ============================================
-   GridLegend — collapsible 20 kV Kabelringe legend
-   ============================================ */
-
+/* grid legend — collapsible 20 kV Kabelringe legend */
 export function GridLegend() {
   const [show, setShow] = useState(true);
 
@@ -146,10 +131,7 @@ export function GridLegend() {
   );
 }
 
-/* ============================================
-   StationInfoPanel — bottom overlay for selected station
-   ============================================ */
-
+/* station info panel — bottom overlay for selected station */
 interface StationInfo {
   id?: string;
   url?: string;
