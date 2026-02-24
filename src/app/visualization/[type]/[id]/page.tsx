@@ -28,7 +28,7 @@ export default async function VisualizationPage({ params, searchParams }: Params
     undefined;
 
   return (
-    <div className={`mx-auto max-w-6xl px-4 py-8 ${embed ? 'min-h-screen bg-white dark:bg-background' : ''}`}>
+    <div className={`mx-auto max-w-6xl px-4 py-8 ${embed ? 'min-h-screen bg-panel' : ''}`}>
       {!embed && (
         <VisualizationHeader
           type={safeType}

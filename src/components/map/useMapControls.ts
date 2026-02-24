@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import { checkWebGLSupport } from '@/lib/webgl';
 
@@ -55,10 +55,17 @@ export function useFullscreen(containerId: string) {
 
 /**
  * Adds ALT+drag rotation support to a MapLibre map instance.
- * Call with the map ref from react-map-gl.
+ * Returns a ref callback to pass to react-map-gl's `ref` prop.
+ * Cleans up document-level listeners when the ref is set to null.
  */
 export function useAltDragRotation() {
+  const cleanupRef = useRef<(() => void) | null>(null);
+
   return useCallback((ref: { getMap: () => maplibregl.Map } | null) => {
+    // Clean up previous listeners
+    cleanupRef.current?.();
+    cleanupRef.current = null;
+
     if (!ref) return;
     const map = ref.getMap();
     const canvas = map.getCanvasContainer();
@@ -66,7 +73,7 @@ export function useAltDragRotation() {
     let prevX = 0;
     let prevY = 0;
 
-    canvas.addEventListener('mousedown', (e: MouseEvent) => {
+    const onMouseDown = (e: MouseEvent) => {
       if (e.altKey && e.button === 0) {
         dragging = true;
         prevX = e.clientX;
@@ -74,9 +81,9 @@ export function useAltDragRotation() {
         canvas.style.cursor = 'grabbing';
         e.preventDefault();
       }
-    });
+    };
 
-    document.addEventListener('mousemove', (e: MouseEvent) => {
+    const onMouseMove = (e: MouseEvent) => {
       if (!dragging) return;
       const dx = e.clientX - prevX;
       const dy = e.clientY - prevY;
@@ -84,14 +91,24 @@ export function useAltDragRotation() {
       prevY = e.clientY;
       map.setBearing(map.getBearing() + dx * 0.5);
       map.setPitch(Math.max(0, Math.min(60, map.getPitch() - dy * 0.5)));
-    });
+    };
 
-    document.addEventListener('mouseup', () => {
+    const onMouseUp = () => {
       if (dragging) {
         dragging = false;
         canvas.style.cursor = '';
       }
-    });
+    };
+
+    canvas.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+    cleanupRef.current = () => {
+      canvas.removeEventListener('mousedown', onMouseDown);
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
 
     return map;
   }, []);

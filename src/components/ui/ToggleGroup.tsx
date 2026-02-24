@@ -12,7 +12,6 @@ interface ToggleGroupProps<T extends string> extends Omit<HTMLAttributes<HTMLDiv
   options: ToggleOption<T>[];
   value: T;
   onChange: (value: T) => void;
-  variant?: 'light' | 'dark';
   size?: 'sm' | 'md';
 }
 
@@ -22,36 +21,17 @@ const sizeStyles = {
 };
 
 function ToggleGroupInner<T extends string>(
-  {
-    options,
-    value,
-    onChange,
-    variant = 'dark',
-    size = 'md',
-    className,
-    ...props
-  }: ToggleGroupProps<T>,
-  ref: React.ForwardedRef<HTMLDivElement>
+  { options, value, onChange, size = 'md', className, ...props }: ToggleGroupProps<T>,
+  ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const isLight = variant === 'light';
-
-  const activeStyles = isLight
-    ? 'bg-foreground text-background shadow-sm'
-    : 'bg-background text-foreground shadow-sm ring-1 ring-border';
-
-  const inactiveStyles = isLight
-    ? 'bg-transparent text-foreground-secondary hover:text-foreground'
-    : 'bg-transparent text-foreground-secondary hover:text-foreground';
-
-  const containerStyles = isLight
-    ? 'bg-panel/90 shadow-sm shadow-black/10 backdrop-blur'
-    : 'bg-surface shadow-sm shadow-black/10 dark:shadow-black/30 backdrop-blur';
-
   return (
     <div
       ref={ref}
       role="group"
-      className={clsx('inline-flex items-center gap-1 rounded-xl p-1', containerStyles, className)}
+      className={clsx(
+        'inline-flex items-center gap-1 rounded-xl bg-surface p-1 shadow-sm shadow-black/10 backdrop-blur dark:shadow-black/30',
+        className,
+      )}
       {...props}
     >
       {options.map((option) => (
@@ -64,7 +44,9 @@ function ToggleGroupInner<T extends string>(
           className={clsx(
             'rounded-lg font-medium transition-colors',
             sizeStyles[size],
-            value === option.value ? activeStyles : inactiveStyles
+            value === option.value
+              ? 'bg-background text-foreground shadow-sm ring-1 ring-border'
+              : 'bg-transparent text-foreground-secondary hover:text-foreground',
           )}
         >
           {option.label}
@@ -75,7 +57,7 @@ function ToggleGroupInner<T extends string>(
 }
 
 const ToggleGroup = forwardRef(ToggleGroupInner) as <T extends string>(
-  props: ToggleGroupProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
+  props: ToggleGroupProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.ReactElement;
 
 export { ToggleGroup };

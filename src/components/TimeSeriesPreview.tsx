@@ -58,7 +58,7 @@ export default function TimeSeriesPreview({ url, title }: Props) {
       </div>
 
       {/* Preview Content */}
-      <div className="relative overflow-hidden rounded-xl border border-border bg-white dark:bg-panel">
+      <div className="relative overflow-hidden rounded-xl border border-border bg-panel">
         {loading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60">
             <ChartSkeleton />
