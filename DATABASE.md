@@ -78,6 +78,31 @@ kubectl exec <pod-name> -n esa -- sh -c 'cat /data/smdt.db.gz.part-* > /data/smd
 kubectl rollout restart deployment/smdt -n esa
 ```
 
+### Performance and crash prevention
+
+The heatmap dataset is large (~21.5M rows, ~35K timestamps across 366 days). Several layers prevent the synchronous `better-sqlite3` queries from blocking the Node.js event loop and crashing the pod:
+
+**Server-side caching** (`src/services/sqlite-store.ts`):
+- `loadHeatmapSliceSqlite()` caches results in a 200-entry LRU map. Since the dataset is static (2016 historical data), cached entries never invalidate. After first access, subsequent requests are served from memory with zero SQLite queries.
+
+**Batch day endpoint** (`/api/heatmap/geo/day?date=YYYY-MM-DD`):
+- Returns aggregated geo data for all ~96 timestamps of a day in a single request, replacing 96 individual `/api/heatmap/geo` calls.
+- Yields to the event loop between timestamps via `setImmediate()` so health probes stay responsive.
+- The client (`useHeatmapData.ts`) calls this on day load and populates its local cache, so heatmap playback requires zero network requests.
+
+**Health endpoint** (`/api/health`):
+- Lightweight endpoint excluded from auth middleware (`proxy.ts` PUBLIC_PATHS).
+- Used by all Kubernetes probes (startup, readiness, liveness). Previous probes used `/api/stations` which required authentication — unauthenticated probes were redirected to `/login`, timed out during event loop blocking, and caused Kubernetes to kill the pod (exit code 135).
+
+**Node.js heap limit** (`Dockerfile`):
+- `NODE_OPTIONS="--max-old-space-size=4096"` caps the V8 heap at 4GB to prevent uncontrolled growth within the 8Gi pod memory limit.
+
+**Crash diagnostics** (`src/instrumentation.ts`):
+- Logs `uncaughtException`, `unhandledRejection`, `SIGTERM`, and `SIGINT` events.
+- Logs `process.memoryUsage()` every 60 seconds.
+- Check with: `kubectl logs <pod> | grep -E '\[MEMORY\]|\[CRASH\]|\[SHUTDOWN\]'`
+- Check previous crash: `kubectl logs --previous <pod> | grep -E '\[MEMORY\]|\[CRASH\]'`
+
 ### Notes
 - Seed script: `scripts/seed-sqlite.ts` (runs via `npm run db:seed`)
 - Data/config auto-discovery: if `SMDT_DATA_DIR`/`SMDT_CONFIG_FILE` are unset, the app tries `../smdt-legacy/backend/data` and `../smdt-legacy/backend/config/KIT_CN.xml`; otherwise falls back to bundled samples under `data/smdt-sample` and `data/smdt-config`.

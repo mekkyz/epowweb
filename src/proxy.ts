@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SESSION_COOKIE_NAME, verifySessionToken } from '@/lib/auth';
 
-const PUBLIC_PATHS = ['/login', '/api/auth'];
+const PUBLIC_PATHS = ['/login', '/api/auth', '/api/health'];
 const STATIC_PREFIXES = ['/_next', '/favicon.ico', '/eASiMOV.png', '/ESA-Logo.png'];
 
 export function proxy(request: NextRequest) {
