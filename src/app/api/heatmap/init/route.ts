@@ -3,8 +3,7 @@ import { getHeatmapBounds, loadHeatmapSlice } from '@/services/smdt-data';
 import { apiLogger } from '@/lib/logger';
 import { aggregateSliceByStation } from '@/app/api/_lib/aggregate-heatmap';
 
-// Cache the response for 60 seconds on the server
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
