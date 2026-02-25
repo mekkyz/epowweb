@@ -11,49 +11,61 @@ async function requireAdmin() {
 }
 
 export async function GET() {
-  if (!(await requireAdmin())) {
-    return errorResponse('Forbidden', HTTP_STATUS.UNAUTHORIZED, 'FORBIDDEN');
+  try {
+    if (!(await requireAdmin())) {
+      return errorResponse('Forbidden', HTTP_STATUS.UNAUTHORIZED, 'FORBIDDEN');
+    }
+    return successResponse(listUsers());
+  } catch {
+    return errorResponse('Failed to fetch users', HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
-  return successResponse(listUsers());
 }
 
 export async function POST(request: NextRequest) {
-  if (!(await requireAdmin())) {
-    return errorResponse('Forbidden', HTTP_STATUS.UNAUTHORIZED, 'FORBIDDEN');
-  }
-
-  let body: { kuerzel?: string; role?: string };
   try {
-    body = await request.json();
+    if (!(await requireAdmin())) {
+      return errorResponse('Forbidden', HTTP_STATUS.UNAUTHORIZED, 'FORBIDDEN');
+    }
+
+    let body: { kuerzel?: string; role?: string };
+    try {
+      body = await request.json();
+    } catch {
+      return badRequestResponse('Invalid request body');
+    }
+
+    const { kuerzel, role } = body;
+    if (!kuerzel || !role || (role !== 'full' && role !== 'admin')) {
+      return badRequestResponse('kuerzel and role (full|admin) are required');
+    }
+
+    setUserRole(kuerzel, role);
+    return successResponse({ kuerzel, role });
   } catch {
-    return badRequestResponse('Invalid request body');
+    return errorResponse('Failed to update user', HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
-
-  const { kuerzel, role } = body;
-  if (!kuerzel || !role || (role !== 'full' && role !== 'admin')) {
-    return badRequestResponse('kuerzel and role (full|admin) are required');
-  }
-
-  setUserRole(kuerzel, role);
-  return successResponse({ kuerzel, role });
 }
 
 export async function DELETE(request: NextRequest) {
-  if (!(await requireAdmin())) {
-    return errorResponse('Forbidden', HTTP_STATUS.UNAUTHORIZED, 'FORBIDDEN');
-  }
-
-  let body: { kuerzel?: string };
   try {
-    body = await request.json();
+    if (!(await requireAdmin())) {
+      return errorResponse('Forbidden', HTTP_STATUS.UNAUTHORIZED, 'FORBIDDEN');
+    }
+
+    let body: { kuerzel?: string };
+    try {
+      body = await request.json();
+    } catch {
+      return badRequestResponse('Invalid request body');
+    }
+
+    if (!body.kuerzel) {
+      return badRequestResponse('kuerzel is required');
+    }
+
+    removeUser(body.kuerzel);
+    return successResponse({ removed: body.kuerzel });
   } catch {
-    return badRequestResponse('Invalid request body');
+    return errorResponse('Failed to remove user', HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
-
-  if (!body.kuerzel) {
-    return badRequestResponse('kuerzel is required');
-  }
-
-  removeUser(body.kuerzel);
-  return successResponse({ removed: body.kuerzel });
 }

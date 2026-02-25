@@ -23,10 +23,10 @@ export default async function LoginPage({
         <div className="bg-white rounded-lg border border-slate-200 p-8 pb-4 shadow-lg shadow-slate-200/50">
           <div className="mb-6 text-center">
             <h1 className="font-display text-2xl font-semibold text-slate-900">
-              ePowWeb - SMDT
+              ePowMon
             </h1>
             <p className="mt-2 text-sm text-slate-600 uppercase">
-              KIT Campus North Power Grid Web-Service
+              KIT Campus North Power Grid Monitoring
             </p>
           </div>
 

@@ -23,9 +23,9 @@ const sans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'eASiMOV - ePowWeb - SMDT | KIT Campus North Power Grid Web-Service',
+  title: 'eASiMOV - ePowWeb - ePowMon | KIT Campus North Power Grid Monitoring',
   description:
-    'A KIT Campus North power grid and weather datasets.',
+    'KIT Campus North power grid datasets.',
 };
 
 export default async function RootLayout({

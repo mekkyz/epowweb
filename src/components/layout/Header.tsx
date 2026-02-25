@@ -101,10 +101,10 @@ function HeaderContent() {
           >
             <div className="flex flex-col">
               <span className="font-display text-lg font-semibold leading-tight text-foreground">
-                ePowWeb - SMDT
+                ePowMon
               </span>
               <span className="text-[10px] font-medium uppercase tracking-wider text-foreground-tertiary">
-                KIT Campus North Power Grid Web-Service
+                KIT Campus North Power Grid Monitoring
               </span>
             </div>
           </Link>

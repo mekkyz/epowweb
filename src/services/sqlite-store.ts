@@ -161,9 +161,44 @@ export async function getBoundsSqlite(meterIds: string[]): Promise<SeriesBounds>
 }
 
 /**
- * Lists all available heatmap timestamps
+ * Lists available dates using a recursive index walk.
+ * Jumps day-by-day through the B-tree (~365 lookups) instead of scanning all 21M+ rows.
+ * Result is cached since the dataset is static.
  */
-export async function listHeatmapTimestampsSqlite(): Promise<string[]> {
+let cachedDates: string[] | null = null;
+
+export async function listHeatmapDatesSqlite(): Promise<string[]> {
+  if (cachedDates) return cachedDates;
+
+  const database = ensureDb();
+
+  try {
+    const rows = database
+      .prepare(
+        `WITH RECURSIVE date_walk(ts) AS (
+           SELECT MIN(ts) FROM heatmap_points
+           UNION ALL
+           SELECT (SELECT MIN(hp.ts) FROM heatmap_points hp
+                   WHERE hp.ts > substr(date_walk.ts, 1, 10) || ' 23:59:59')
+           FROM date_walk WHERE ts IS NOT NULL
+         )
+         SELECT substr(ts, 1, 10) AS date FROM date_walk WHERE ts IS NOT NULL`,
+      )
+      .all() as { date: string }[];
+
+    cachedDates = rows.map((r) => r.date);
+    return cachedDates;
+  } catch (error) {
+    dbLogger.error('Failed to list heatmap dates from SQLite', error);
+    throw error;
+  }
+}
+
+/**
+ * Lists timestamps for a specific date (e.g. "2016-01-15").
+ * Uses index range scan — returns ~96 rows for 15-min interval data.
+ */
+export async function listDayTimestampsSqlite(date: string): Promise<string[]> {
   const database = ensureDb();
 
   try {
@@ -171,13 +206,14 @@ export async function listHeatmapTimestampsSqlite(): Promise<string[]> {
       .prepare(
         `SELECT DISTINCT ts
          FROM heatmap_points
+         WHERE ts >= ? AND ts <= ?
          ORDER BY ts ASC`,
       )
-      .all() as { ts: string }[];
+      .all(`${date} 00:00:00`, `${date} 23:59:59`) as { ts: string }[];
 
     return rows.map((r) => r.ts);
   } catch (error) {
-    dbLogger.error('Failed to list heatmap timestamps from SQLite', error);
+    dbLogger.error('Failed to list day timestamps from SQLite', error, { date });
     throw error;
   }
 }
@@ -222,10 +258,23 @@ export async function getNeighborTimestampSqlite(
   }
 }
 
+// --- Server-side LRU cache for heatmap slices (static dataset, never invalidates) ---
+const sliceCache = new Map<string, HeatmapPoint[]>();
+const SLICE_CACHE_MAX = 200;
+
 /**
- * Loads a heatmap slice for a specific timestamp
+ * Loads a heatmap slice for a specific timestamp.
+ * Results are cached in an LRU map since the dataset is static.
  */
 export async function loadHeatmapSliceSqlite(timestamp: string): Promise<HeatmapPoint[]> {
+  const cached = sliceCache.get(timestamp);
+  if (cached) {
+    // LRU: move to end
+    sliceCache.delete(timestamp);
+    sliceCache.set(timestamp, cached);
+    return cached;
+  }
+
   const database = ensureDb();
 
   try {
@@ -238,11 +287,20 @@ export async function loadHeatmapSliceSqlite(timestamp: string): Promise<Heatmap
       )
       .all(timestamp) as Record<string, unknown>[];
 
-    return rows.map((r) => ({
+    const result = rows.map((r) => ({
       meterId: r.meter_id as string,
       valueKw: toNumber(r.value_kw),
       unit: (r.unit as string) ?? 'kW',
     }));
+
+    // LRU eviction
+    if (sliceCache.size >= SLICE_CACHE_MAX) {
+      const oldest = sliceCache.keys().next().value;
+      if (oldest) sliceCache.delete(oldest);
+    }
+    sliceCache.set(timestamp, result);
+
+    return result;
   } catch (error) {
     dbLogger.error('Failed to load heatmap slice from SQLite', error, { timestamp });
     throw error;

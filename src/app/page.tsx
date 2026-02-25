@@ -59,7 +59,7 @@ export default function Home() {
       <section className="py-6">
         <div className="text-center">
           <h1 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-            eASiMOV - ePowWeb - SMDT
+            eASiMOV - ePowMon
           </h1>
 
         </div>

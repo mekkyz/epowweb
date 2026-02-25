@@ -7,7 +7,8 @@ import {
   getHeatmapBoundsSqlite,
   getNeighborTimestampSqlite,
   hasSqlite,
-  listHeatmapTimestampsSqlite,
+  listDayTimestampsSqlite,
+  listHeatmapDatesSqlite,
   loadAggregatedSeriesSqlite,
   loadHeatmapSliceSqlite,
   loadMeterSeriesSqlite,
@@ -215,7 +216,7 @@ export async function getHeatmapBounds(): Promise<{ min: string | null; max: str
   if (hasSqlite()) {
     return getHeatmapBoundsSqlite();
   }
-  const ts = await listHeatmapTimestamps();
+  const ts = await listAllCsvTimestamps();
   return { min: ts[0] ?? null, max: ts[ts.length - 1] ?? null, count: ts.length };
 }
 
@@ -226,25 +227,49 @@ export async function getNeighborTimestamp(
   if (hasSqlite()) {
     return getNeighborTimestampSqlite(current, direction);
   }
-  const ts = await listHeatmapTimestamps();
+  const ts = await listAllCsvTimestamps();
   const idx = ts.indexOf(current);
   if (idx === -1) return null;
   return direction === 'next' ? ts[idx + 1] ?? null : ts[idx - 1] ?? null;
 }
 
-export async function listHeatmapTimestamps(): Promise<string[]> {
+/**
+ * Lists available dates (not full timestamps).
+ * SQLite: efficient recursive index walk (~365 lookups).
+ * CSV: derives from filenames.
+ */
+export async function listHeatmapDates(): Promise<string[]> {
   if (hasSqlite()) {
-    return listHeatmapTimestampsSqlite();
+    return listHeatmapDatesSqlite();
   }
+  const ts = await listAllCsvTimestamps();
+  const dates = new Set(ts.map((t) => t.slice(0, 10)));
+  return Array.from(dates).sort();
+}
 
+/**
+ * Lists timestamps for a specific date (e.g. "2016-01-15").
+ * SQLite: index range scan, returns ~96 rows.
+ * CSV: filters filenames by date prefix.
+ */
+export async function listDayTimestamps(date: string): Promise<string[]> {
+  if (hasSqlite()) {
+    return listDayTimestampsSqlite(date);
+  }
+  const ts = await listAllCsvTimestamps();
+  return ts.filter((t) => t.startsWith(date));
+}
+
+/** CSV fallback: list all timestamps from filenames (fast — reads directory, not files). */
+async function listAllCsvTimestamps(): Promise<string[]> {
   if (!fs.existsSync(HEATMAP_DIR)) {
     dbLogger.warn('Heatmap directory not found', { path: HEATMAP_DIR });
     return [];
   }
-  
+
   try {
     const files = await fs.promises.readdir(HEATMAP_DIR);
-    
+
     return files
       .filter((f) => f.startsWith('zw_') && f.endsWith('.csv'))
       .map((f) => f.replace('zw_', '').replace('.csv', ''))
