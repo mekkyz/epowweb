@@ -2,6 +2,7 @@ import Image from 'next/image';
 import CampusMapSection from '@/components/CampusMapSection';
 import LiveDataSection from '@/components/LiveDataSection';
 import PageHeader from '@/components/layout/PageHeader';
+import CountUp from '@/components/CountUp';
 import { gridData } from '@/config/grid';
 import { Activity, Building2, Gauge, Cable, type LucideIcon } from 'lucide-react';
 
@@ -44,11 +45,14 @@ function StatCard({ icon: Icon, color, value, label, hint }: {
   hint: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-0.5 rounded-lg bg-panel px-3 py-3 ring-1 ring-border shadow-sm sm:h-[120px] sm:px-6 sm:py-2">
+    <div className="stat-card stat-sheen relative overflow-hidden flex flex-col items-center justify-center gap-0.5 rounded-lg bg-panel px-5 py-3 ring-1 ring-border sm:h-[118px] sm:w-[140px]">
       <Icon className={`h-4 w-4 ${color}`} />
-      <span className="font-display text-xl font-semibold text-foreground">{value}</span>
-      <span className="text-xs text-foreground-tertiary">{label}</span>
-      <span className="text-[10px] leading-tight text-foreground-tertiary/70">{hint}</span>
+      <CountUp
+        end={value}
+        className="mt-0.5 font-display text-[1.65rem] font-semibold leading-none tabular-nums text-foreground"
+      />
+      <span className="text-[11px] font-medium text-foreground-secondary">{label}</span>
+      <span className="text-[10px] leading-tight text-muted">{hint}</span>
     </div>
   );
 }
@@ -56,21 +60,25 @@ function StatCard({ icon: Icon, color, value, label, hint }: {
 export default function Home() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-4 md:py-6">
-      <section className="py-6">
+      {/* ── Hero ── */}
+      <section className="hero-mesh relative overflow-hidden rounded-xl bg-surface/50 px-5 pb-7 pt-8 ring-1 ring-border/40 sm:px-7">
         <div className="text-center">
           <h1 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-            eASiMOV - ePowMon
+            <span className="-skew-x-12 inline-block">e</span>PowMon
           </h1>
-
+          <p className="mt-2 text-sm text-muted sm:text-[15px]">
+            KIT Campus North Power Grid Monitoring
+          </p>
         </div>
 
-        <div className="mt-6 hidden items-center justify-between sm:flex">
+        {/* Desktop stats row */}
+        <div className="mt-8 hidden items-center justify-between gap-4 sm:flex">
           <Image
             src="/eASiMOV.png"
             alt="eASiMOV - KIT Institute for Automation and Applied Informatics"
             width={120}
             height={120}
-            className="h-[120px] w-auto shrink-0 rounded-lg object-contain ring-1 ring-border shadow-sm"
+            className="h-[118px] w-auto shrink-0 rounded-lg bg-panel object-contain p-2 ring-1 ring-border"
             priority
           />
 
@@ -83,17 +91,20 @@ export default function Home() {
             alt="ESA - European Space Agency"
             width={120}
             height={120}
-            className="h-[120px] w-auto shrink-0 rounded-lg object-contain ring-1 ring-border shadow-sm"
+            className="h-[118px] w-auto shrink-0 rounded-lg bg-panel object-contain p-2 ring-1 ring-border"
             priority
           />
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-2 sm:hidden">
+        {/* Mobile stats grid */}
+        <div className="mt-7 grid grid-cols-2 gap-2.5 sm:hidden">
           {stats.map((stat) => (
             <StatCard key={stat.label} {...stat} />
           ))}
         </div>
       </section>
+
+      <div className="mt-6" />
 
       <CampusMapSection />
 

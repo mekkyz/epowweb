@@ -152,6 +152,107 @@ a {
   color: var(--accent-2);
 }
 
+/* ─── hero section ─── */
+
+/* Slow-moving gradient mesh — alive glass feel */
+.hero-mesh::before {
+  content: '';
+  position: absolute;
+  inset: -60%;
+  background:
+    radial-gradient(ellipse 50% 60% at 15% 30%, rgba(110, 168, 255, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 55% at 80% 50%, rgba(140, 160, 200, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 50% at 50% 80%, rgba(100, 180, 200, 0.08) 0%, transparent 70%);
+  animation: mesh-drift 25s ease-in-out infinite alternate;
+  pointer-events: none;
+  will-change: transform;
+  filter: blur(40px);
+}
+
+.light .hero-mesh::before {
+  background:
+    radial-gradient(ellipse 50% 60% at 15% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 55% at 80% 50%, rgba(100, 116, 160, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 50% at 50% 80%, rgba(80, 160, 180, 0.05) 0%, transparent 70%);
+  filter: blur(50px);
+}
+
+@keyframes mesh-drift {
+  0% {
+    transform: translate(0%, 0%) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(8%, -5%) rotate(1deg) scale(1.03);
+  }
+  66% {
+    transform: translate(-5%, 6%) rotate(-0.5deg) scale(0.98);
+  }
+  100% {
+    transform: translate(3%, -3%) rotate(0.5deg) scale(1.01);
+  }
+}
+
+/* Stat card base */
+.stat-card {
+  transition: box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.light .stat-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.light .stat-card:hover {
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.09);
+}
+
+/* Card sheen — light reflecting on polished surface */
+.stat-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 28%,
+    rgba(255, 255, 255, 0.04) 42%,
+    rgba(255, 255, 255, 0.10) 50%,
+    rgba(255, 255, 255, 0.04) 58%,
+    transparent 72%
+  );
+  background-size: 250% 100%;
+  animation: sheen-slide 7s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.light .stat-sheen::after {
+  background: linear-gradient(
+    105deg,
+    transparent 28%,
+    rgba(0, 0, 0, 0.015) 42%,
+    rgba(0, 0, 0, 0.035) 50%,
+    rgba(0, 0, 0, 0.015) 58%,
+    transparent 72%
+  );
+  background-size: 250% 100%;
+}
+
+.stat-sheen:nth-child(2)::after { animation-delay: -2s; }
+.stat-sheen:nth-child(3)::after { animation-delay: -4s; }
+.stat-sheen:nth-child(4)::after { animation-delay: -6s; }
+
+@keyframes sheen-slide {
+  0%, 100% {
+    background-position: 200% center;
+  }
+  50% {
+    background-position: -50% center;
+  }
+}
+
 /* slider */
 
 @layer components {
