@@ -4,20 +4,15 @@ import Database from 'better-sqlite3';
 import readline from 'readline';
 import { XMLParser } from 'fast-xml-parser';
 
-const DATA_DIR =
-  process.env.SMDT_DATA_DIR ??
-  (fs.existsSync(path.join(process.cwd(), '..', 'smdt-legacy', 'backend', 'data'))
-    ? path.join(process.cwd(), '..', 'smdt-legacy', 'backend', 'data')
-    : path.join(process.cwd(), 'data', 'smdt-sample'));
-const CSV_DIR = path.join(DATA_DIR, 'DatenSM');
-const CSV_HEATMAP_DIR = path.join(DATA_DIR, 'DatenSM_time');
+if (!process.env.SMDT_DATA_DIR) {
+  console.error('SMDT_DATA_DIR is required. Example: SMDT_DATA_DIR=../smdt-legacy/backend/data npm run db:seed');
+  process.exit(1);
+}
+const DATA_DIR = process.env.SMDT_DATA_DIR;
+const CSV_DIR = path.join(DATA_DIR, 'meter-readings');
+const CSV_HEATMAP_DIR = path.join(DATA_DIR, 'heatmap-snapshots');
 const DB_PATH = process.env.SMDT_SQLITE_PATH ?? path.join(process.cwd(), 'data', 'smdt.db');
-
-const CONFIG_FILE =
-  process.env.SMDT_CONFIG_FILE ??
-  (fs.existsSync(path.join(process.cwd(), '..', 'smdt-legacy', 'backend', 'config', 'KIT_CN.xml'))
-    ? path.join(process.cwd(), '..', 'smdt-legacy', 'backend', 'config', 'KIT_CN.xml')
-    : path.join(process.cwd(), 'data', 'smdt-config', 'KIT_CN.xml'));
+const CONFIG_FILE = process.env.SMDT_CONFIG_FILE ?? path.join(process.cwd(), 'data', 'meter-mapping.xml');
 
 // --- XML config parsing (meter → station mapping) ---
 

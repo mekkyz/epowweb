@@ -2886,7 +2886,7 @@
       "properties": {
         "group": "Ring-4 (Nordring)",
         "id": "S-351",
-        "description": "Laborgeb�ude ZAG",
+        "description": "Laborgebäude ZAG",
         "size": 1,
         "color": "#ff5500"
       },
@@ -2988,7 +2988,7 @@
       "properties": {
         "group": "Ring-4 (Nordring)",
         "id": "S-612",
-        "description": "K�ltekraftwerk (BHKW)",
+        "description": "Kältekraftwerk (BHKW)",
         "size": 1,
         "color": "#ff5500"
       },

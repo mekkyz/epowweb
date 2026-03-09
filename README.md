@@ -12,31 +12,27 @@ npm run dev            # open http://localhost:3000
 
 ### Environment
 
-The server auto-selects the richest dataset available:
-
-1) `SMDT_DATA_DIR` / `SMDT_CONFIG_FILE` if set.
-2) Fallback to `../smdt-legacy/backend/data` + `../smdt-legacy/backend/config/KIT_CN.xml` if they exist (full legacy coverage).
-3) Otherwise use the bundled sample data under `./data/smdt-sample` + `./data/smdt-config/KIT_CN.xml`.
-
-- When `data/smdt.db` exists (or `SMDT_SQLITE_PATH` points to a DB file), all series/heatmap APIs use SQLite. The CSV fallback is only used if the DB is missing.
-- Optional legacy hooks (currently unused by the UI): `NEXT_PUBLIC_BACKEND_BASE`, `NEXT_PUBLIC_HEATMAP_BASE`.
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `SMDT_DATA_DIR` | *(required for seeding)* | CSV data dir for `npm run db:seed` |
+| `SMDT_CONFIG_FILE` | `./data/meter-mapping.xml` | Meter-station mapping XML |
+| `SMDT_SQLITE_PATH` | `./data/smdt.db` | SQLite database path |
 
 ### Data
 
-- Grid data lives in `src/config/legacy-grid.json`, converted from the original `data/legacy/KITCN.geojson` (run `npm run legacy:data` to regenerate).
-- Power data: seed SQLite from `DatenSM`/`DatenSM_time` via `npm run db:seed` (reads from `SMDT_DATA_DIR` or the bundled sample dir). It recreates the DB from scratch and is safe to rerun.
-- Config in `data/smdt-config/KIT_CN.xml`. Point `SMDT_CONFIG_FILE` at a different XML if needed.
-- If the SQLite DB is missing, the APIs fall back to CSV reads from `SMDT_DATA_DIR`.
+- Grid topology in `src/config/grid-data.json` (stations, lines, buildings, meters as GeoJSON).
+- Power data: seed SQLite via `SMDT_DATA_DIR=../smdt-legacy/backend/data npm run db:seed`.
+- Meter-station mapping in `data/meter-mapping.xml`. Override with `SMDT_CONFIG_FILE` if needed.
 
-### What’s inside
+### What's inside
 
 - **2D campus map** (MapLibre) with base-style toggles, line + station overlays, and click-to-open visualization links.
 - **Live data lookup** for stations/buildings/meters with inline visualizations powered by the new TypeScript APIs.
 - **3D map** (deck.gl + MapLibre) extruding stations and cables.
-- **Heatmap explorer** reading from SQLite when available (or the `DatenSM_time` CSVs).
-- **TypeScript backend APIs** under `/api` backed by SQLite (with CSV fallback):
+- **Heatmap explorer** reading from SQLite.
+- **TypeScript backend APIs** under `/api` backed by SQLite:
   - `/api/meters/:id/series` (per-meter time-series)
-  - `/api/buildings/:id/series` and `/api/stations/:id/series` (aggregated sums based on `KIT_CN.xml`)
+  - `/api/buildings/:id/series` and `/api/stations/:id/series` (aggregated sums based on `meter-mapping.xml`)
   - `/api/heatmap/init`, `/api/heatmap/geo?timestamp=...`, `/api/heatmap/step` (heatmap navigation)
 - Legacy URLs like `/rest/eASiMOV/visualization/:id` redirect to the new in-app visualization pages.
 

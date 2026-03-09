@@ -23,10 +23,7 @@ SMDT_DATA_DIR=../smdt-legacy/backend/data npm run db:seed
 
 This creates `data/smdt.db` with two tables: `meter_readings` and `station_heatmap`. It is safe to rerun (the script recreates the DB from scratch).
 
-The seed script also reads the XML config file (`KIT_CN.xml`) to build the meter-to-station mapping used for in-memory aggregation. Config file discovery:
-1. `SMDT_CONFIG_FILE` env var (if set)
-2. `../smdt-legacy/backend/config/KIT_CN.xml` (if exists)
-3. `data/smdt-config/KIT_CN.xml` (bundled fallback)
+The seed script also reads `data/meter-mapping.xml` (or `SMDT_CONFIG_FILE` if set) to build the meter-to-station mapping used for in-memory aggregation.
 
 ### Run the app locally
 
@@ -34,7 +31,7 @@ The seed script also reads the XML config file (`KIT_CN.xml`) to build the meter
 npm run dev
 ```
 
-The app requires `data/smdt.db` to exist. If it's missing, seed it first. If no full CSV data is available, seed from the bundled sample: `npm run db:seed` (auto-discovers `data/smdt-sample`).
+The app requires `data/smdt.db` to exist. If it's missing, seed it first.
 
 ### Upload DB to k8s
 
@@ -100,11 +97,11 @@ The seed script expects two subdirectories inside `SMDT_DATA_DIR`:
 
 ```
 SMDT_DATA_DIR/
-├── DatenSM/              # Meter readings (one file per meter)
+├── meter-readings/              # Meter readings (one file per meter)
 │   ├── 0101-ZE01-70.csv  # Format: start; end; powerOrigKw; powerKw; energyOrigKwh; energyKwh; errorCode
 │   ├── 0101-ZE02-70.csv
 │   └── ...
-└── DatenSM_time/         # Heatmap snapshots (one file per 15-min timestamp)
+└── heatmap-snapshots/         # Heatmap snapshots (one file per 15-min timestamp)
     ├── zw_20160101_000000.csv  # Format: timestamp; meterId; valueKw; unit
     ├── zw_20160101_001500.csv
     └── ...
@@ -311,6 +308,5 @@ When deploying changes that affect the database or performance layers:
 ### Notes
 
 - Seed script: `scripts/seed-sqlite.ts` (runs via `npm run db:seed`)
-- Data/config auto-discovery: if `SMDT_DATA_DIR`/`SMDT_CONFIG_FILE` are unset, the app tries `../smdt-legacy/backend/data` and `../smdt-legacy/backend/config/KIT_CN.xml`; otherwise falls back to bundled samples under `data/smdt-sample` and `data/smdt-config`.
-- Override DB path: set `SMDT_SQLITE_PATH` env var (default: `data/smdt.db`).
+- `SMDT_DATA_DIR` is required for seeding. Defaults: `SMDT_CONFIG_FILE=./data/meter-mapping.xml`, `SMDT_SQLITE_PATH=./data/smdt.db`
 - The PVC (`smdt-data`) persists across pod restarts — no reseeding needed.
