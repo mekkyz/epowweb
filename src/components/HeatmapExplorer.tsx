@@ -39,7 +39,7 @@ export default function HeatmapExplorer() {
   const [canRenderMap] = useState<boolean>(() => checkWebGLSupport());
 
   const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
-  const mapStyle = useMemo(() => MAP_STYLES[mapStyleType].detailed, [mapStyleType]);
+  const mapStyle = useMemo(() => MAP_STYLES[mapStyleType], [mapStyleType]);
 
   const handleMapRef = useCallback((ref: { getMap: () => maplibregl.Map } | null) => {
     if (ref) setupAltDrag(ref);

@@ -58,7 +58,7 @@ export default function CampusMap3D() {
   const suppressMissing = useSuppressMissingImages();
 
   const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
-  const mapStyle = useMemo(() => MAP_STYLES[mapStyleType].detailed, [mapStyleType]);
+  const mapStyle = useMemo(() => MAP_STYLES[mapStyleType], [mapStyleType]);
 
   useEffect(() => {
     load('/3d/StationSign.obj', OBJLoader)

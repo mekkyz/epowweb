@@ -8,14 +8,8 @@
 // =============================================================================
 
 export const MAP_STYLES = {
-  light: {
-    minimal: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-    detailed: 'https://tiles.openfreemap.org/styles/liberty', // OpenStreetMap-based with full detail
-  },
-  dark: {
-    minimal: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-    detailed: 'https://tiles.openfreemap.org/styles/dark', // OSM dark style with full detail
-  },
+  light: 'https://tiles.openfreemap.org/styles/liberty',
+  dark: 'https://tiles.openfreemap.org/styles/fiord',
 } as const;
 
 export const DEFAULT_MAP_VIEW = {

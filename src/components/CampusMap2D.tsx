@@ -90,7 +90,7 @@ export default function CampusMap2D() {
   }, [suppressMissing, setupAltDrag]);
 
   const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
-  const mapStyle = useMemo(() => MAP_STYLES[mapStyleType].detailed, [mapStyleType]);
+  const mapStyle = useMemo(() => MAP_STYLES[mapStyleType], [mapStyleType]);
 
   const onMapClick = useCallback((event: MapLayerMouseEvent) => {
     const feature = event.features?.find((f) => f.layer.id === 'stations') as
