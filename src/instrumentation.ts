@@ -1,32 +1,37 @@
 /**
  * Next.js instrumentation hook — runs once on server startup.
  * Adds crash diagnostics and periodic memory logging.
+ *
+ * Access process via globalThis to avoid Edge Runtime static-analysis warnings
+ * (all routes use Node.js runtime, so process is always available).
  */
-export function register() {
-  if (typeof window !== 'undefined') return; // server-only
+export async function register() {
+  if (typeof window !== 'undefined') return;
 
-  process.on('uncaughtException', (err) => {
+  const p = (globalThis as Record<string, unknown>)['process'] as typeof process | undefined;
+  if (!p?.on) return;
+
+  p.on('uncaughtException', (err: Error) => {
     console.error('[CRASH] Uncaught exception:', err);
-    process.exit(1);
+    p.exit(1);
   });
 
-  process.on('unhandledRejection', (reason) => {
+  p.on('unhandledRejection', (reason: unknown) => {
     console.error('[CRASH] Unhandled rejection:', reason);
   });
 
-  process.on('SIGTERM', () => {
+  p.on('SIGTERM', () => {
     console.log('[SHUTDOWN] Received SIGTERM — graceful shutdown');
-    process.exit(0);
+    p.exit(0);
   });
 
-  process.on('SIGINT', () => {
+  p.on('SIGINT', () => {
     console.log('[SHUTDOWN] Received SIGINT — graceful shutdown');
-    process.exit(0);
+    p.exit(0);
   });
 
-  // Log memory usage every 60s at debug level
   setInterval(() => {
-    const mem = process.memoryUsage();
+    const mem = p.memoryUsage();
     console.log('[MEMORY]', {
       rss: `${(mem.rss / 1024 / 1024).toFixed(1)}MB`,
       heapUsed: `${(mem.heapUsed / 1024 / 1024).toFixed(1)}MB`,

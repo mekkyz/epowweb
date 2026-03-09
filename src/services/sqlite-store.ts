@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { HeatmapPoint, MeterReading, SeriesBounds, SeriesOptions } from '@/types/smdt';
+import { MeterReading, SeriesBounds, SeriesOptions, StationHeatmapRow } from '@/types/smdt';
 import { dbLogger } from '@/lib/logger';
 import { queryAll, queryGet } from '@/services/sqlite-async';
 
@@ -168,10 +168,10 @@ export async function listHeatmapDatesSqlite(): Promise<string[]> {
     const rows = await queryAll(
       path,
       `WITH RECURSIVE date_walk(ts) AS (
-         SELECT MIN(ts) FROM heatmap_points
+         SELECT MIN(ts) FROM station_heatmap
          UNION ALL
-         SELECT (SELECT MIN(hp.ts) FROM heatmap_points hp
-                 WHERE hp.ts > substr(date_walk.ts, 1, 10) || ' 23:59:59')
+         SELECT (SELECT MIN(sh.ts) FROM station_heatmap sh
+                 WHERE sh.ts > substr(date_walk.ts, 1, 10) || ' 23:59:59')
          FROM date_walk WHERE ts IS NOT NULL
        )
        SELECT substr(ts, 1, 10) AS date FROM date_walk WHERE ts IS NOT NULL`,
@@ -195,7 +195,7 @@ export async function listDayTimestampsSqlite(date: string): Promise<string[]> {
     const rows = await queryAll(
       path,
       `SELECT DISTINCT ts
-       FROM heatmap_points
+       FROM station_heatmap
        WHERE ts >= ? AND ts <= ?
        ORDER BY ts ASC`,
       [`${date} 00:00:00`, `${date} 23:59:59`],
@@ -215,8 +215,8 @@ export async function getHeatmapBoundsSqlite(): Promise<{ min: string | null; ma
   const path = getDbPath();
 
   try {
-    const minRow = await queryGet(path, `SELECT MIN(ts) AS ts FROM heatmap_points`) as { ts: string | null };
-    const maxRow = await queryGet(path, `SELECT MAX(ts) AS ts FROM heatmap_points`) as { ts: string | null };
+    const minRow = await queryGet(path, `SELECT MIN(ts) AS ts FROM station_heatmap`) as { ts: string | null };
+    const maxRow = await queryGet(path, `SELECT MAX(ts) AS ts FROM station_heatmap`) as { ts: string | null };
 
     return { min: minRow.ts, max: maxRow.ts, count: 0 };
   } catch (error) {
@@ -239,7 +239,7 @@ export async function getNeighborTimestampSqlite(
     const order = direction === 'next' ? 'ASC' : 'DESC';
     const row = await queryGet(
       path,
-      `SELECT DISTINCT ts FROM heatmap_points WHERE ts ${op} ? ORDER BY ts ${order} LIMIT 1`,
+      `SELECT DISTINCT ts FROM station_heatmap WHERE ts ${op} ? ORDER BY ts ${order} LIMIT 1`,
       [current],
     ) as { ts: string } | undefined;
 
@@ -250,51 +250,49 @@ export async function getNeighborTimestampSqlite(
   }
 }
 
-// --- Server-side LRU cache for heatmap slices (static dataset, never invalidates) ---
-const sliceCache = new Map<string, HeatmapPoint[]>();
-const SLICE_CACHE_MAX = 200;
+// --- Pre-aggregated station heatmap (from station_heatmap table) ---
+const stationSliceCache = new Map<string, StationHeatmapRow[]>();
+const STATION_CACHE_MAX = 200;
 
 /**
- * Loads a heatmap slice for a specific timestamp.
- * Results are cached in an LRU map since the dataset is static.
+ * Loads pre-aggregated station-level heatmap data for a timestamp.
+ * Uses the station_heatmap table (populated at seed time) — no runtime aggregation needed.
  */
-export async function loadHeatmapSliceSqlite(timestamp: string): Promise<HeatmapPoint[]> {
-  const cached = sliceCache.get(timestamp);
+export async function loadStationHeatmapSqlite(timestamp: string): Promise<StationHeatmapRow[]> {
+  const cached = stationSliceCache.get(timestamp);
   if (cached) {
-    // LRU: move to end
-    sliceCache.delete(timestamp);
-    sliceCache.set(timestamp, cached);
+    stationSliceCache.delete(timestamp);
+    stationSliceCache.set(timestamp, cached);
     return cached;
   }
 
-  const path = getDbPath();
+  const p = getDbPath();
 
   try {
     const rows = await queryAll(
-      path,
-      `SELECT meter_id, value_kw, unit
-       FROM heatmap_points
+      p,
+      `SELECT station_id, total_kw, meter_count
+       FROM station_heatmap
        WHERE ts = ?
-       ORDER BY meter_id ASC`,
+       ORDER BY station_id ASC`,
       [timestamp],
     ) as Record<string, unknown>[];
 
     const result = rows.map((r) => ({
-      meterId: r.meter_id as string,
-      valueKw: toNumber(r.value_kw),
-      unit: (r.unit as string) ?? 'kW',
+      stationId: r.station_id as string,
+      totalKw: Number(r.total_kw) || 0,
+      meterCount: Number(r.meter_count) || 0,
     }));
 
-    // LRU eviction
-    if (sliceCache.size >= SLICE_CACHE_MAX) {
-      const oldest = sliceCache.keys().next().value;
-      if (oldest) sliceCache.delete(oldest);
+    if (stationSliceCache.size >= STATION_CACHE_MAX) {
+      const oldest = stationSliceCache.keys().next().value;
+      if (oldest) stationSliceCache.delete(oldest);
     }
-    sliceCache.set(timestamp, result);
+    stationSliceCache.set(timestamp, result);
 
     return result;
   } catch (error) {
-    dbLogger.error('Failed to load heatmap slice from SQLite', error, { timestamp });
+    dbLogger.error('Failed to load station heatmap from SQLite', error, { timestamp });
     throw error;
   }
 }

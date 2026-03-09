@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getHeatmapBounds, loadHeatmapSlice } from '@/services/smdt-data';
+import { getHeatmapBounds, loadStationHeatmap } from '@/services/smdt-data';
 import { apiLogger } from '@/lib/logger';
-import { aggregateSliceByStation } from '@/app/api/_lib/aggregate-heatmap';
+import { stationRowsToGeoJSON } from '@/app/api/_lib/aggregate-heatmap';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,8 +15,8 @@ export async function GET() {
     let stats = null;
 
     if (initialTimestamp) {
-      const slice = await loadHeatmapSlice(initialTimestamp);
-      const result = aggregateSliceByStation(slice);
+      const rows = await loadStationHeatmap(initialTimestamp);
+      const result = stationRowsToGeoJSON(rows);
       featureCollection = result.featureCollection;
       stats = result.stats;
     }

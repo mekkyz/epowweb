@@ -1,6 +1,5 @@
-import { getMeterMeta } from '@/services/smdt-data';
 import { stationFeatures } from '@/config/grid';
-import type { HeatmapPoint } from '@/types/smdt';
+import type { StationHeatmapRow } from '@/types/smdt';
 
 // Built once at module load — reused across all requests
 const stationsById = new Map(stationFeatures.map((s) => [s.properties.id, s]));
@@ -18,48 +17,25 @@ export interface AggregatedHeatmap {
 }
 
 /**
- * Aggregates raw heatmap points by station, producing a GeoJSON FeatureCollection.
- * Shared by /api/heatmap/init and /api/heatmap/geo.
+ * Converts pre-aggregated station rows to GeoJSON FeatureCollection.
  */
-export function aggregateSliceByStation(slice: HeatmapPoint[]): AggregatedHeatmap {
-  const bucket = new Map<
-    string,
-    { stationId: string; value: number; count: number; coordinates: [number, number] }
-  >();
-
-  for (const p of slice) {
-    try {
-      const meta = getMeterMeta(p.meterId);
-      const stationId = meta?.stationId;
-      if (!stationId) continue;
-
-      const station = stationsById.get(stationId);
-      if (!station?.geometry || station.geometry.type !== 'Point') continue;
-
-      const coords = station.geometry.coordinates as [number, number];
-      const entry = bucket.get(stationId);
-      const val = p.valueKw ?? 0;
-
-      if (!entry) {
-        bucket.set(stationId, { stationId, value: val, count: 1, coordinates: coords });
-      } else {
-        entry.value += val;
-        entry.count += 1;
-      }
-    } catch {
-      // Skip malformed points
-      continue;
-    }
-  }
-
-  const features = Array.from(bucket.values()).map((b) => ({
-    type: 'Feature' as const,
-    geometry: { type: 'Point' as const, coordinates: b.coordinates },
-    properties: { stationId: b.stationId, valueKw: b.value, meters: b.count },
-  }));
+export function stationRowsToGeoJSON(rows: StationHeatmapRow[]): AggregatedHeatmap {
+  let totalMeters = 0;
+  const features = rows
+    .map((r) => {
+      const station = stationsById.get(r.stationId);
+      if (!station?.geometry || station.geometry.type !== 'Point') return null;
+      totalMeters += r.meterCount;
+      return {
+        type: 'Feature' as const,
+        geometry: { type: 'Point' as const, coordinates: station.geometry.coordinates as [number, number] },
+        properties: { stationId: r.stationId, valueKw: r.totalKw, meters: r.meterCount },
+      };
+    })
+    .filter((f): f is NonNullable<typeof f> => f !== null);
 
   return {
     featureCollection: { type: 'FeatureCollection' as const, features },
-    stats: { stations: features.length, meters: slice.length },
+    stats: { stations: features.length, meters: totalMeters },
   };
 }

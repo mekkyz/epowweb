@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --hostname 0.0.0.0",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "legacy:data": "node scripts/convert-legacy-data.js",
-    "db:seed": "tsx scripts/seed-sqlite.ts"
+    "db:seed": "tsx scripts/seed-sqlite.ts",
+    "db:seed:append": "tsx scripts/seed-sqlite.ts --append"
   },
   "dependencies": {
     "@deck.gl/core": "^9.2.6",

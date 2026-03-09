@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Database from 'better-sqlite3';
 import readline from 'readline';
+import { XMLParser } from 'fast-xml-parser';
 
 const DATA_DIR =
   process.env.SMDT_DATA_DIR ??
@@ -12,12 +13,67 @@ const CSV_DIR = path.join(DATA_DIR, 'DatenSM');
 const CSV_HEATMAP_DIR = path.join(DATA_DIR, 'DatenSM_time');
 const DB_PATH = process.env.SMDT_SQLITE_PATH ?? path.join(process.cwd(), 'data', 'smdt.db');
 
+const CONFIG_FILE =
+  process.env.SMDT_CONFIG_FILE ??
+  (fs.existsSync(path.join(process.cwd(), '..', 'smdt-legacy', 'backend', 'config', 'KIT_CN.xml'))
+    ? path.join(process.cwd(), '..', 'smdt-legacy', 'backend', 'config', 'KIT_CN.xml')
+    : path.join(process.cwd(), 'data', 'smdt-config', 'KIT_CN.xml'));
+
+// --- XML config parsing (meter → station mapping) ---
+
+type XmlMeter = { name: string };
+type XmlGroup = { name: string; type?: string; group?: XmlGroup | XmlGroup[]; meter?: XmlMeter | XmlMeter[] };
+
+function ensureArray<T>(value: T | T[] | undefined): T[] {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+}
+
+function parseMeterStationMap(configFile: string): Map<string, string> {
+  const map = new Map<string, string>();
+  if (!fs.existsSync(configFile)) {
+    console.warn(`Config file not found: ${configFile} — station_heatmap will be empty`);
+    return map;
+  }
+
+  const xml = fs.readFileSync(configFile, 'utf8');
+  const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '', allowBooleanAttributes: true });
+  const parsed = parser.parse(xml);
+
+  function walk(group: XmlGroup, stationId?: string) {
+    if (group.type === 'Station') {
+      ensureArray(group.group).forEach((child) => walk(child, group.name));
+      return;
+    }
+    if (group.type === 'Gebaeude') {
+      ensureArray(group.meter).forEach((m) => {
+        if (stationId) map.set(m.name, stationId);
+      });
+      return;
+    }
+    ensureArray(group.group).forEach((child) => walk(child, stationId));
+  }
+
+  const rootGroups = ensureArray(parsed?.xml?.group ?? parsed?.config?.group ?? parsed?.group);
+  rootGroups.forEach((g) => walk(g));
+
+  console.log(`Loaded ${map.size} meter→station mappings from config`);
+  return map;
+}
+
+// --- Main ---
+
+const APPEND_MODE = process.argv.includes('--append');
+
 async function main() {
-  // ensure output directory exists
   fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
 
-  // remove existing DB to start fresh
-  if (fs.existsSync(DB_PATH)) fs.unlinkSync(DB_PATH);
+  if (APPEND_MODE) {
+    console.log('Mode: append (keeping existing data)');
+  } else {
+    console.log('Mode: full seed (recreating DB)');
+    if (fs.existsSync(DB_PATH)) fs.unlinkSync(DB_PATH);
+  }
 
   const db = new Database(DB_PATH);
   db.pragma('journal_mode = WAL');
@@ -38,16 +94,14 @@ async function main() {
     CREATE INDEX IF NOT EXISTS idx_meter_readings_meter_time ON meter_readings (meter_id, start_ts);
     CREATE UNIQUE INDEX IF NOT EXISTS ux_meter_readings_meter_start ON meter_readings (meter_id, start_ts);
 
-    CREATE TABLE IF NOT EXISTS heatmap_points (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+    CREATE TABLE IF NOT EXISTS station_heatmap (
       ts TEXT NOT NULL,
-      meter_id TEXT NOT NULL,
-      value_kw REAL,
-      unit TEXT
+      station_id TEXT NOT NULL,
+      total_kw REAL NOT NULL,
+      meter_count INTEGER NOT NULL,
+      PRIMARY KEY (ts, station_id)
     );
-    CREATE INDEX IF NOT EXISTS idx_heatmap_ts ON heatmap_points (ts);
-    CREATE INDEX IF NOT EXISTS idx_heatmap_meter_ts ON heatmap_points (meter_id, ts);
-    CREATE UNIQUE INDEX IF NOT EXISTS ux_heatmap_ts_meter ON heatmap_points (ts, meter_id);
+    CREATE INDEX IF NOT EXISTS idx_station_heatmap_ts ON station_heatmap (ts);
   `);
 
   const insertMeter = db.prepare(`
@@ -56,12 +110,7 @@ async function main() {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
-  const insertHeatmap = db.prepare(`
-    INSERT OR IGNORE INTO heatmap_points (ts, meter_id, value_kw, unit)
-    VALUES (?, ?, ?, ?)
-  `);
-
-  // seed meter readings
+  // --- Seed meter readings ---
   const files = fs.readdirSync(CSV_DIR).filter((f) => f.endsWith('.csv'));
   for (const file of files) {
     const meterId = file.replace('.csv', '');
@@ -105,44 +154,81 @@ async function main() {
     }
   }
 
-  // seed heatmap points
-  if (fs.existsSync(CSV_HEATMAP_DIR)) {
-    const heatmapFiles = fs.readdirSync(CSV_HEATMAP_DIR).filter((f) => f.startsWith('zw_'));
-    for (const file of heatmapFiles) {
-      const filePath = path.join(CSV_HEATMAP_DIR, file);
-      console.log(`Seeding heatmap slice ${file}...`);
+  // --- Aggregate heatmap CSVs directly into station_heatmap (in-memory) ---
+  console.log('Aggregating heatmap CSVs by station (in-memory)...');
 
+  const meterStationMap = parseMeterStationMap(CONFIG_FILE);
+
+  const insertStation = db.prepare(`
+    INSERT OR REPLACE INTO station_heatmap (ts, station_id, total_kw, meter_count)
+    VALUES (?, ?, ?, ?)
+  `);
+
+  if (fs.existsSync(CSV_HEATMAP_DIR)) {
+    // In-memory accumulator: key = "ts\0stationId", value = { totalKw, count }
+    const agg = new Map<string, { totalKw: number; count: number }>();
+
+    const heatmapFiles = fs.readdirSync(CSV_HEATMAP_DIR).filter((f) => f.startsWith('zw_'));
+    let fileIdx = 0;
+    for (const file of heatmapFiles) {
+      fileIdx++;
+      if (fileIdx % 1000 === 0) {
+        console.log(`  Processing heatmap file ${fileIdx}/${heatmapFiles.length}...`);
+      }
+
+      const filePath = path.join(CSV_HEATMAP_DIR, file);
       const rl = readline.createInterface({
         input: fs.createReadStream(filePath),
         crlfDelay: Infinity,
       });
 
-      const batch: unknown[][] = [];
-
       for await (const line of rl) {
         if (!line.trim()) continue;
         const parts = line.split(';').map((s) => s.trim());
-        const [ts, meterId, valueKw, unit] = parts;
+        const [ts, meterId, valueKw] = parts;
 
-        batch.push([ts, meterId, num(valueKw), unit]);
+        const stationId = meterStationMap.get(meterId);
+        if (!stationId) continue;
 
-        if (batch.length >= 5000) {
-          const tx = db.transaction((rows: unknown[][]) => {
-            for (const row of rows) insertHeatmap.run(...row);
-          });
-          tx(batch);
-          batch.length = 0;
+        const key = `${ts}\0${stationId}`;
+        const entry = agg.get(key);
+        const val = num(valueKw) ?? 0;
+        if (!entry) {
+          agg.set(key, { totalKw: val, count: 1 });
+        } else {
+          entry.totalKw += val;
+          entry.count += 1;
         }
       }
+    }
 
-      if (batch.length) {
-        const tx = db.transaction((rows: unknown[][]) => {
-          for (const row of rows) insertHeatmap.run(...row);
+    // Flush aggregated data to SQLite in batches
+    console.log(`  Writing ${agg.size} aggregated rows to station_heatmap...`);
+    const batch: [string, string, number, number][] = [];
+    for (const [key, val] of agg) {
+      const idx = key.indexOf('\0');
+      batch.push([key.slice(0, idx), key.slice(idx + 1), val.totalKw, val.count]);
+
+      if (batch.length >= 5000) {
+        const tx = db.transaction((rows: [string, string, number, number][]) => {
+          for (const row of rows) insertStation.run(...row);
         });
         tx(batch);
+        batch.length = 0;
       }
     }
+    if (batch.length) {
+      const tx = db.transaction((rows: [string, string, number, number][]) => {
+        for (const row of rows) insertStation.run(...row);
+      });
+      tx(batch);
+    }
+    agg.clear();
   }
+
+  const aggCount = db.prepare(`SELECT COUNT(*) AS cnt FROM station_heatmap`).get() as { cnt: number };
+  const tsCount = db.prepare(`SELECT COUNT(DISTINCT ts) AS cnt FROM station_heatmap`).get() as { cnt: number };
+  console.log(`  Pre-aggregated: ${aggCount.cnt} rows (${tsCount.cnt} timestamps × stations)`);
 
   db.close();
   const stats = fs.statSync(DB_PATH);

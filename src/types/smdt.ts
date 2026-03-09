@@ -38,10 +38,10 @@ export interface MeterReading {
   errorCode: number | null;
 }
 
-export interface HeatmapPoint {
-  meterId: string;
-  valueKw: number | null;
-  unit: string;
+export interface StationHeatmapRow {
+  stationId: string;
+  totalKw: number;
+  meterCount: number;
 }
 
 export interface SeriesOptions {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { loadHeatmapSlice, listDayTimestamps } from '@/services/smdt-data';
-import { aggregateSliceByStation, AggregatedHeatmap } from '@/app/api/_lib/aggregate-heatmap';
+import { loadStationHeatmap, listDayTimestamps } from '@/services/smdt-data';
+import { stationRowsToGeoJSON, AggregatedHeatmap } from '@/app/api/_lib/aggregate-heatmap';
 import { apiLogger } from '@/lib/logger';
 
 /**
@@ -32,19 +32,10 @@ export async function GET(req: NextRequest) {
     const entries: Record<string, AggregatedHeatmap> = {};
 
     for (const ts of timestamps) {
-      const slice = await loadHeatmapSlice(ts);
-
-      if (!slice || slice.length === 0) {
-        entries[ts] = {
-          featureCollection: { type: 'FeatureCollection', features: [] },
-          stats: { stations: 0, meters: 0 },
-        };
-      } else {
-        entries[ts] = aggregateSliceByStation(slice);
-      }
-
-      // Yield to event loop so liveness probes can respond
-      await new Promise((r) => setImmediate(r));
+      const rows = await loadStationHeatmap(ts);
+      entries[ts] = rows.length === 0
+        ? { featureCollection: { type: 'FeatureCollection', features: [] }, stats: { stations: 0, meters: 0 } }
+        : stationRowsToGeoJSON(rows);
     }
 
     apiLogger.info('GET /api/heatmap/geo/day', { date, count: timestamps.length });

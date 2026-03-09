@@ -61,7 +61,7 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-4 md:py-6">
       {/* ── Hero ── */}
-      <section className="hero-mesh relative overflow-hidden rounded-xl bg-surface/50 px-5 pb-7 pt-8 ring-1 ring-border/40 sm:px-7">
+      <section className="pb-7 pt-8">
         <div className="text-center">
           <h1 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
             <span className="-skew-x-12 inline-block">e</span>PowMon

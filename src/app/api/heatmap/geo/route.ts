@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { loadHeatmapSlice } from '@/services/smdt-data';
+import { loadStationHeatmap } from '@/services/smdt-data';
 import { apiLogger } from '@/lib/logger';
 import { ERROR_MESSAGES } from '@/lib/constants';
-import { aggregateSliceByStation } from '@/app/api/_lib/aggregate-heatmap';
+import { stationRowsToGeoJSON } from '@/app/api/_lib/aggregate-heatmap';
 
 export async function GET(req: NextRequest) {
   try {
@@ -17,10 +17,9 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const slice = await loadHeatmapSlice(timestamp);
+    const rows = await loadStationHeatmap(timestamp);
 
-    // Guard: empty slice → return empty FeatureCollection
-    if (!slice || slice.length === 0) {
+    if (rows.length === 0) {
       return NextResponse.json({
         success: true,
         data: { timestamp, featureCollection: { type: 'FeatureCollection', features: [] }, stats: { stations: 0, meters: 0 } },
@@ -30,7 +29,7 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const { featureCollection, stats } = aggregateSliceByStation(slice);
+    const { featureCollection, stats } = stationRowsToGeoJSON(rows);
 
     apiLogger.info('GET /api/heatmap/geo', { timestamp, stationsCount: stats.stations, metersCount: stats.meters });
 

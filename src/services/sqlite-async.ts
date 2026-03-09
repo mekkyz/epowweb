@@ -20,6 +20,10 @@ function getDb() {
   if (!db) {
     db = new Database(workerData.dbPath, { readonly: true });
     db.pragma('journal_mode = WAL');
+    db.pragma('mmap_size = 2147483648');
+    db.pragma('cache_size = -64000');
+    db.pragma('temp_store = MEMORY');
+    db.pragma('query_only = ON');
   }
   return db;
 }

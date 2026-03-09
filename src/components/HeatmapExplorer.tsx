@@ -137,10 +137,10 @@ export default function HeatmapExplorer() {
           'application/json',
         );
       } else {
-        const points = body.points ?? [];
-        const rows = ['meterId,valueKw,unit'];
-        points.forEach((p: { meterId: string; valueKw: number | null; unit: string }) => {
-          rows.push(`${p.meterId},${p.valueKw ?? ''},${p.unit ?? ''}`);
+        const stations = body.data?.stations ?? [];
+        const rows = ['stationId,totalKw,meterCount'];
+        stations.forEach((s: { stationId: string; totalKw: number; meterCount: number }) => {
+          rows.push(`${s.stationId},${s.totalKw},${s.meterCount}`);
         });
         downloadBlob(rows.join('\n'), `heatmap-${data.selected}.csv`, 'text/csv');
       }

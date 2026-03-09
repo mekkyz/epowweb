@@ -101,7 +101,7 @@ function HeaderContent() {
           >
             <div className="flex flex-col">
               <span className="font-display text-lg font-semibold leading-tight text-foreground">
-                ePowMon
+                <span className="-skew-x-12 inline-block">e</span>PowMon
               </span>
               <span className="text-[10px] font-medium uppercase tracking-wider text-foreground-tertiary">
                 KIT Campus North Power Grid Monitoring

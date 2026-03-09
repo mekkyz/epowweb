@@ -10,23 +10,22 @@ import {
   listDayTimestampsSqlite,
   listHeatmapDatesSqlite,
   loadAggregatedSeriesSqlite,
-  loadHeatmapSliceSqlite,
   loadMeterSeriesSqlite,
+  loadStationHeatmapSqlite,
 } from '@/services/sqlite-store';
 import {
   BuildingMeta,
-  HeatmapPoint,
   MeterMeta,
   MeterReading,
   SeriesBounds,
   SeriesOptions,
   SmdtConfig,
+  StationHeatmapRow,
   StationMeta,
 } from '@/types/smdt';
 import { dbLogger } from '@/lib/logger';
 
 const METER_DIR = path.join(getDataDir(), 'DatenSM');
-const HEATMAP_DIR = path.join(getDataDir(), 'DatenSM_time');
 
 export function listConfig(): SmdtConfig {
   return getSmdtConfig();
@@ -175,113 +174,27 @@ export async function getAggregatedBounds(meterIds: string[]): Promise<SeriesBou
   return { start: minStart, end: maxEnd };
 }
 
-export async function loadHeatmapSlice(timestamp: string): Promise<HeatmapPoint[]> {
-  if (hasSqlite()) {
-    return loadHeatmapSliceSqlite(timestamp);
-  }
-
-  const ts = dayjs(timestamp).isValid() ? dayjs(timestamp) : dayjs(timestamp, 'YYYYMMDD_HHmmss');
-  if (!ts.isValid()) {
-    dbLogger.warn('Invalid heatmap timestamp', { timestamp });
-    return [];
-  }
-  
-  const filename = `zw_${ts.format('YYYYMMDD_HHmmss')}.csv`;
-  const filePath = path.join(HEATMAP_DIR, filename);
-  
-  if (!fs.existsSync(filePath)) {
-    dbLogger.warn('Heatmap CSV file not found', { timestamp, filePath });
-    return [];
-  }
-
-  try {
-    const content = await fs.promises.readFile(filePath, 'utf8');
-    const lines = content.split(/\r?\n/).filter(Boolean);
-    
-    return lines.map((line) => {
-      const parts = line.split(';').map((s) => s.trim());
-      return {
-        meterId: parts[1],
-        valueKw: safeNumber(parts[2]),
-        unit: parts[3] ?? 'kW',
-      };
-    });
-  } catch (error) {
-    dbLogger.error('Failed to load heatmap slice from CSV', error, { timestamp });
-    return [];
-  }
+export async function loadStationHeatmap(timestamp: string): Promise<StationHeatmapRow[]> {
+  return loadStationHeatmapSqlite(timestamp);
 }
 
 export async function getHeatmapBounds(): Promise<{ min: string | null; max: string | null; count: number }> {
-  if (hasSqlite()) {
-    return getHeatmapBoundsSqlite();
-  }
-  const ts = await listAllCsvTimestamps();
-  return { min: ts[0] ?? null, max: ts[ts.length - 1] ?? null, count: ts.length };
+  return getHeatmapBoundsSqlite();
 }
 
 export async function getNeighborTimestamp(
   current: string,
   direction: 'prev' | 'next',
 ): Promise<string | null> {
-  if (hasSqlite()) {
-    return getNeighborTimestampSqlite(current, direction);
-  }
-  const ts = await listAllCsvTimestamps();
-  const idx = ts.indexOf(current);
-  if (idx === -1) return null;
-  return direction === 'next' ? ts[idx + 1] ?? null : ts[idx - 1] ?? null;
+  return getNeighborTimestampSqlite(current, direction);
 }
 
-/**
- * Lists available dates (not full timestamps).
- * SQLite: efficient recursive index walk (~365 lookups).
- * CSV: derives from filenames.
- */
 export async function listHeatmapDates(): Promise<string[]> {
-  if (hasSqlite()) {
-    return listHeatmapDatesSqlite();
-  }
-  const ts = await listAllCsvTimestamps();
-  const dates = new Set(ts.map((t) => t.slice(0, 10)));
-  return Array.from(dates).sort();
+  return listHeatmapDatesSqlite();
 }
 
-/**
- * Lists timestamps for a specific date (e.g. "2016-01-15").
- * SQLite: index range scan, returns ~96 rows.
- * CSV: filters filenames by date prefix.
- */
 export async function listDayTimestamps(date: string): Promise<string[]> {
-  if (hasSqlite()) {
-    return listDayTimestampsSqlite(date);
-  }
-  const ts = await listAllCsvTimestamps();
-  return ts.filter((t) => t.startsWith(date));
-}
-
-/** CSV fallback: list all timestamps from filenames (fast — reads directory, not files). */
-async function listAllCsvTimestamps(): Promise<string[]> {
-  if (!fs.existsSync(HEATMAP_DIR)) {
-    dbLogger.warn('Heatmap directory not found', { path: HEATMAP_DIR });
-    return [];
-  }
-
-  try {
-    const files = await fs.promises.readdir(HEATMAP_DIR);
-
-    return files
-      .filter((f) => f.startsWith('zw_') && f.endsWith('.csv'))
-      .map((f) => f.replace('zw_', '').replace('.csv', ''))
-      .map((raw) => {
-        const parsed = dayjs(raw, 'YYYYMMDD_HHmmss');
-        return parsed.isValid() ? parsed.format('YYYY-MM-DD HH:mm:ss') : raw;
-      })
-      .sort();
-  } catch (error) {
-    dbLogger.error('Failed to list heatmap timestamps', error);
-    return [];
-  }
+  return listDayTimestampsSqlite(date);
 }
 
 // =============================================================================
