@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import DeckGL from '@deck.gl/react';
 import type { PickingInfo } from '@deck.gl/core';
 import { SolidPolygonLayer } from '@deck.gl/layers';
@@ -8,11 +8,12 @@ import { SimpleMeshLayer } from '@deck.gl/mesh-layers';
 import { OBJLoader } from '@loaders.gl/obj';
 import { load } from '@loaders.gl/core';
 import type { LineFeature } from '@/types/grid';
-import { Map } from 'react-map-gl/maplibre';
+import { Map, Source, Layer } from 'react-map-gl/maplibre';
+import type { LayerProps } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import { useTheme } from 'next-themes';
 import { hexToRgb } from '@/lib/color';
-import { lineFeatures, stationFeatures } from '@/config/grid';
+import { lineFeatures, stationFeatures, gridCollections } from '@/config/grid';
 import { MAP_STYLES, MAP_3D_VIEW } from '@/lib/constants';
 import { Box } from 'lucide-react';
 import MapShell from './map/MapShell';
@@ -49,11 +50,60 @@ function lineToPolygon(coordinates: [number, number][], width: number): [number,
   return polygons;
 }
 
+// ---------------------------------------------------------------------------
+// Campus building overlay (MapLibre, not deck.gl)
+// A FLAT fill layer used purely for hover/click detection.
+// Default: practically invisible (opacity 0.01 — enough for queryRenderedFeatures).
+// Hover: subtle blue highlight appears over the building footprint.
+// The base-map's own 3D buildings provide the visual extrusion — this layer
+// does NOT extrude, so there's no doubling / ghosting.
+// ---------------------------------------------------------------------------
+
+const campusBuildingFill: LayerProps = {
+  id: 'campus-buildings-fill',
+  type: 'fill',
+  paint: {
+    'fill-color': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      '#6aacd8',
+      '#b8b4ad',
+    ],
+    'fill-opacity': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      0.45,     // visible blue on hover
+      0.01,     // invisible but still hit-testable
+    ],
+  },
+};
+
+const campusBuildingLabels: LayerProps = {
+  id: 'campus-building-labels',
+  type: 'symbol',
+  minzoom: 15,
+  layout: {
+    'text-field': ['get', 'id'],
+    'text-size': ['interpolate', ['linear'], ['zoom'], 15, 8, 17, 11, 19, 14],
+    'text-anchor': 'center',
+    'text-allow-overlap': false,
+    'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+  },
+  paint: {
+    'text-color': '#4a4a4a',
+    'text-halo-color': 'rgba(255, 255, 255, 0.85)',
+    'text-halo-width': 1.2,
+    'text-opacity': 0.85,
+  },
+};
+
 export default function CampusMap3D() {
   const { resolvedTheme } = useTheme();
   const [selected, setSelected] = useState<{ id?: string; url?: string; description?: string; group?: string } | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [stationMesh, setStationMesh] = useState<any>(null);
+  const mapInstanceRef = useRef<maplibregl.Map | null>(null);
+  const hoveredBuildingId = useRef<string | number | null>(null);
 
   const suppressMissing = useSuppressMissingImages();
 
@@ -67,7 +117,10 @@ export default function CampusMap3D() {
   }, []);
 
   const handleMapRef = useCallback((ref: { getMap: () => maplibregl.Map } | null) => {
-    if (ref) suppressMissing(ref);
+    if (ref) {
+      suppressMissing(ref);
+      mapInstanceRef.current = ref.getMap();
+    }
   }, [suppressMissing]);
 
   const onMapLoad = useCallback((evt: { target: maplibregl.Map }) => {
@@ -168,8 +221,62 @@ export default function CampusMap3D() {
   const onDeckClick = useCallback((info: PickingInfo) => {
     if (info.object && info.layer?.id === 'grid-stations-3d') {
       setSelected(info.object.properties ?? null);
-    } else {
-      setSelected(null);
+    } else if (!info.object) {
+      // Check MapLibre layers for campus building clicks
+      const map = mapInstanceRef.current;
+      if (map && info.pixel) {
+        const features = map.queryRenderedFeatures(
+          [info.pixel[0], info.pixel[1]] as [number, number],
+          { layers: ['campus-buildings-fill'] },
+        );
+        if (features?.length) {
+          const props = features[0].properties as { id?: string; url?: string };
+          setSelected({ id: props.id, url: props.url });
+        } else {
+          setSelected(null);
+        }
+      } else {
+        setSelected(null);
+      }
+    }
+  }, []);
+
+  /** Hover handler — when deck.gl has no object, check MapLibre campus buildings */
+  const onDeckHover = useCallback((info: PickingInfo) => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    // Clear previous building hover state
+    if (hoveredBuildingId.current !== null) {
+      map.setFeatureState(
+        { source: 'campus-buildings', id: hoveredBuildingId.current },
+        { hover: false },
+      );
+      hoveredBuildingId.current = null;
+    }
+
+    // If deck.gl caught something (station/line), skip MapLibre query
+    if (info.object) {
+      map.getCanvas().style.cursor = 'pointer';
+      return;
+    }
+
+    // Query MapLibre for campus building under cursor
+    if (info.pixel) {
+      const features = map.queryRenderedFeatures(
+        [info.pixel[0], info.pixel[1]] as [number, number],
+        { layers: ['campus-buildings-fill'] },
+      );
+      if (features?.length && features[0].id !== undefined) {
+        hoveredBuildingId.current = features[0].id;
+        map.setFeatureState(
+          { source: 'campus-buildings', id: features[0].id },
+          { hover: true },
+        );
+        map.getCanvas().style.cursor = 'pointer';
+      } else {
+        map.getCanvas().style.cursor = '';
+      }
     }
   }, []);
 
@@ -220,7 +327,7 @@ export default function CampusMap3D() {
       selectedStation={selected}
       className="shadow-2xl shadow-emerald-400/10"
     >
-      {({ showLines, showStations, onError }) => {
+      {({ showLines, showStations, showBuildings, onError }) => {
         // Filter layers based on toggles
         const activeLayers = layers.filter((l) => {
           if (!l) return false;
@@ -256,6 +363,7 @@ export default function CampusMap3D() {
             layers={activeLayers}
             onError={onError}
             onClick={onDeckClick}
+            onHover={onDeckHover}
           >
             <Map
               ref={handleMapRef}
@@ -264,7 +372,14 @@ export default function CampusMap3D() {
               mapStyle={mapStyle}
               onLoad={onMapLoad}
               attributionControl={false}
-            />
+            >
+              {showBuildings && (
+                <Source id="campus-buildings" type="geojson" data={gridCollections.buildings} generateId>
+                  <Layer {...campusBuildingFill} />
+                  <Layer {...campusBuildingLabels} />
+                </Source>
+              )}
+            </Map>
           </DeckGL>
         );
       }}

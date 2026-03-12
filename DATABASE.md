@@ -97,11 +97,11 @@ The seed script expects two subdirectories inside `SMDT_DATA_DIR`:
 
 ```
 SMDT_DATA_DIR/
-├── meter-readings/              # Meter readings (one file per meter)
+├── DatenSM/              # Meter readings (one file per meter)
 │   ├── 0101-ZE01-70.csv  # Format: start; end; powerOrigKw; powerKw; energyOrigKwh; energyKwh; errorCode
 │   ├── 0101-ZE02-70.csv
 │   └── ...
-└── heatmap-snapshots/         # Heatmap snapshots (one file per 15-min timestamp)
+└── DatenSM_time/         # Heatmap snapshots (one file per 15-min timestamp)
     ├── zw_20160101_000000.csv  # Format: timestamp; meterId; valueKw; unit
     ├── zw_20160101_001500.csv
     └── ...

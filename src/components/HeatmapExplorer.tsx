@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
-import MapGL, { Layer, LayerProps, NavigationControl, Source } from 'react-map-gl/maplibre';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import MapGL, { Layer, LayerProps, MapRef, NavigationControl, Source } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import { useTheme } from 'next-themes';
 import { Info } from 'lucide-react';
@@ -11,7 +11,7 @@ import { MAP_STYLES } from '@/lib/constants';
 import { downloadBlob } from '@/lib/download';
 import { checkWebGLSupport } from '@/lib/webgl';
 import { useAuth } from '@/context/AuthProvider';
-import { MapAttribution, MapWatermark } from './map/MapOverlays';
+import { MapAttribution, MapWatermark, StationInfoPanel } from './map/MapOverlays';
 import { useAltDragRotation, useFullscreen } from './map/useMapControls';
 import { useHeatmapData } from './map/useHeatmapData';
 import HeatmapControls from './map/HeatmapControls';
@@ -25,6 +25,7 @@ export default function HeatmapExplorer() {
   const data = useHeatmapData(showError);
   const { isFullscreen, toggleFullscreen } = useFullscreen('heatmap-explorer-container');
   const setupAltDrag = useAltDragRotation();
+  const mapRef = useRef<MapRef | null>(null);
 
   const [hover, setHover] = useState<{
     stationId: string;
@@ -33,7 +34,8 @@ export default function HeatmapExplorer() {
     x: number;
     y: number;
   } | null>(null);
-  const [showLegend, setShowLegend] = useState(false);
+  const [selected, setSelected] = useState<{ id: string; url: string } | null>(null);
+  const [showLegend, setShowLegend] = useState(true);
   const [thresholdMin, setThresholdMin] = useState(0);
   const [thresholdMax, setThresholdMax] = useState(800);
   const [canRenderMap] = useState<boolean>(() => checkWebGLSupport());
@@ -41,7 +43,8 @@ export default function HeatmapExplorer() {
   const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
   const mapStyle = useMemo(() => MAP_STYLES[mapStyleType], [mapStyleType]);
 
-  const handleMapRef = useCallback((ref: { getMap: () => maplibregl.Map } | null) => {
+  const handleMapRef = useCallback((ref: MapRef | null) => {
+    mapRef.current = ref;
     if (ref) setupAltDrag(ref);
   }, [setupAltDrag]);
 
@@ -111,12 +114,9 @@ export default function HeatmapExplorer() {
           tFrac(0.5), '#ff5000', tFrac(0.63), '#ff1e00', tFrac(0.88), '#c80000',
         ],
         'circle-opacity': 1,
-        'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 14, 2, 16, 3, 18, 4],
-        'circle-stroke-color': mapStyleType === 'light' ? '#ffffff' : '#1a1a2e',
-        'circle-stroke-opacity': 1,
       },
     }),
-    [mapStyleType, tFrac],
+    [tFrac],
   );
 
   const mapView = { longitude: 8.4346, latitude: 49.099, zoom: 14.5 };
@@ -151,6 +151,105 @@ export default function HeatmapExplorer() {
     }
   };
 
+  const downloadPng = () => {
+    const map = mapRef.current?.getMap();
+    if (!map) {
+      showError('Map not ready');
+      return;
+    }
+    map.once('render', () => {
+      try {
+        const mapCanvas = map.getCanvas();
+        const isDark = document.documentElement.classList.contains('dark');
+        const scale = 2;
+        const pad = 12 * scale;
+        const headerH = 56 * scale;
+        const footerH = 52 * scale;
+        const w = mapCanvas.width;
+        const h = mapCanvas.height;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = w + 2 * pad;
+        canvas.height = h + headerH + footerH;
+        const ctx = canvas.getContext('2d')!;
+
+        const bg = isDark ? '#0b1020' : '#ffffff';
+        const textColor = isDark ? '#e2e8f0' : '#1a202c';
+        const mutedColor = isDark ? '#94a3b8' : '#64748b';
+        const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+
+        // Background
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Title
+        ctx.fillStyle = textColor;
+        ctx.font = `600 ${14 * scale}px "Work Sans", system-ui, sans-serif`;
+        ctx.fillText('KIT-CN 20 kV Power Grid Heatmap', pad, pad + 16 * scale);
+
+        // Timestamp next to title
+        if (data.selected) {
+          const titleW = ctx.measureText('KIT-CN 20 kV Power Grid Heatmap').width;
+          ctx.fillStyle = mutedColor;
+          ctx.font = `${10 * scale}px "Work Sans", system-ui, sans-serif`;
+          const ts = new Date(data.selected).toLocaleString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit', hour12: false,
+          });
+          ctx.fillText(`  ·  ${ts}`, pad + titleW, pad + 16 * scale);
+        }
+
+        // Thin separator line
+        ctx.fillStyle = borderColor;
+        ctx.fillRect(pad, headerH - 4 * scale, canvas.width - 2 * pad, 1);
+
+        // Map image
+        ctx.drawImage(mapCanvas, pad, headerH);
+
+        // Footer separator
+        const footerTop = headerH + h;
+        ctx.fillStyle = borderColor;
+        ctx.fillRect(pad, footerTop + 4 * scale, canvas.width - 2 * pad, 1);
+
+        // Legend gradient bar
+        const legendY = footerTop + 12 * scale;
+        const legendH = 10 * scale;
+        const gradW = 180 * scale;
+        const grad = ctx.createLinearGradient(pad, 0, pad + gradW, 0);
+        grad.addColorStop(0, '#00ff00');
+        grad.addColorStop(0.25, '#ffff00');
+        grad.addColorStop(0.5, '#ffa500');
+        grad.addColorStop(0.75, '#ff0000');
+        grad.addColorStop(1, '#b40000');
+        ctx.fillStyle = grad;
+        ctx.fillRect(pad, legendY, gradW, legendH);
+
+        // Legend labels below bar
+        ctx.fillStyle = mutedColor;
+        ctx.font = `${8 * scale}px "Work Sans", system-ui, sans-serif`;
+        ctx.fillText(`${thresholdMin} kW`, pad, legendY + legendH + 12 * scale);
+        const maxLabel = `${thresholdMax} kW`;
+        ctx.fillText(maxLabel, pad + gradW - ctx.measureText(maxLabel).width, legendY + legendH + 12 * scale);
+
+        // Attribution on the right
+        ctx.textAlign = 'right';
+        ctx.font = `${8 * scale}px "Work Sans", system-ui, sans-serif`;
+        ctx.fillText('© ESA, IAI-KIT', canvas.width - pad, legendY + legendH + 12 * scale);
+        ctx.textAlign = 'left';
+
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = `heatmap-${data.selected || 'snapshot'}-${Date.now()}.png`;
+        a.click();
+        success('Map downloaded as PNG');
+      } catch (err) {
+        console.error('PNG export failed:', err);
+        showError('Failed to export PNG');
+      }
+    });
+    map.triggerRepaint();
+  };
+
   return (
     <div
       id="heatmap-explorer-container"
@@ -179,6 +278,7 @@ export default function HeatmapExplorer() {
         setPlaySpeed={data.setPlaySpeed}
         stopPlayback={data.stopPlayback}
         onDownload={downloadSlice}
+        onDownloadPng={downloadPng}
         isFullscreen={isFullscreen}
         toggleFullscreen={toggleFullscreen}
         isDemo={isDemo}
@@ -218,6 +318,15 @@ export default function HeatmapExplorer() {
               maxZoom={18}
               attributionControl={false}
               interactiveLayerIds={['heat-circles']}
+              onClick={(evt) => {
+                const f = evt.features?.[0];
+                if (!f) { setSelected(null); return; }
+                const props = f.properties as { stationId: string };
+                setSelected({
+                  id: props.stationId,
+                  url: `/visualization/station/${props.stationId}`,
+                });
+              }}
               onMouseMove={(evt) => {
                 const f = evt.features?.[0];
                 if (!f) return setHover(null);
@@ -338,6 +447,7 @@ export default function HeatmapExplorer() {
                   </div>
                 </div>
               )}
+              <StationInfoPanel station={selected} hasData={true} showPreview={false} disabled={isDemo} />
             </MapGL>
           )}
         </div>

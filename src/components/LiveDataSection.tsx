@@ -4,8 +4,10 @@ import { useEffect, useMemo, useState } from 'react';
 import LookupPanel from '@/components/LookupPanel';
 import TimeSeriesPreview from '@/components/TimeSeriesPreview';
 import { meterOptions, stationOptions, buildingOptions } from '@/config/grid';
+import { useAuth } from '@/context/AuthProvider';
 
 export default function LiveDataSection() {
+  const { isDemo } = useAuth();
   const defaultUrl = useMemo(
     () => (meterOptions[0]?.id ? `/visualization/meter/${meterOptions[0].id}` : undefined),
     [],
@@ -48,7 +50,7 @@ export default function LiveDataSection() {
   return (
     <div className="space-y-6">
       <LookupPanel onPreview={setPreviewUrl} />
-      <TimeSeriesPreview url={previewUrl} title={previewTitle} />
+      <TimeSeriesPreview url={previewUrl} title={previewTitle} disabled={isDemo} />
     </div>
   );
 }

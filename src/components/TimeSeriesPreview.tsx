@@ -8,9 +8,10 @@ import Link from 'next/link';
 interface Props {
   url?: string;
   title?: string;
+  disabled?: boolean;
 }
 
-export default function TimeSeriesPreview({ url, title }: Props) {
+export default function TimeSeriesPreview({ url, title, disabled }: Props) {
   const [loading, setLoading] = useState(true);
 
   // Reset loader when URL changes and add a timeout safeguard
@@ -50,11 +51,17 @@ export default function TimeSeriesPreview({ url, title }: Props) {
             <p className="font-semibold text-foreground">{title ?? 'Visualization'}</p>
           </div>
         </div>
-        <Link href={url} target="_blank" rel="noopener noreferrer">
-          <Button variant="outline" size="sm" iconRight={<ExternalLink className="h-3.5 w-3.5" />}>
+        {disabled ? (
+          <Button variant="outline" size="sm" disabled title="Full access required" iconRight={<ExternalLink className="h-3.5 w-3.5" />}>
             Open in Tab
           </Button>
-        </Link>
+        ) : (
+          <Link href={url} target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" size="sm" title="Open visualization in new tab" iconRight={<ExternalLink className="h-3.5 w-3.5" />}>
+              Open in Tab
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Preview Content */}

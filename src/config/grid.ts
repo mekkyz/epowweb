@@ -1,8 +1,10 @@
 import gridRaw from '@/config/grid-data.json';
 import type {
+  BuildingFeature,
   GridCollections,
   GridData,
   LineFeature,
+  RawBuilding,
   RawGridData,
   StationFeature,
 } from '@/types/grid';
@@ -18,10 +20,29 @@ const uniqueMeters = dedupe(raw.meters, (m) => m.id).map((m) => ({
   url: `/visualization/meter/${m.id}`,
 }));
 
-const uniqueBuildings = dedupe(raw.buildings, (b) => b.id).map((b) => ({
-  ...b,
-  url: `/visualization/building/${b.id}`,
+/** Extract the id from either a GeoJSON Feature or a plain {id} object. */
+function getBuildingId(b: RawBuilding): string {
+  return 'properties' in b && b.properties ? b.properties.id : (b as { id: string }).id;
+}
+
+const dedupedBuildings = dedupe(raw.buildings, getBuildingId);
+
+const uniqueBuildings = dedupedBuildings.map((b) => ({
+  id: getBuildingId(b),
+  url: `/visualization/building/${getBuildingId(b)}`,
 }));
+
+/** Buildings that have GeoJSON Polygon coordinates — used for map layers. */
+const buildingFeatures: BuildingFeature[] = dedupedBuildings
+  .filter((b): b is Extract<RawBuilding, { type: 'Feature'; geometry: { type: 'Polygon' } }> =>
+    'type' in b && b.type === 'Feature' && 'geometry' in b && b.geometry?.type === 'Polygon')
+  .map((b) => ({
+    ...b,
+    properties: {
+      ...b.properties,
+      url: `/visualization/building/${b.properties.id}`,
+    },
+  }));
 
 const uniqueStations = dedupe(raw.stations, (s) => s.properties.id).map((s) => ({
   ...s,
@@ -43,6 +64,7 @@ const uniqueLines = dedupe(raw.lines, (l) => l.properties.id);
 export const gridData: GridData = {
   meters: uniqueMeters,
   buildings: uniqueBuildings,
+  buildingFeatures,
   stations: uniqueStations,
   lines: uniqueLines,
 };
@@ -58,6 +80,10 @@ export const gridCollections: GridCollections = {
   lines: {
     type: 'FeatureCollection',
     features: gridData.lines,
+  },
+  buildings: {
+    type: 'FeatureCollection',
+    features: gridData.buildingFeatures,
   },
 };
 
@@ -100,6 +126,7 @@ export const meterOptions = gridData.meters
 
 export const lineFeatures = gridData.lines as LineFeature[];
 export const stationFeatures = gridData.stations as StationFeature[];
+export const buildingFeaturesList = gridData.buildingFeatures as BuildingFeature[];
 
 // =============================================================================
 // Grid Legend (shared by 2D and 3D map components)

@@ -4,6 +4,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowDownToLine,
+  ImageDown,
   Maximize2,
   Minimize2,
   Play,
@@ -37,6 +38,7 @@ interface HeatmapControlsProps {
   stopPlayback: () => void;
   // actions
   onDownload: (format: 'json' | 'csv') => void;
+  onDownloadPng: () => void;
   isFullscreen: boolean;
   toggleFullscreen: () => void;
   // restrictions
@@ -64,6 +66,7 @@ export default function HeatmapControls({
   setPlaySpeed,
   stopPlayback,
   onDownload,
+  onDownloadPng,
   isFullscreen,
   toggleFullscreen,
   isDemo,
@@ -180,7 +183,7 @@ export default function HeatmapControls({
             size="sm"
             onClick={() => onDownload('json')}
             disabled={isDemo || !hasSelected}
-            title={isDemo ? 'Full access required' : undefined}
+            title={isDemo ? 'Full access required' : 'Download data as JSON'}
             icon={<ArrowDownToLine className="h-3.5 w-3.5" />}
           >
             JSON
@@ -190,7 +193,7 @@ export default function HeatmapControls({
             size="sm"
             onClick={() => onDownload('csv')}
             disabled={isDemo || !hasSelected}
-            title={isDemo ? 'Full access required' : undefined}
+            title={isDemo ? 'Full access required' : 'Download data as CSV'}
             icon={<ArrowDownToLine className="h-3.5 w-3.5" />}
           >
             CSV
@@ -198,9 +201,19 @@ export default function HeatmapControls({
           <Button
             variant="outline"
             size="sm"
+            onClick={onDownloadPng}
+            disabled={isDemo}
+            title={isDemo ? 'Full access required' : 'Download as PNG'}
+            icon={<ImageDown className="h-3.5 w-3.5" />}
+          >
+            PNG
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={toggleFullscreen}
             disabled={isDemo}
-            title={isDemo ? 'Full access required' : undefined}
+            title={isDemo ? 'Full access required' : isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
             aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
             icon={isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
           />

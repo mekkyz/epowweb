@@ -42,6 +42,7 @@ export function MapFullscreenButton({
     <button
       onClick={onToggle}
       className="pointer-events-auto absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all hover:bg-panel hover:shadow-md"
+      title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
       aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
     >
       {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
@@ -139,7 +140,7 @@ interface StationInfo {
   group?: string;
 }
 
-export function StationInfoPanel({ station }: { station: StationInfo | null }) {
+export function StationInfoPanel({ station, hasData = true, showPreview = true, disabled = false }: { station: StationInfo | null; hasData?: boolean; showPreview?: boolean; disabled?: boolean }) {
   if (!station) return null;
 
   return (
@@ -151,40 +152,48 @@ export function StationInfoPanel({ station }: { station: StationInfo | null }) {
               {station.id}
             </p>
             <p className="text-foreground-secondary">
-              {station.description || 'Power node'}
+              {station.description || (station.id?.startsWith('G-') ? 'Building' : 'Power node')}
             </p>
             {station.group && (
               <p className="text-foreground-secondary">{station.group}</p>
             )}
           </div>
 
-          <div className="w-px bg-border" />
+          {hasData && station.url && (
+            <>
+              <div className="w-px bg-border" />
 
-          <div className="flex flex-col items-center justify-center gap-2">
-            <span className="rounded-md bg-surface px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground-tertiary">
-              Visualization
-            </span>
-            {station.url && (
-              <div className="pointer-events-auto flex flex-col gap-2">
-                <button
-                  onClick={() => {
-                    const el = document.getElementById('live-data');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    window.dispatchEvent(new CustomEvent('preview-visualization', { detail: station.url }));
-                  }}
-                  className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface"
-                >
-                  Preview
-                </button>
-                <button
-                  onClick={() => window.open(station.url, '_blank', 'noopener,noreferrer')}
-                  className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface"
-                >
-                  Open in Tab
-                </button>
+              <div className="flex flex-col items-center justify-center gap-2">
+                <span className="rounded-md bg-surface px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground-tertiary">
+                  Visualization
+                </span>
+                <div className="pointer-events-auto flex flex-col gap-2">
+                  {showPreview && (
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById('live-data');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        window.dispatchEvent(new CustomEvent('preview-visualization', { detail: station.url }));
+                      }}
+                      disabled={disabled}
+                      title={disabled ? 'Full access required' : 'Preview visualization'}
+                      className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Preview
+                    </button>
+                  )}
+                  <button
+                    onClick={() => window.open(station.url, '_blank', 'noopener,noreferrer')}
+                    disabled={disabled}
+                    title={disabled ? 'Full access required' : 'Open visualization in new tab'}
+                    className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Open in Tab
+                  </button>
+                </div>
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -9,8 +9,8 @@ if (!process.env.SMDT_DATA_DIR) {
   process.exit(1);
 }
 const DATA_DIR = process.env.SMDT_DATA_DIR;
-const CSV_DIR = path.join(DATA_DIR, 'meter-readings');
-const CSV_HEATMAP_DIR = path.join(DATA_DIR, 'heatmap-snapshots');
+const CSV_DIR = path.join(DATA_DIR, 'DatenSM');
+const CSV_HEATMAP_DIR = path.join(DATA_DIR, 'DatenSM_time');
 const DB_PATH = process.env.SMDT_SQLITE_PATH ?? path.join(process.cwd(), 'data', 'smdt.db');
 const CONFIG_FILE = process.env.SMDT_CONFIG_FILE ?? path.join(process.cwd(), 'data', 'meter-mapping.xml');
 

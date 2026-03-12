@@ -14,6 +14,8 @@ import {
   StationInfoPanel,
 } from './MapOverlays';
 import { useWebGLCheck, useFullscreen } from './useMapControls';
+import { useEntityMapping } from '@/hooks/useEntityMapping';
+import { useAuth } from '@/context/AuthProvider';
 
 interface StationInfo {
   id?: string;
@@ -45,6 +47,7 @@ interface MapShellProps {
   children: (props: {
     showLines: boolean;
     showStations: boolean;
+    showBuildings: boolean;
     isFullscreen: boolean;
     onError: () => void;
   }) => ReactNode;
@@ -64,9 +67,12 @@ export default function MapShell({
 }: MapShellProps) {
   const webGLSupported = useWebGLCheck();
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerId);
+  const { isDemo } = useAuth();
+  const mapping = useEntityMapping();
   const [mapError, setMapError] = useState(false);
   const [showLines, setShowLines] = useState(true);
   const [showStations, setShowStations] = useState(true);
+  const [showBuildings, setShowBuildings] = useState(true);
 
   const handleMapError = useCallback(() => {
     setMapError(true);
@@ -89,6 +95,7 @@ export default function MapShell({
           <div className={chipGroup}>
             <ToggleChip active={showLines} label="Grid" onChange={setShowLines} />
             <ToggleChip active={showStations} label="Stations" onChange={setShowStations} />
+            <ToggleChip active={showBuildings} label="Buildings" onChange={setShowBuildings} />
           </div>
         </div>
       )}
@@ -114,7 +121,7 @@ export default function MapShell({
           title={errorTitle}
           description={errorDescription}
         >
-          {children({ showLines, showStations, isFullscreen, onError: handleMapError })}
+          {children({ showLines, showStations, showBuildings, isFullscreen, onError: handleMapError })}
         </MapErrorBoundary>
       ) : (
         <MapPlaceholder
@@ -124,8 +131,14 @@ export default function MapShell({
         />
       )}
 
-      {/* station info panel */}
-      <StationInfoPanel station={selectedStation ?? null} />
+      {/* station/building info panel */}
+      <StationInfoPanel
+        station={selectedStation ?? null}
+        hasData={!!(selectedStation?.id && mapping.loaded && (
+          mapping.stationIds.has(selectedStation.id) || mapping.buildingIds.has(selectedStation.id)
+        ))}
+        disabled={isDemo}
+      />
     </div>
   );
 }

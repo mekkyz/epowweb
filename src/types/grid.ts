@@ -1,4 +1,4 @@
-import type { Feature, FeatureCollection, LineString, Point } from 'geojson';
+import type { Feature, FeatureCollection, LineString, Point, Polygon } from 'geojson';
 
 export interface Meter {
   id: string;
@@ -9,6 +9,13 @@ export interface Building {
   id: string;
   url: string;
 }
+
+export interface BuildingProperties {
+  id: string;
+  url: string;
+}
+
+export type BuildingFeature = Feature<Polygon, BuildingProperties>;
 
 export interface StationProperties {
   group: string;
@@ -30,10 +37,16 @@ export interface LineProperties {
 
 export type LineFeature = Feature<LineString, LineProperties>;
 
+/** A building entry in grid-data.json — either a GeoJSON Polygon Feature, a Point Feature, or a plain object. */
+export type RawBuilding =
+  | Feature<Polygon, { id: string }>
+  | Feature<Point, { id: string }>
+  | { id: string };
+
 /** Raw shape of grid-data.json (no url fields — grid.ts adds them). */
 export interface RawGridData {
   meters: Omit<Meter, 'url'>[];
-  buildings: Omit<Building, 'url'>[];
+  buildings: RawBuilding[];
   stations: Feature<Point, Omit<StationProperties, 'url'>>[];
   lines: LineFeature[];
 }
@@ -42,6 +55,7 @@ export interface RawGridData {
 export interface GridData {
   meters: Meter[];
   buildings: Building[];
+  buildingFeatures: BuildingFeature[];
   stations: StationFeature[];
   lines: LineFeature[];
 }
@@ -49,4 +63,5 @@ export interface GridData {
 export interface GridCollections {
   stations: FeatureCollection<Point, StationProperties>;
   lines: FeatureCollection<LineString, LineProperties>;
+  buildings: FeatureCollection<Polygon, BuildingProperties>;
 }
