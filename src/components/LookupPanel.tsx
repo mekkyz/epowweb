@@ -74,16 +74,10 @@ export default function LookupPanel({ onPreview }: Props) {
   if (effectiveBuilding !== building) setBuilding(effectiveBuilding);
   if (effectiveMeter !== meter) setMeter(effectiveMeter);
 
-  const openTarget = (type: EntityType, previewOnly = false) => {
+  const openTarget = (type: EntityType) => {
     const id = type === 'station' ? station : type === 'building' ? effectiveBuilding : effectiveMeter;
     if (!id) return;
-
-    const target = `/visualization/${type}/${id}`;
-    if (previewOnly) {
-      onPreview?.(target);
-      return;
-    }
-    window.open(target, '_blank', 'noopener,noreferrer');
+    window.open(`/visualization/${type}/${id}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -93,9 +87,8 @@ export default function LookupPanel({ onPreview }: Props) {
           label="Stations"
           icon={<Radio className="h-4 w-4 text-emerald-400" />}
           value={station}
-          onChange={setStation}
+          onChange={(id) => { setStation(id); onPreview?.(`/visualization/station/${id}`); }}
           options={baseStationOptions}
-          onPreview={() => openTarget('station', true)}
           onOpen={() => openTarget('station')}
           disabled={isDemo}
         />
@@ -103,9 +96,8 @@ export default function LookupPanel({ onPreview }: Props) {
           label="Buildings"
           icon={<Building className="h-4 w-4 text-blue-400" />}
           value={effectiveBuilding}
-          onChange={setBuilding}
+          onChange={(id) => { setBuilding(id); onPreview?.(`/visualization/building/${id}`); }}
           options={filteredBuildingOptions}
-          onPreview={() => openTarget('building', true)}
           onOpen={() => openTarget('building')}
           disabled={isDemo}
           filterActive={filterBuildings}
@@ -117,9 +109,8 @@ export default function LookupPanel({ onPreview }: Props) {
           label="Meters"
           icon={<Gauge className="h-4 w-4 text-amber-400" />}
           value={effectiveMeter}
-          onChange={setMeter}
+          onChange={(id) => { setMeter(id); onPreview?.(`/visualization/meter/${id}`); }}
           options={filteredMeterOptions}
-          onPreview={() => openTarget('meter', true)}
           onOpen={() => openTarget('meter')}
           disabled={isDemo}
           filterActive={filterMeters}
@@ -138,7 +129,6 @@ function LookupSelect({
   value,
   onChange,
   options,
-  onPreview,
   onOpen,
   disabled,
   filterActive,
@@ -151,7 +141,6 @@ function LookupSelect({
   value: string;
   options: { id: string; label: string }[];
   onChange: (next: string) => void;
-  onPreview: () => void;
   onOpen: () => void;
   disabled?: boolean;
   filterActive?: boolean;
@@ -194,27 +183,16 @@ function LookupSelect({
             </button>
           )}
         </div>
-        <div className="flex gap-1">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onPreview}
-            disabled={disabled}
-            title={disabled ? 'Full access required' : 'Preview visualization'}
-          >
-            Preview
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onOpen}
-            disabled={disabled}
-            title={disabled ? 'Full access required' : 'Open visualization in new tab'}
-            iconRight={<ArrowUpRight className="h-3 w-3" />}
-          >
-            Open
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onOpen}
+          disabled={disabled}
+          title={disabled ? 'Full access required' : 'Open visualization in new tab'}
+          iconRight={<ArrowUpRight className="h-3 w-3" />}
+        >
+          Open
+        </Button>
       </div>
       <Select
         options={selectOptions}

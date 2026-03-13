@@ -64,7 +64,7 @@ export default function Home() {
       <section className="pb-7 pt-8">
         <div className="text-center">
           <h1 className="font-display text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-            <span className="-skew-x-12 inline-block">e</span>PowMon
+            <span className="-skew-x-12 inline-block text-[#009682]">e</span>PowMon
           </h1>
           <p className="mt-2 text-sm text-muted sm:text-[15px]">
             KIT Campus North Power Grid Monitoring
