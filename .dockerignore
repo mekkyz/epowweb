@@ -1,11 +1,9 @@
 node_modules
-.next
-.git
+*.tsbuildinfo
+Dockerfile
+.dockerignore
+*.log
 **/*.db
 **/*.db-*
-*.log
-.env*
+.*
 !.env.example
-.DS_Store
-.idea
-.vscode

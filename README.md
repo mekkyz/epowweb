@@ -1,61 +1,52 @@
-# SMDT (Next.js)
+# ePowMon
 
-Next.js + Tailwind rebuild of the smdt-legacy frontend. It covers the KIT Campus North power grid (stations, buildings, meters, lines), interactive 2D/3D maps, legacy time-series visualizations, and the heatmap endpoint.
+KIT Campus North power grid (stations, buildings, meters, lines), interactive 2D/3D maps and heatmap.
 
-## Quick start
+## Features
 
-```bash
-npm install
-SMDT_DATA_DIR=../smdt-legacy/backend/data npm run db:seed   # creates data/smdt.db
-npm run dev            # open http://localhost:3000
-```
+- 2D campus map (MapLibre) with base-style toggles, line + station overlays
+- 3D map (deck.gl + MapLibre) extruding stations and cables
+- Data lookup for stations/buildings/meters with inline visualizations
+- Heatmap explorer reading from SQLite
+- TypeScript backend APIs under `/api` backed by SQLite
 
-### Environment
+## Tech Stack
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `SMDT_DATA_DIR` | *(required for seeding)* | CSV data dir for `npm run db:seed` |
-| `SMDT_CONFIG_FILE` | `./data/meter-mapping.xml` | Meter-station mapping XML |
-| `SMDT_SQLITE_PATH` | `./data/smdt.db` | SQLite database path |
+- Next.js (standalone output)
+- React and TypeScript
+- Tailwind with MapLibre and deck.gl
+- SQLite (better-sqlite3)
+- Docker
 
-### Data
+## Environment
 
-- Grid topology in `src/config/grid-data.json` (stations, lines, buildings, meters as GeoJSON).
-- Power data: seed SQLite via `SMDT_DATA_DIR=../smdt-legacy/backend/data npm run db:seed`.
-- Meter-station mapping in `data/meter-mapping.xml`. Override with `SMDT_CONFIG_FILE` if needed.
+| Variable           | Default                    | Purpose                            |
+| ------------------ | -------------------------- | ---------------------------------- |
+| `SMDT_DATA_DIR`    | _(required for seeding)_   | CSV data dir for `npm run db:seed` |
+| `SMDT_CONFIG_FILE` | `./data/meter-mapping.xml` | Meter-station mapping XML          |
+| `SMDT_SQLITE_PATH` | `./data/smdt.db`           | SQLite database path               |
 
-### What's inside
+## Deployment
 
-- **2D campus map** (MapLibre) with base-style toggles, line + station overlays, and click-to-open visualization links.
-- **Live data lookup** for stations/buildings/meters with inline visualizations powered by the new TypeScript APIs.
-- **3D map** (deck.gl + MapLibre) extruding stations and cables.
-- **Heatmap explorer** reading from SQLite.
-- **TypeScript backend APIs** under `/api` backed by SQLite:
-  - `/api/meters/:id/series` (per-meter time-series)
-  - `/api/buildings/:id/series` and `/api/stations/:id/series` (aggregated sums based on `meter-mapping.xml`)
-  - `/api/heatmap/init`, `/api/heatmap/geo?timestamp=...`, `/api/heatmap/step` (heatmap navigation)
-- Legacy URLs like `/rest/eASiMOV/visualization/:id` redirect to the new in-app visualization pages.
+### Docker
 
-### Kubernetes deployment
+Multi-stage Docker build -> standalone mode -> non-root user -> port 3000
 
-The app runs as a single container. The SQLite database lives on a PVC (`smdt-data`, 20Gi) mounted at `/data`.
+### Kubernetes
 
-#### Code-only changes (no new data)
+`esa` namespace on the IAI cluster via ArgoCD.
 
-Rebuild and push the image, then restart:
+- **Deployment** - single container with SQLite on a PVC (`smdt-data`, 20Gi) mounted at `/data`
+- **Service** - routing port 80 -> port 3000 on container
+- **Ingress** - traefik with TLS
+- **Certificate** — Let's Encrypt
 
-```bash
-docker build -t iai-artifactory.222.2.2:5000/2222/smdt:latest .
-docker push iai-artifactory.222.2.2:5000/2222/smdt:latest
-kubectl rollout restart deployment/smdt -n esa
-```
+Database updates: see [DATABASE.md](DATABASE.md) for the full seed/upload procedure.
 
-#### Database update (new CSV data)
+## License
 
-See [DATABASE.md](DATABASE.md) for the full procedure (seed locally, compress, chunk-upload to the pod, decompress).
+This software may not be used, copied, modified, or distributed without explicit written permission from the author.
 
-### Checks
+## Author
 
-```bash
-npm run lint
-```
+[mekky@kit.edu](mailto:mekky@kit.edu)
