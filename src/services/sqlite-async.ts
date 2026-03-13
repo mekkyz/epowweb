@@ -5,8 +5,8 @@
  * This module moves all queries to a dedicated Worker Thread so the main
  * event loop stays free for HTTP requests, health probes, etc.
  */
-import { Worker } from 'worker_threads';
-import { dbLogger } from '@/lib/logger';
+import { Worker } from "worker_threads";
+import { dbLogger } from "@/lib/logger";
 
 // The worker script is inlined as a string so it works in Next.js standalone
 // builds without needing a separate file in the output bundle.
@@ -56,9 +56,9 @@ function ensureWorker(dbPath: string): Worker {
     workerData: { dbPath },
   });
 
-  worker.on('message', (msg: { id?: number; type?: string; result?: unknown; error?: string }) => {
-    if (msg.type === 'ready') {
-      dbLogger.info('SQLite worker thread ready', { dbPath });
+  worker.on("message", (msg: { id?: number; type?: string; result?: unknown; error?: string }) => {
+    if (msg.type === "ready") {
+      dbLogger.info("SQLite worker thread ready", { dbPath });
       return;
     }
     if (msg.id == null) return;
@@ -69,8 +69,8 @@ function ensureWorker(dbPath: string): Worker {
     else p.resolve(msg.result);
   });
 
-  worker.on('error', (err) => {
-    dbLogger.error('SQLite worker thread error', err);
+  worker.on("error", (err) => {
+    dbLogger.error("SQLite worker thread error", err);
     for (const [id, p] of pending) {
       p.reject(err);
       pending.delete(id);
@@ -78,9 +78,9 @@ function ensureWorker(dbPath: string): Worker {
     worker = null;
   });
 
-  worker.on('exit', (code) => {
+  worker.on("exit", (code) => {
     if (code !== 0) {
-      dbLogger.error('SQLite worker thread exited', { code });
+      dbLogger.error("SQLite worker thread exited", { code });
     }
     worker = null;
   });
@@ -92,7 +92,7 @@ export function queryAll(dbPath: string, sql: string, params: unknown[] = []): P
   return new Promise((resolve, reject) => {
     const id = reqId++;
     pending.set(id, { resolve: resolve as (v: unknown) => void, reject });
-    ensureWorker(dbPath).postMessage({ id, sql, params, method: 'all' });
+    ensureWorker(dbPath).postMessage({ id, sql, params, method: "all" });
   });
 }
 
@@ -100,6 +100,6 @@ export function queryGet(dbPath: string, sql: string, params: unknown[] = []): P
   return new Promise((resolve, reject) => {
     const id = reqId++;
     pending.set(id, { resolve, reject });
-    ensureWorker(dbPath).postMessage({ id, sql, params, method: 'get' });
+    ensureWorker(dbPath).postMessage({ id, sql, params, method: "get" });
   });
 }

@@ -1,16 +1,12 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
-import { ArrowUpRight, Building, Gauge, Radio } from 'lucide-react';
-import {
-  buildingOptions,
-  meterOptions,
-  stationOptions,
-} from '@/config/grid';
-import { Button, Select } from '@/components/ui';
-import { useAuth } from '@/context/AuthProvider';
-import { useEntityMapping } from '@/hooks/useEntityMapping';
-import type { EntityType } from '@/lib/constants';
+import { useMemo, useState } from "react";
+import { ArrowUpRight, Building, Gauge, Radio } from "lucide-react";
+import { buildingOptions, meterOptions, stationOptions } from "@/config/grid";
+import { Button, Select } from "@/components/ui";
+import { useAuth } from "@/context/AuthProvider";
+import { useEntityMapping } from "@/hooks/useEntityMapping";
+import type { EntityType } from "@/lib/constants";
 
 interface Props {
   onPreview?: (url: string) => void;
@@ -20,9 +16,9 @@ export default function LookupPanel({ onPreview }: Props) {
   const { isDemo } = useAuth();
   const mapping = useEntityMapping();
 
-  const [station, setStation] = useState(stationOptions[0]?.id ?? '');
-  const [building, setBuilding] = useState(buildingOptions[0]?.id ?? '');
-  const [meter, setMeter] = useState(meterOptions[0]?.id ?? '');
+  const [station, setStation] = useState(stationOptions[0]?.id ?? "");
+  const [building, setBuilding] = useState(buildingOptions[0]?.id ?? "");
+  const [meter, setMeter] = useState(meterOptions[0]?.id ?? "");
 
   const [filterBuildings, setFilterBuildings] = useState(false);
   const [filterMeters, setFilterMeters] = useState(false);
@@ -64,20 +60,21 @@ export default function LookupPanel({ onPreview }: Props) {
   // When filtered options change, ensure selection is still valid
   const effectiveBuilding = filteredBuildingOptions.find((b) => b.id === building)
     ? building
-    : filteredBuildingOptions[0]?.id ?? '';
+    : (filteredBuildingOptions[0]?.id ?? "");
 
   const effectiveMeter = filteredMeterOptions.find((m) => m.id === meter)
     ? meter
-    : filteredMeterOptions[0]?.id ?? '';
+    : (filteredMeterOptions[0]?.id ?? "");
 
   // Sync effective values back
   if (effectiveBuilding !== building) setBuilding(effectiveBuilding);
   if (effectiveMeter !== meter) setMeter(effectiveMeter);
 
   const openTarget = (type: EntityType) => {
-    const id = type === 'station' ? station : type === 'building' ? effectiveBuilding : effectiveMeter;
+    const id =
+      type === "station" ? station : type === "building" ? effectiveBuilding : effectiveMeter;
     if (!id) return;
-    window.open(`/visualization/${type}/${id}`, '_blank', 'noopener,noreferrer');
+    window.open(`/visualization/${type}/${id}`, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -87,18 +84,24 @@ export default function LookupPanel({ onPreview }: Props) {
           label="Stations"
           icon={<Radio className="h-4 w-4 text-emerald-400" />}
           value={station}
-          onChange={(id) => { setStation(id); onPreview?.(`/visualization/station/${id}`); }}
+          onChange={(id) => {
+            setStation(id);
+            onPreview?.(`/visualization/station/${id}`);
+          }}
           options={baseStationOptions}
-          onOpen={() => openTarget('station')}
+          onOpen={() => openTarget("station")}
           disabled={isDemo}
         />
         <LookupSelect
           label="Buildings"
           icon={<Building className="h-4 w-4 text-blue-400" />}
           value={effectiveBuilding}
-          onChange={(id) => { setBuilding(id); onPreview?.(`/visualization/building/${id}`); }}
+          onChange={(id) => {
+            setBuilding(id);
+            onPreview?.(`/visualization/building/${id}`);
+          }}
           options={filteredBuildingOptions}
-          onOpen={() => openTarget('building')}
+          onOpen={() => openTarget("building")}
           disabled={isDemo}
           filterActive={filterBuildings}
           onToggleFilter={() => setFilterBuildings((f) => !f)}
@@ -109,14 +112,17 @@ export default function LookupPanel({ onPreview }: Props) {
           label="Meters"
           icon={<Gauge className="h-4 w-4 text-amber-400" />}
           value={effectiveMeter}
-          onChange={(id) => { setMeter(id); onPreview?.(`/visualization/meter/${id}`); }}
+          onChange={(id) => {
+            setMeter(id);
+            onPreview?.(`/visualization/meter/${id}`);
+          }}
           options={filteredMeterOptions}
-          onOpen={() => openTarget('meter')}
+          onOpen={() => openTarget("meter")}
           disabled={isDemo}
           filterActive={filterMeters}
           onToggleFilter={() => setFilterMeters((f) => !f)}
           filterReady={mapping.loaded}
-          filterLabel={filterBuildings ? 'Filter by building' : 'Filter by station'}
+          filterLabel={filterBuildings ? "Filter by building" : "Filter by station"}
         />
       </div>
     </div>
@@ -154,11 +160,11 @@ function LookupSelect({
   }));
 
   return (
-    <div className="rounded-xl border border-border bg-panel p-4 shadow-sm transition-all hover:border-border-strong">
+    <div className="border-border bg-panel hover:border-border-strong rounded-xl border p-4 shadow-sm transition-all">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           {icon}
-          <p className="text-sm font-semibold text-foreground">{label}</p>
+          <p className="text-foreground text-sm font-semibold">{label}</p>
           {onToggleFilter && (
             <button
               onClick={onToggleFilter}
@@ -171,12 +177,12 @@ function LookupSelect({
             >
               <span
                 className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${
-                  filterActive ? 'bg-accent' : 'bg-border'
+                  filterActive ? "bg-accent" : "bg-border"
                 }`}
               >
                 <span
                   className={`inline-block h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-transform ${
-                    filterActive ? 'translate-x-[18px]' : 'translate-x-[3px]'
+                    filterActive ? "translate-x-[18px]" : "translate-x-[3px]"
                   }`}
                 />
               </span>
@@ -188,7 +194,7 @@ function LookupSelect({
           size="sm"
           onClick={onOpen}
           disabled={disabled}
-          title={disabled ? 'Full access required' : 'Open visualization in new tab'}
+          title={disabled ? "Full access required" : "Open visualization in new tab"}
           iconRight={<ArrowUpRight className="h-3 w-3" />}
         >
           Open
@@ -199,7 +205,7 @@ function LookupSelect({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         size="sm"
-        className="bg-white py-1 dark:bg-background"
+        className="dark:bg-background bg-white py-1"
         disabled={disabled}
         aria-label={`Select ${label.toLowerCase()}`}
       />

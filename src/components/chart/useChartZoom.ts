@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type ChartMouseEvent = {
   activeLabel?: string | number | null;
@@ -12,7 +12,10 @@ interface UseChartZoomOptions<T extends { start: string }> {
   resetKey?: unknown;
 }
 
-export function useChartZoom<T extends { start: string }>({ data, resetKey }: UseChartZoomOptions<T>) {
+export function useChartZoom<T extends { start: string }>({
+  data,
+  resetKey,
+}: UseChartZoomOptions<T>) {
   const [zoomLeft, setZoomLeft] = useState<number | null>(null);
   const [zoomRight, setZoomRight] = useState<number | null>(null);
   const [refAreaLeft, setRefAreaLeft] = useState<string | null>(null);
@@ -104,8 +107,8 @@ export function useChartZoom<T extends { start: string }>({ data, resetKey }: Us
       zoomBy(e.deltaY < 0 ? 1 : -1, relativeX);
     };
 
-    container.addEventListener('wheel', handleWheelEvent, { passive: false });
-    return () => container.removeEventListener('wheel', handleWheelEvent);
+    container.addEventListener("wheel", handleWheelEvent, { passive: false });
+    return () => container.removeEventListener("wheel", handleWheelEvent);
   }, [data.length, zoomBy]);
 
   // ── pan (shift+drag / middle-click) ────────────────────────────

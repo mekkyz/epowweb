@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Area,
   Bar,
@@ -12,11 +12,11 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
-import type { ValueType } from 'recharts/types/component/DefaultTooltipContent';
-import { useTheme } from 'next-themes';
-import { Spinner, EmptyState, ChartSkeleton } from '@/components/ui';
-import { COLORS } from '@/lib/constants';
+} from "recharts";
+import type { ValueType } from "recharts/types/component/DefaultTooltipContent";
+import { useTheme } from "next-themes";
+import { Spinner, EmptyState, ChartSkeleton } from "@/components/ui";
+import { COLORS } from "@/lib/constants";
 import {
   TrendingUp,
   AlertCircle,
@@ -30,9 +30,9 @@ import {
   Minus,
   CircleDot,
   BarChart3,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { useChartZoom } from '@/components/chart/useChartZoom';
+} from "lucide-react";
+import clsx from "clsx";
+import { useChartZoom } from "@/components/chart/useChartZoom";
 
 interface SeriesPoint {
   start: string;
@@ -47,12 +47,12 @@ interface Props {
 export default function SeriesChart({ fetchUrl, title }: Props) {
   const { resolvedTheme } = useTheme();
   const [data, setData] = useState<SeriesPoint[]>([]);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [mounted, setMounted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [chartHeight, setChartHeight] = useState(340);
   const [isInIframe, setIsInIframe] = useState(false);
-  const [chartStyle, setChartStyle] = useState<'curve' | 'line' | 'point' | 'column'>('curve');
+  const [chartStyle, setChartStyle] = useState<"curve" | "line" | "point" | "column">("curve");
   const [filled, setFilled] = useState(true);
 
   const {
@@ -82,15 +82,15 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
   }, [isExpanded]);
 
   // Theme-aware chart colors
-  const isDark = resolvedTheme === 'dark';
+  const isDark = resolvedTheme === "dark";
   const chartColors = useMemo(
     () => ({
-      grid: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)',
-      axisStroke: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.3)',
-      axisTick: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.6)',
-      tooltipBg: isDark ? 'rgba(11, 16, 32, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-      tooltipBorder: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.15)',
-      tooltipText: isDark ? '#fff' : '#000',
+      grid: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)",
+      axisStroke: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.3)",
+      axisTick: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.6)",
+      tooltipBg: isDark ? "rgba(11, 16, 32, 0.95)" : "rgba(255, 255, 255, 0.95)",
+      tooltipBorder: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.15)",
+      tooltipText: isDark ? "#fff" : "#000",
     }),
     [isDark],
   );
@@ -99,7 +99,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
     if (!fetchUrl) return;
     let active = true;
     const load = async () => {
-      setStatus('loading');
+      setStatus("loading");
       try {
         const res = await fetch(fetchUrl);
         if (!res.ok) throw new Error(`Request failed: ${res.status}`);
@@ -116,10 +116,10 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
             powerKw: row.powerKw ?? row.power ?? null,
           })),
         );
-        setStatus('idle');
+        setStatus("idle");
       } catch (err) {
         console.error(err);
-        if (active) setStatus('error');
+        if (active) setStatus("error");
       }
     };
     load();
@@ -155,7 +155,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
     return (
       <EmptyState
         title="Missing data source"
-        className="h-[420px] w-full rounded-xl border border-border bg-surface"
+        className="border-border bg-surface h-[420px] w-full rounded-xl border"
       />
     );
   }
@@ -163,74 +163,78 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
   return (
     <div
       id="series-chart-container"
-      className="overflow-hidden rounded-xl border border-border bg-white shadow-lg dark:bg-background"
+      className="border-border dark:bg-background overflow-hidden rounded-xl border bg-white shadow-lg"
       style={{
-        margin: isExpanded ? '0 -18vw' : '0 0',
-        transition: 'margin 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        willChange: 'margin',
+        margin: isExpanded ? "0 -18vw" : "0 0",
+        transition: "margin 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        willChange: "margin",
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border px-4 py-3">
+      <div className="border-border flex items-center justify-between border-b px-4 py-3">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
             <TrendingUp className="h-4 w-4 text-emerald-400" />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">
-              {title ?? 'Time-series aggregation'}
+            <p className="text-foreground text-sm font-medium">
+              {title ?? "Time-series aggregation"}
             </p>
-            <p className="text-xs text-foreground-tertiary">Power consumption in kW</p>
+            <p className="text-foreground-tertiary text-xs">Power consumption in kW</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {status === 'idle' && data.length > 0 && (
+          {status === "idle" && data.length > 0 && (
             <>
-              {([
-                { label: 'Min', value: stats.min, color: 'text-sky-400' },
-                { label: 'Avg', value: stats.avg, color: 'text-emerald-400' },
-                { label: 'Median', value: stats.median, color: 'text-violet-400' },
-                { label: 'Max', value: stats.max, color: 'text-amber-400' },
-              ] as const).map(({ label, value, color }) => (
+              {(
+                [
+                  { label: "Min", value: stats.min, color: "text-sky-400" },
+                  { label: "Avg", value: stats.avg, color: "text-emerald-400" },
+                  { label: "Median", value: stats.median, color: "text-violet-400" },
+                  { label: "Max", value: stats.max, color: "text-amber-400" },
+                ] as const
+              ).map(({ label, value, color }) => (
                 <div key={label} className="flex items-center gap-3">
                   <div className="text-right">
-                    <p className="text-xs text-foreground-tertiary">{label}</p>
+                    <p className="text-foreground-tertiary text-xs">{label}</p>
                     <p className={`font-mono text-sm ${color}`}>{value.toFixed(2)} kW</p>
                   </div>
-                  <div className="h-8 w-px bg-border" />
+                  <div className="bg-border h-8 w-px" />
                 </div>
               ))}
             </>
           )}
-          <div className="rounded-md px-2 py-1 text-xs text-foreground-secondary">
-            {status === 'loading' && (
+          <div className="text-foreground-secondary rounded-md px-2 py-1 text-xs">
+            {status === "loading" && (
               <span className="flex items-center gap-1.5">
                 <Spinner size="sm" /> Loading…
               </span>
             )}
-            {status === 'error' && (
+            {status === "error" && (
               <span className="flex items-center gap-1.5 text-red-400">
                 <AlertCircle className="h-3 w-3" /> Failed
               </span>
             )}
-            {status === 'idle' &&
-              `${visibleData.length}${isZoomed ? ` / ${data.length}` : ''} points`}
+            {status === "idle" &&
+              `${visibleData.length}${isZoomed ? ` / ${data.length}` : ""} points`}
           </div>
-          <div className="flex items-center gap-0.5 rounded-lg border border-border-strong p-0.5">
-            {([
-              { key: 'curve', icon: Spline, label: 'Curve' },
-              { key: 'line', icon: Minus, label: 'Line' },
-              { key: 'point', icon: CircleDot, label: 'Point' },
-              { key: 'column', icon: BarChart3, label: 'Column' },
-            ] as const).map(({ key, icon: Icon, label }) => (
+          <div className="border-border-strong flex items-center gap-0.5 rounded-lg border p-0.5">
+            {(
+              [
+                { key: "curve", icon: Spline, label: "Curve" },
+                { key: "line", icon: Minus, label: "Line" },
+                { key: "point", icon: CircleDot, label: "Point" },
+                { key: "column", icon: BarChart3, label: "Column" },
+              ] as const
+            ).map(({ key, icon: Icon, label }) => (
               <button
                 key={key}
                 onClick={() => setChartStyle(key)}
                 className={clsx(
-                  'flex h-7 w-7 items-center justify-center rounded-md transition-all',
+                  "flex h-7 w-7 items-center justify-center rounded-md transition-all",
                   chartStyle === key
-                    ? 'bg-surface text-foreground shadow-sm'
-                    : 'text-foreground-tertiary hover:text-foreground-secondary',
+                    ? "bg-surface text-foreground shadow-sm"
+                    : "text-foreground-tertiary hover:text-foreground-secondary",
                 )}
                 aria-label={label}
                 title={label}
@@ -238,14 +242,14 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                 <Icon className="h-3.5 w-3.5" />
               </button>
             ))}
-            <div className="mx-0.5 h-5 w-px bg-border" />
+            <div className="bg-border mx-0.5 h-5 w-px" />
             <button
               onClick={() => setFilled((f) => !f)}
               className={clsx(
-                'flex h-7 items-center justify-center rounded-md px-2 text-xs font-medium transition-all',
+                "flex h-7 items-center justify-center rounded-md px-2 text-xs font-medium transition-all",
                 filled
-                  ? 'bg-surface text-foreground shadow-sm'
-                  : 'text-foreground-tertiary hover:text-foreground-secondary',
+                  ? "bg-surface text-foreground shadow-sm"
+                  : "text-foreground-tertiary hover:text-foreground-secondary",
               )}
               aria-label="Toggle filled"
               title="Toggle filled"
@@ -256,14 +260,10 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
           {!isInIframe && (
             <button
               onClick={toggleExpanded}
-              className="flex h-7 w-7 items-center justify-center rounded-lg border border-border-strong text-foreground-secondary transition-all hover:bg-surface hover:text-foreground"
-              aria-label={isExpanded ? 'Collapse chart' : 'Expand chart'}
+              className="border-border-strong text-foreground-secondary hover:bg-surface hover:text-foreground flex h-7 w-7 items-center justify-center rounded-lg border transition-all"
+              aria-label={isExpanded ? "Collapse chart" : "Expand chart"}
             >
-              {isExpanded ? (
-                <Minimize2 className="h-4 w-4" />
-              ) : (
-                <Maximize2 className="h-4 w-4" />
-              )}
+              {isExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
             </button>
           )}
         </div>
@@ -271,7 +271,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
 
       {/* Chart */}
       <div className="relative p-4">
-        {status === 'loading' && data.length === 0 ? (
+        {status === "loading" && data.length === 0 ? (
           <ChartSkeleton />
         ) : (
           <>
@@ -279,26 +279,26 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
             {data.length > 10 && (
               <div
                 className={clsx(
-                  'absolute right-6 top-6 z-10 flex items-center gap-1 rounded-lg border border-border bg-panel/95 p-1 shadow-lg backdrop-blur-sm transition-opacity',
-                  isDragging ? 'opacity-30' : 'opacity-100',
+                  "border-border bg-panel/95 absolute top-6 right-6 z-10 flex items-center gap-1 rounded-lg border p-1 shadow-lg backdrop-blur-sm transition-opacity",
+                  isDragging ? "opacity-30" : "opacity-100",
                 )}
               >
                 <button
                   onClick={() => zoomBy(1)}
                   disabled={zoomPercentage <= 5}
-                  className="flex h-7 w-7 items-center justify-center rounded-md text-foreground-secondary transition-colors hover:bg-surface hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent"
+                  className="text-foreground-secondary hover:bg-surface hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
                   aria-label="Zoom in"
                   title="Zoom in (scroll up)"
                 >
                   <ZoomIn className="h-4 w-4" />
                 </button>
-                <div className="min-w-[3rem] px-1 text-center font-mono text-xs text-foreground-secondary">
+                <div className="text-foreground-secondary min-w-[3rem] px-1 text-center font-mono text-xs">
                   {zoomPercentage}%
                 </div>
                 <button
                   onClick={() => zoomBy(-1)}
                   disabled={!isZoomed}
-                  className="flex h-7 w-7 items-center justify-center rounded-md text-foreground-secondary transition-colors hover:bg-surface hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent"
+                  className="text-foreground-secondary hover:bg-surface hover:text-foreground flex h-7 w-7 items-center justify-center rounded-md transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
                   aria-label="Zoom out"
                   title="Zoom out (scroll down)"
                 >
@@ -306,10 +306,10 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                 </button>
                 {isZoomed && (
                   <>
-                    <div className="mx-1 h-5 w-px bg-border" />
+                    <div className="bg-border mx-1 h-5 w-px" />
                     <button
                       onClick={resetZoom}
-                      className="flex h-7 items-center gap-1.5 rounded-md px-2 text-xs text-foreground-secondary transition-colors hover:bg-surface hover:text-foreground"
+                      className="text-foreground-secondary hover:bg-surface hover:text-foreground flex h-7 items-center gap-1.5 rounded-md px-2 text-xs transition-colors"
                       aria-label="Reset zoom"
                       title="Reset zoom (double-click)"
                     >
@@ -323,7 +323,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
 
             {/* Pan hint when zoomed */}
             {isZoomed && !isDragging && (
-              <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 rounded-full border border-border bg-panel/90 px-3 py-1.5 text-xs text-foreground-tertiary shadow-lg backdrop-blur-sm">
+              <div className="border-border bg-panel/90 text-foreground-tertiary absolute bottom-6 left-1/2 z-10 -translate-x-1/2 rounded-full border px-3 py-1.5 text-xs shadow-lg backdrop-blur-sm">
                 <span className="flex items-center gap-2">
                   <Move className="h-3.5 w-3.5" />
                   Shift+drag to pan • Double-click to reset
@@ -335,15 +335,15 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
               ref={chartContainerRef}
               {...containerHandlers}
               className={clsx(
-                'select-none outline-none',
-                isPanning && 'cursor-grabbing',
-                isZoomed && !isPanning && 'cursor-crosshair',
+                "outline-none select-none",
+                isPanning && "cursor-grabbing",
+                isZoomed && !isPanning && "cursor-crosshair",
               )}
               style={{
                 height: isExpanded ? 720 : 340,
                 minWidth: 280,
                 minHeight: 240,
-                transition: 'height 0.35s ease-out',
+                transition: "height 0.35s ease-out",
               }}
             >
               <ResponsiveContainer
@@ -356,7 +356,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                 <ComposedChart
                   data={visibleData}
                   margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-                  barCategoryGap={chartStyle === 'column' ? '5%' : undefined}
+                  barCategoryGap={chartStyle === "column" ? "5%" : undefined}
                   {...chartHandlers}
                 >
                   <defs>
@@ -375,7 +375,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                   <XAxis
                     dataKey="start"
                     tickFormatter={(value) => {
-                      if (!value) return '';
+                      if (!value) return "";
                       const isMultiDay =
                         visibleData.length > 1 &&
                         visibleData[0]?.start?.slice(0, 10) !==
@@ -396,8 +396,8 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                     interval="preserveStartEnd"
                     minTickGap={40}
                     label={{
-                      value: 'Time',
-                      position: 'insideBottom',
+                      value: "Time",
+                      position: "insideBottom",
                       offset: -10,
                       style: { fill: chartColors.axisTick, fontSize: 11 },
                     }}
@@ -408,46 +408,46 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                     width={60}
                     tick={{ fill: chartColors.axisTick, fontSize: 11 }}
                     label={{
-                      value: 'Power (kW)',
+                      value: "Power (kW)",
                       angle: -90,
-                      position: 'insideLeft',
-                      style: { fill: chartColors.axisTick, fontSize: 11, textAnchor: 'middle' },
+                      position: "insideLeft",
+                      style: { fill: chartColors.axisTick, fontSize: 11, textAnchor: "middle" },
                     }}
                   />
                   <Tooltip
                     contentStyle={{
                       background: chartColors.tooltipBg,
                       border: `1px solid ${chartColors.tooltipBorder}`,
-                      borderRadius: '8px',
+                      borderRadius: "8px",
                       boxShadow: isDark
-                        ? '0 4px 12px rgba(0,0,0,0.5)'
-                        : '0 4px 12px rgba(0,0,0,0.15)',
-                      padding: '12px',
+                        ? "0 4px 12px rgba(0,0,0,0.5)"
+                        : "0 4px 12px rgba(0,0,0,0.15)",
+                      padding: "12px",
                     }}
                     labelStyle={{
                       color: chartColors.tooltipText,
-                      marginBottom: '8px',
+                      marginBottom: "8px",
                       fontWeight: 600,
-                      fontSize: '13px',
+                      fontSize: "13px",
                     }}
                     labelFormatter={(label) => {
-                      if (!label) return '';
+                      if (!label) return "";
                       const date = new Date(label);
-                      return date.toLocaleString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
+                      return date.toLocaleString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
                         hour12: false,
                       });
                     }}
                     formatter={(value: ValueType | undefined) => {
-                      const val = value ?? '–';
-                      return [`${val} kW`, 'Power Consumption'] as [string, string];
+                      const val = value ?? "–";
+                      return [`${val} kW`, "Power Consumption"] as [string, string];
                     }}
                   />
-                  {chartStyle === 'curve' && (
+                  {chartStyle === "curve" && (
                     <Area
                       type="monotone"
                       dataKey="powerKw"
@@ -457,7 +457,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                       fill="url(#colorPower)"
                     />
                   )}
-                  {chartStyle === 'line' && filled && (
+                  {chartStyle === "line" && filled && (
                     <Area
                       type="linear"
                       dataKey="powerKw"
@@ -467,7 +467,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                       fill="url(#colorPower)"
                     />
                   )}
-                  {chartStyle === 'line' && !filled && (
+                  {chartStyle === "line" && !filled && (
                     <Line
                       type="linear"
                       dataKey="powerKw"
@@ -476,13 +476,13 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                       dot={false}
                     />
                   )}
-                  {chartStyle === 'point' && (
+                  {chartStyle === "point" && (
                     <Line
                       type="linear"
                       dataKey="powerKw"
                       stroke="transparent"
                       dot={{
-                        fill: filled ? COLORS.accent.primary : 'transparent',
+                        fill: filled ? COLORS.accent.primary : "transparent",
                         stroke: COLORS.accent.primary,
                         strokeWidth: filled ? 0 : 1,
                         r: 1,
@@ -495,12 +495,12 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                       isAnimationActive={false}
                     />
                   )}
-                  {chartStyle === 'column' && (
+                  {chartStyle === "column" && (
                     <Bar
                       dataKey="powerKw"
                       fill={COLORS.accent.primary}
                       fillOpacity={filled ? 0.8 : 0.15}
-                      stroke={filled ? 'none' : COLORS.accent.primary}
+                      stroke={filled ? "none" : COLORS.accent.primary}
                       strokeWidth={filled ? 0 : 1}
                       radius={[1, 1, 0, 0]}
                       maxBarSize={

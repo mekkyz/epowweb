@@ -6,10 +6,10 @@ The app uses SQLite for meter readings and heatmap data. The database is generat
 
 Two tables:
 
-| Table | Description | Rows (1 year) |
-|-------|-------------|---------------|
-| `meter_readings` | Raw 15-min meter data (power, energy) per meter | ~21.5M |
-| `station_heatmap` | **Pre-aggregated** station-level totals per timestamp | ~1.3M |
+| Table             | Description                                           | Rows (1 year) |
+| ----------------- | ----------------------------------------------------- | ------------- |
+| `meter_readings`  | Raw 15-min meter data (power, energy) per meter       | ~21.5M        |
+| `station_heatmap` | **Pre-aggregated** station-level totals per timestamp | ~1.3M         |
 
 The `station_heatmap` table is the key optimization: instead of storing ~614 meter rows per timestamp and aggregating at runtime, the seed script pre-aggregates them into ~37 station rows per timestamp directly from CSV. This is a **16x reduction** in query size and eliminates the need for an intermediate `heatmap_points` table entirely.
 
@@ -142,12 +142,12 @@ Follow the "Upload DB to k8s" and deployment steps below.
 
 **Sizing estimates per year:**
 
-| Metric | Per year | 10 years |
-|--------|----------|----------|
-| `meter_readings` rows | ~21.5M | ~215M |
-| `station_heatmap` rows | ~1.3M | ~13M |
-| DB file size | ~3.8 GB | ~38 GB |
-| PVC required | 10 Gi | 100 Gi |
+| Metric                 | Per year | 10 years |
+| ---------------------- | -------- | -------- |
+| `meter_readings` rows  | ~21.5M   | ~215M    |
+| `station_heatmap` rows | ~1.3M    | ~13M     |
+| DB file size           | ~3.8 GB  | ~38 GB   |
+| PVC required           | 10 Gi    | 100 Gi   |
 
 For 10 years, expand the PVC before uploading:
 
@@ -184,13 +184,13 @@ The seed script pre-aggregates heatmap data from meter-level (~614 rows/timestam
 
 The worker thread configures SQLite for read-only performance:
 
-| PRAGMA | Value | Effect |
-|--------|-------|--------|
-| `journal_mode` | WAL | Concurrent reads without locking |
-| `mmap_size` | 2147483648 (2 GB) | Memory-mapped I/O, avoids read() syscalls |
-| `cache_size` | -64000 (64 MB) | Larger page cache for repeated queries |
-| `temp_store` | MEMORY | Temp tables in RAM instead of disk |
-| `query_only` | ON | Safety: prevents accidental writes |
+| PRAGMA         | Value             | Effect                                    |
+| -------------- | ----------------- | ----------------------------------------- |
+| `journal_mode` | WAL               | Concurrent reads without locking          |
+| `mmap_size`    | 2147483648 (2 GB) | Memory-mapped I/O, avoids read() syscalls |
+| `cache_size`   | -64000 (64 MB)    | Larger page cache for repeated queries    |
+| `temp_store`   | MEMORY            | Temp tables in RAM instead of disk        |
+| `query_only`   | ON                | Safety: prevents accidental writes        |
 
 **4. Server-side LRU caching** (`src/services/sqlite-store.ts`)
 
@@ -217,13 +217,13 @@ Returns all ~96 timestamps of geo data for an entire day in a single request, re
 
 Logs critical process events for debugging pod crashes:
 
-| Event | Log prefix | Description |
-|-------|-----------|-------------|
-| `uncaughtException` | `[CRASH]` | Unhandled error — logs and exits |
-| `unhandledRejection` | `[CRASH]` | Unhandled promise rejection |
-| `SIGTERM` | `[SHUTDOWN]` | Kubernetes graceful shutdown signal |
-| `SIGINT` | `[SHUTDOWN]` | Manual interrupt |
-| Every 60s | `[MEMORY]` | RSS, heap used, heap total, external |
+| Event                | Log prefix   | Description                          |
+| -------------------- | ------------ | ------------------------------------ |
+| `uncaughtException`  | `[CRASH]`    | Unhandled error — logs and exits     |
+| `unhandledRejection` | `[CRASH]`    | Unhandled promise rejection          |
+| `SIGTERM`            | `[SHUTDOWN]` | Kubernetes graceful shutdown signal  |
+| `SIGINT`             | `[SHUTDOWN]` | Manual interrupt                     |
+| Every 60s            | `[MEMORY]`   | RSS, heap used, heap total, external |
 
 Check logs:
 
@@ -279,16 +279,16 @@ Client (browser)
 
 ### Key files
 
-| File | Purpose |
-|------|---------|
-| `seed-sqlite.ts` | Seeds DB from CSV + XML config, aggregates station data in-memory |
-| `src/services/sqlite-async.ts` | Worker Thread wrapper for better-sqlite3 |
-| `src/services/sqlite-store.ts` | All SQLite queries + LRU caching |
-| `src/services/smdt-data.ts` | Service layer (SQLite-only for heatmap) |
-| `src/app/api/_lib/aggregate-heatmap.ts` | GeoJSON conversion for station rows |
-| `src/app/api/heatmap/geo/day/route.ts` | Batch day endpoint |
-| `src/app/api/health/route.ts` | Health probe endpoint |
-| `src/instrumentation.ts` | Crash diagnostics + memory logging |
+| File                                    | Purpose                                                           |
+| --------------------------------------- | ----------------------------------------------------------------- |
+| `seed-sqlite.ts`                        | Seeds DB from CSV + XML config, aggregates station data in-memory |
+| `src/services/sqlite-async.ts`          | Worker Thread wrapper for better-sqlite3                          |
+| `src/services/sqlite-store.ts`          | All SQLite queries + LRU caching                                  |
+| `src/services/smdt-data.ts`             | Service layer (SQLite-only for heatmap)                           |
+| `src/app/api/_lib/aggregate-heatmap.ts` | GeoJSON conversion for station rows                               |
+| `src/app/api/heatmap/geo/day/route.ts`  | Batch day endpoint                                                |
+| `src/app/api/health/route.ts`           | Health probe endpoint                                             |
+| `src/instrumentation.ts`                | Crash diagnostics + memory logging                                |
 
 ---
 

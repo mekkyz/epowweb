@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { apiLogger } from '@/lib/logger';
-import { API_DEFAULTS } from '@/lib/constants';
-import type { SeriesBounds } from '@/types/smdt';
+import { NextRequest, NextResponse } from "next/server";
+import { apiLogger } from "@/lib/logger";
+import { API_DEFAULTS } from "@/lib/constants";
+import type { SeriesBounds } from "@/types/smdt";
 
 type Params = { params: { id: string } | Promise<{ id: string }> };
 
@@ -10,7 +10,10 @@ interface SeriesHandlerConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getMeta: (id: string) => Record<string, any> | undefined;
   getBounds: (idOrMeters: string | string[]) => Promise<SeriesBounds>;
-  loadSeries: (idOrMeters: string | string[], opts: { start?: string; end?: string; limit?: number }) => Promise<unknown[]>;
+  loadSeries: (
+    idOrMeters: string | string[],
+    opts: { start?: string; end?: string; limit?: number },
+  ) => Promise<unknown[]>;
   /** For meters: pass the id directly. For buildings/stations: pass meta.meters. */
   useMeterIds?: boolean;
 }
@@ -31,24 +34,33 @@ export function createSeriesHandler(config: SeriesHandlerConfig) {
       const meta = getMeta(entityId);
 
       if (!meta) {
-        apiLogger.warn(`GET ${routePath} - ${entityType} not found`, { [entityType + 'Id']: entityId });
+        apiLogger.warn(`GET ${routePath} - ${entityType} not found`, {
+          [entityType + "Id"]: entityId,
+        });
         return NextResponse.json(
-          { success: false, error: { message: `${entityType} '${entityId}' not found`, code: 'NOT_FOUND' } },
-          { status: 404 }
+          {
+            success: false,
+            error: { message: `${entityType} '${entityId}' not found`, code: "NOT_FOUND" },
+          },
+          { status: 404 },
         );
       }
 
       const { searchParams } = new URL(req.url);
-      const start = searchParams.get('start') ?? undefined;
-      const end = searchParams.get('end') ?? undefined;
-      const limitParam = searchParams.get('limit');
+      const start = searchParams.get("start") ?? undefined;
+      const end = searchParams.get("end") ?? undefined;
+      const limitParam = searchParams.get("limit");
       const limit = limitParam ? Number(limitParam) : API_DEFAULTS.seriesLimit;
 
       const boundsArg = useMeterIds ? meta.meters! : entityId;
       const bounds = await getBounds(boundsArg);
       const defaultStartDate = bounds.end
-        ? new Date(new Date(bounds.end).valueOf() - API_DEFAULTS.defaultTimeRangeDays * 24 * 3600 * 1000)
-            .toISOString().slice(0, 19).replace('T', ' ')
+        ? new Date(
+            new Date(bounds.end).valueOf() - API_DEFAULTS.defaultTimeRangeDays * 24 * 3600 * 1000,
+          )
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " ")
         : undefined;
 
       const finalStart = start ?? defaultStartDate;
@@ -57,7 +69,10 @@ export function createSeriesHandler(config: SeriesHandlerConfig) {
       const seriesArg = useMeterIds ? meta.meters! : entityId;
       const series = await loadSeries(seriesArg, { start: finalStart, end: finalEnd, limit });
 
-      apiLogger.info(`GET ${routePath}`, { [entityType + 'Id']: entityId, seriesCount: series.length });
+      apiLogger.info(`GET ${routePath}`, {
+        [entityType + "Id"]: entityId,
+        seriesCount: series.length,
+      });
 
       return NextResponse.json({
         success: true,
@@ -65,10 +80,10 @@ export function createSeriesHandler(config: SeriesHandlerConfig) {
         meta: { count: series.length, timestamp: new Date().toISOString() },
       });
     } catch (error) {
-      apiLogger.error(`GET ${routePath} failed`, error, { [entityType + 'Id']: entityId });
+      apiLogger.error(`GET ${routePath} failed`, error, { [entityType + "Id"]: entityId });
       return NextResponse.json(
         { success: false, error: { message: `Failed to fetch ${entityType} series data` } },
-        { status: 500 }
+        { status: 500 },
       );
     }
   };

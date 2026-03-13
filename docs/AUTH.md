@@ -4,11 +4,11 @@ SMDT uses KIT's OpenID Connect (Keycloak) for authentication. Any KIT user can l
 
 ## Roles
 
-| Role | Who | Access |
-|------|-----|--------|
-| **demo** | Any KIT user (default) | Maps and grid overview visible; interactive controls (series, heatmap) disabled |
-| **full** | Kürzel listed in `auth.db` | Full access to all features |
-| **admin** | Kürzel listed as admin in `auth.db` | Full access + user management at `/admin` |
+| Role      | Who                                 | Access                                                                          |
+| --------- | ----------------------------------- | ------------------------------------------------------------------------------- |
+| **demo**  | Any KIT user (default)              | Maps and grid overview visible; interactive controls (series, heatmap) disabled |
+| **full**  | Kürzel listed in `auth.db`          | Full access to all features                                                     |
+| **admin** | Kürzel listed as admin in `auth.db` | Full access + user management at `/admin`                                       |
 
 ## How it works
 
@@ -24,6 +24,7 @@ SMDT uses KIT's OpenID Connect (Keycloak) for authentication. Any KIT user can l
 A small SQLite database at `/data/auth.db` (configurable via `AUTH_DB_PATH`).
 
 Single table:
+
 ```sql
 CREATE TABLE users (
   kuerzel TEXT PRIMARY KEY,
@@ -32,6 +33,7 @@ CREATE TABLE users (
 ```
 
 Users **not** in this table get demo access. On first startup, the table is seeded from env vars:
+
 - `AUTH_ADMIN_USERS=cakmak` (comma-separated)
 - `AUTH_FULL_USERS=doe,smith` (comma-separated)
 

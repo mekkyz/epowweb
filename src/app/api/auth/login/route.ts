@@ -1,31 +1,27 @@
-import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
-import {
-  getOidcAuthUrl,
-  STATE_COOKIE_NAME,
-  FROM_COOKIE_NAME,
-} from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+import { getOidcAuthUrl, STATE_COOKIE_NAME, FROM_COOKIE_NAME } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  const from = request.nextUrl.searchParams.get('from') || '/';
-  const state = crypto.randomBytes(32).toString('hex');
+  const from = request.nextUrl.searchParams.get("from") || "/";
+  const state = crypto.randomBytes(32).toString("hex");
 
   const response = NextResponse.redirect(getOidcAuthUrl(state));
 
   response.cookies.set(STATE_COOKIE_NAME, state, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
     maxAge: 300, // 5 minutes
-    path: '/',
+    path: "/",
   });
 
   response.cookies.set(FROM_COOKIE_NAME, from, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
     maxAge: 300,
-    path: '/',
+    path: "/",
   });
 
   return response;

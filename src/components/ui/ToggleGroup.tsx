@@ -1,27 +1,30 @@
-'use client';
+"use client";
 
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
-import clsx from 'clsx';
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import clsx from "clsx";
 
 interface ToggleOption<T extends string> {
   value: T;
   label: ReactNode;
 }
 
-interface ToggleGroupProps<T extends string> extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
+interface ToggleGroupProps<T extends string> extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "onChange"
+> {
   options: ToggleOption<T>[];
   value: T;
   onChange: (value: T) => void;
-  size?: 'sm' | 'md';
+  size?: "sm" | "md";
 }
 
 const sizeStyles = {
-  sm: 'px-2.5 py-1 text-xs',
-  md: 'px-3 py-1.5 text-sm',
+  sm: "px-2.5 py-1 text-xs",
+  md: "px-3 py-1.5 text-sm",
 };
 
 function ToggleGroupInner<T extends string>(
-  { options, value, onChange, size = 'md', className, ...props }: ToggleGroupProps<T>,
+  { options, value, onChange, size = "md", className, ...props }: ToggleGroupProps<T>,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   return (
@@ -29,7 +32,7 @@ function ToggleGroupInner<T extends string>(
       ref={ref}
       role="group"
       className={clsx(
-        'inline-flex items-center gap-1 rounded-xl bg-surface p-1 shadow-sm shadow-black/10 backdrop-blur dark:shadow-black/30',
+        "bg-surface inline-flex items-center gap-1 rounded-xl p-1 shadow-sm shadow-black/10 backdrop-blur dark:shadow-black/30",
         className,
       )}
       {...props}
@@ -42,11 +45,11 @@ function ToggleGroupInner<T extends string>(
           aria-checked={value === option.value}
           onClick={() => onChange(option.value)}
           className={clsx(
-            'rounded-lg font-medium transition-colors',
+            "rounded-lg font-medium transition-colors",
             sizeStyles[size],
             value === option.value
-              ? 'bg-background text-foreground shadow-sm ring-1 ring-border'
-              : 'bg-transparent text-foreground-secondary hover:text-foreground',
+              ? "bg-background text-foreground ring-border shadow-sm ring-1"
+              : "text-foreground-secondary hover:text-foreground bg-transparent",
           )}
         >
           {option.label}

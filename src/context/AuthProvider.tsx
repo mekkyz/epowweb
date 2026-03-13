@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useCallback, useMemo, type ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import type { UserRole } from '@/lib/auth';
-import { useRolePreview } from '@/components/RolePreview';
+import { createContext, useContext, useCallback, useMemo, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import type { UserRole } from "@/lib/auth";
+import { useRolePreview } from "@/components/RolePreview";
 
 export interface AuthUser {
   username: string;
@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function useAuth(): AuthContextValue {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }
@@ -39,14 +39,14 @@ export function AuthProvider({ children, user }: AuthProviderProps) {
   const previewRole = useRolePreview();
 
   const logout = useCallback(async () => {
-    const res = await fetch('/api/auth/logout', { method: 'POST' });
+    const res = await fetch("/api/auth/logout", { method: "POST" });
     const body = await res.json();
 
     // Redirect to KIT OIDC logout to end SSO session
     if (body.logoutUrl) {
       window.location.href = body.logoutUrl;
     } else {
-      router.push('/login');
+      router.push("/login");
       router.refresh();
     }
   }, [router]);
@@ -54,7 +54,7 @@ export function AuthProvider({ children, user }: AuthProviderProps) {
   const effectiveUser = useMemo<AuthUser | null>(() => {
     // In development, allow role preview to override the role
     if (previewRole) {
-      const base = user ?? { username: 'preview', name: 'Preview User' };
+      const base = user ?? { username: "preview", name: "Preview User" };
       return { ...base, role: previewRole };
     }
     return user;
@@ -63,8 +63,8 @@ export function AuthProvider({ children, user }: AuthProviderProps) {
   const value: AuthContextValue = {
     user: effectiveUser,
     isAuthenticated: !!effectiveUser,
-    isDemo: effectiveUser?.role === 'demo',
-    isAdmin: effectiveUser?.role === 'admin',
+    isDemo: effectiveUser?.role === "demo",
+    isAdmin: effectiveUser?.role === "admin",
     logout,
   };
 

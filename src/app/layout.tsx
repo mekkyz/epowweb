@@ -1,31 +1,30 @@
-import type { Metadata } from 'next';
-import { Google_Sans_Flex, Work_Sans } from 'next/font/google';
-import './globals.css';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import { ToastProvider } from '@/components/ui';
-import { WebGLErrorSuppressor } from '@/components/WebGLErrorSuppressor';
-import { ThemeProvider } from '@/context/ThemeProvider';
-import { AuthProvider } from '@/context/AuthProvider';
-import { getSession } from '@/lib/auth';
-import RolePreview from '@/components/RolePreview';
+import type { Metadata } from "next";
+import { Google_Sans_Flex, Work_Sans } from "next/font/google";
+import "./globals.css";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import { ToastProvider } from "@/components/ui";
+import { WebGLErrorSuppressor } from "@/components/WebGLErrorSuppressor";
+import { ThemeProvider } from "@/context/ThemeProvider";
+import { AuthProvider } from "@/context/AuthProvider";
+import { getSession } from "@/lib/auth";
+import RolePreview from "@/components/RolePreview";
 
 const display = Google_Sans_Flex({
-  variable: '--font-display',
-  subsets: ['latin'],
-  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+  variable: "--font-display",
+  subsets: ["latin"],
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
   adjustFontFallback: false,
 });
 
 const sans = Work_Sans({
-  variable: '--font-sans',
-  subsets: ['latin'],
+  variable: "--font-sans",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: 'eASiMOV - ePowWeb - ePowMon | KIT Campus North Power Grid Monitoring',
-  description:
-    'KIT Campus North power grid datasets.',
+  title: "eASiMOV - ePowWeb - ePowMon | KIT Campus North Power Grid Monitoring",
+  description: "KIT Campus North power grid datasets.",
 };
 
 export default async function RootLayout({
@@ -34,7 +33,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getSession();
-  const user = session ? { username: session.username, role: session.role, name: session.name } : null;
+  const user = session
+    ? { username: session.username, role: session.role, name: session.name }
+    : null;
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -72,7 +73,7 @@ export default async function RootLayout({
                 <main className="flex-1">{children}</main>
                 <Footer />
               </div>
-              {process.env.NODE_ENV === 'development' && <RolePreview />}
+              {process.env.NODE_ENV === "development" && <RolePreview />}
             </ToastProvider>
           </AuthProvider>
         </ThemeProvider>

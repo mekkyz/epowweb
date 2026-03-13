@@ -1,9 +1,12 @@
-'use client';
+"use client";
 
-import { forwardRef, type InputHTMLAttributes } from 'react';
-import clsx from 'clsx';
+import { forwardRef, type InputHTMLAttributes } from "react";
+import clsx from "clsx";
 
-interface SliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'type' | 'value'> {
+interface SliderProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "type" | "value"
+> {
   min: number;
   max: number;
   value: number;
@@ -25,15 +28,15 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         disabled={disabled}
-        style={{ '--pct': `${pct}%` } as React.CSSProperties}
-        className={clsx('slider-track', className)}
+        style={{ "--pct": `${pct}%` } as React.CSSProperties}
+        className={clsx("slider-track", className)}
         {...props}
       />
     );
-  }
+  },
 );
 
-Slider.displayName = 'Slider';
+Slider.displayName = "Slider";
 
 export { Slider };
 export type { SliderProps };

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect, type FormEvent } from 'react';
-import { Trash2, UserPlus, Shield, ShieldCheck, Users } from 'lucide-react';
-import { Button, Input, Select, Badge, useToast } from '@/components/ui';
+import { useState, useEffect, type FormEvent } from "react";
+import { Trash2, UserPlus, Shield, ShieldCheck, Users } from "lucide-react";
+import { Button, Input, Select, Badge, useToast } from "@/components/ui";
 
 interface UserEntry {
   kuerzel: string;
-  role: 'full' | 'admin';
+  role: "full" | "admin";
   email: string | null;
   affiliation: string | null;
 }
@@ -14,51 +14,53 @@ interface UserEntry {
 export default function AdminPanel() {
   const [users, setUsers] = useState<UserEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [kuerzel, setKuerzel] = useState('');
-  const [role, setRole] = useState<'full' | 'admin'>('full');
+  const [kuerzel, setKuerzel] = useState("");
+  const [role, setRole] = useState<"full" | "admin">("full");
   const [saving, setSaving] = useState(false);
   const { success, error: showError } = useToast();
 
   const fetchUsers = async () => {
-    const res = await fetch('/api/admin/users');
+    const res = await fetch("/api/admin/users");
     const body = await res.json();
     if (body.success) setUsers(body.data);
     setLoading(false);
   };
 
   // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data load
-  useEffect(() => { fetchUsers(); }, []);
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const handleAdd = async (e: FormEvent) => {
     e.preventDefault();
     if (!kuerzel.trim()) return;
 
     setSaving(true);
-    const res = await fetch('/api/admin/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const res = await fetch("/api/admin/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ kuerzel: kuerzel.trim().toLowerCase(), role }),
     });
     if (res.ok) {
       success(`Added ${kuerzel.trim().toLowerCase()} as ${role}`);
     } else {
-      showError('Failed to add user');
+      showError("Failed to add user");
     }
-    setKuerzel('');
+    setKuerzel("");
     await fetchUsers();
     setSaving(false);
   };
 
   const handleRemove = async (k: string) => {
-    const res = await fetch('/api/admin/users', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
+    const res = await fetch("/api/admin/users", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ kuerzel: k }),
     });
     if (res.ok) {
       success(`Removed ${k}`);
     } else {
-      showError('Failed to remove user');
+      showError("Failed to remove user");
     }
     await fetchUsers();
   };
@@ -66,9 +68,9 @@ export default function AdminPanel() {
   return (
     <div className="space-y-6">
       {/* Add User Form */}
-      <div className="rounded-xl border border-border bg-panel p-4 shadow-sm">
+      <div className="border-border bg-panel rounded-xl border p-4 shadow-sm">
         <form onSubmit={handleAdd} className="flex flex-wrap items-end gap-3">
-          <div className="flex-1 min-w-[160px]">
+          <div className="min-w-[160px] flex-1">
             <Input
               label="KIT Kürzel"
               value={kuerzel}
@@ -81,10 +83,10 @@ export default function AdminPanel() {
             <Select
               label="Role"
               value={role}
-              onChange={(e) => setRole(e.target.value as 'full' | 'admin')}
+              onChange={(e) => setRole(e.target.value as "full" | "admin")}
               options={[
-                { value: 'full', label: 'Full' },
-                { value: 'admin', label: 'Admin' },
+                { value: "full", label: "Full" },
+                { value: "admin", label: "Admin" },
               ]}
             />
           </div>
@@ -100,25 +102,25 @@ export default function AdminPanel() {
       </div>
 
       {/* Users Table */}
-      <div className="overflow-hidden rounded-xl border border-border bg-panel shadow-sm">
-        <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+      <div className="border-border bg-panel overflow-hidden rounded-xl border shadow-sm">
+        <div className="border-border flex items-center gap-2 border-b px-4 py-3">
           <Users className="h-4 w-4 text-emerald-400" />
-          <span className="text-sm font-medium text-foreground">Admin/Full Users</span>
-          <span className="ml-auto text-xs text-foreground-tertiary">{users.length} users</span>
+          <span className="text-foreground text-sm font-medium">Admin/Full Users</span>
+          <span className="text-foreground-tertiary ml-auto text-xs">{users.length} users</span>
         </div>
 
         {loading ? (
-          <div className="px-4 py-8 text-center text-sm text-foreground-secondary">
+          <div className="text-foreground-secondary px-4 py-8 text-center text-sm">
             Loading users...
           </div>
         ) : users.length === 0 ? (
-          <div className="px-4 py-8 text-center text-sm text-foreground-secondary">
+          <div className="text-foreground-secondary px-4 py-8 text-center text-sm">
             No admin or full users configured. All KIT users have demo access.
           </div>
         ) : (
           <div className="overflow-auto">
             <table className="min-w-full text-sm">
-              <thead className="sticky top-0 bg-panel/95 text-xs uppercase tracking-wider text-foreground-secondary backdrop-blur-sm">
+              <thead className="bg-panel/95 text-foreground-secondary sticky top-0 text-xs tracking-wider uppercase backdrop-blur-sm">
                 <tr>
                   <th className="px-4 py-2.5 text-left font-medium">Kürzel</th>
                   <th className="px-4 py-2.5 text-left font-medium">Email</th>
@@ -127,10 +129,13 @@ export default function AdminPanel() {
                   <th className="px-4 py-2.5 text-right font-medium">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-border divide-y">
                 {users.map((u) => (
-                  <tr key={u.kuerzel} className="text-foreground-secondary transition-colors hover:bg-surface">
-                    <td className="px-4 py-2.5 font-mono text-foreground">{u.kuerzel}</td>
+                  <tr
+                    key={u.kuerzel}
+                    className="text-foreground-secondary hover:bg-surface transition-colors"
+                  >
+                    <td className="text-foreground px-4 py-2.5 font-mono">{u.kuerzel}</td>
                     <td className="px-4 py-2.5">
                       {u.email ? (
                         <span className="text-foreground-secondary">{u.email}</span>
@@ -140,17 +145,14 @@ export default function AdminPanel() {
                     </td>
                     <td className="px-4 py-2.5">
                       {u.affiliation ? (
-                        <span className="text-xs text-foreground-secondary">{u.affiliation}</span>
+                        <span className="text-foreground-secondary text-xs">{u.affiliation}</span>
                       ) : (
                         <span className="text-foreground-tertiary">—</span>
                       )}
                     </td>
                     <td className="px-4 py-2.5">
-                      <Badge
-                        variant={u.role === 'admin' ? 'warning' : 'success'}
-                        size="sm"
-                      >
-                        {u.role === 'admin' ? (
+                      <Badge variant={u.role === "admin" ? "warning" : "success"} size="sm">
+                        {u.role === "admin" ? (
                           <span className="flex items-center gap-1">
                             <ShieldCheck className="h-3 w-3" />
                             Admin

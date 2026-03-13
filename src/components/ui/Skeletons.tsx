@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import clsx from 'clsx';
+import clsx from "clsx";
 
 const CHART_BAR_HEIGHTS = [45, 72, 38, 65, 55, 80, 42, 68, 35, 75, 50, 60];
 
@@ -9,31 +9,31 @@ interface ChartSkeletonProps {
   className?: string;
 }
 
-export function ChartSkeleton({ height = 'h-[340px]', className }: ChartSkeletonProps) {
+export function ChartSkeleton({ height = "h-[340px]", className }: ChartSkeletonProps) {
   return (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-xl border border-border bg-surface p-4 backdrop-blur',
+        "border-border bg-surface relative overflow-hidden rounded-xl border p-4 backdrop-blur",
         height,
-        className
+        className,
       )}
     >
       <div className="mb-4 flex items-center justify-between">
         <div className="space-y-2">
-          <div className="h-3 w-20 animate-pulse rounded bg-surface-hover" />
-          <div className="h-4 w-40 animate-pulse rounded bg-panel" />
+          <div className="bg-surface-hover h-3 w-20 animate-pulse rounded" />
+          <div className="bg-panel h-4 w-40 animate-pulse rounded" />
         </div>
-        <div className="h-3 w-16 animate-pulse rounded bg-surface-hover" />
+        <div className="bg-surface-hover h-3 w-16 animate-pulse rounded" />
       </div>
 
       <div className="relative h-[calc(100%-60px)]">
-        <div className="absolute left-0 top-0 flex h-full flex-col justify-between py-4">
+        <div className="absolute top-0 left-0 flex h-full flex-col justify-between py-4">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-2 w-8 animate-pulse rounded bg-surface-hover" />
+            <div key={i} className="bg-surface-hover h-2 w-8 animate-pulse rounded" />
           ))}
         </div>
 
-        <div className="ml-12 flex h-full items-end justify-around gap-2 border-b border-l border-border px-4 pb-6">
+        <div className="border-border ml-12 flex h-full items-end justify-around gap-2 border-b border-l px-4 pb-6">
           {CHART_BAR_HEIGHTS.map((h, i) => (
             <div
               key={i}
@@ -46,9 +46,9 @@ export function ChartSkeleton({ height = 'h-[340px]', className }: ChartSkeleton
           ))}
         </div>
 
-        <div className="ml-12 mt-2 flex justify-around">
+        <div className="mt-2 ml-12 flex justify-around">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-2 w-10 animate-pulse rounded bg-surface-hover" />
+            <div key={i} className="bg-surface-hover h-2 w-10 animate-pulse rounded" />
           ))}
         </div>
       </div>

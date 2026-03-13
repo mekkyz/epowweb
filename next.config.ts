@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  output: "standalone",
   devIndicators: false,
-  serverExternalPackages: ['better-sqlite3'],
+  serverExternalPackages: ["better-sqlite3"],
   onDemandEntries: {
     // Keep pages in memory longer to reduce WebGL context recreation
     maxInactiveAge: 60 * 1000,

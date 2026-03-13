@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type FeatureCollection = {
-  type: 'FeatureCollection';
+  type: "FeatureCollection";
   features: {
-    type: 'Feature';
-    geometry: { type: 'Point'; coordinates: [number, number] };
+    type: "Feature";
+    geometry: { type: "Point"; coordinates: [number, number] };
     properties: { stationId: string; valueKw: number; meters: number };
   }[];
 };
@@ -85,10 +85,10 @@ async function prefetchGeo(timestamps: string[], readyRef: { current: boolean })
     if (geoCache.has(ts)) continue;
 
     try {
-      const res = await fetch(
-        `/api/heatmap/geo?timestamp=${encodeURIComponent(ts)}`,
-        { signal, priority: 'low' } as RequestInit,
-      );
+      const res = await fetch(`/api/heatmap/geo?timestamp=${encodeURIComponent(ts)}`, {
+        signal,
+        priority: "low",
+      } as RequestInit);
       if (!res.ok || signal.aborted) return;
       const body = await res.json();
       const fc = body.data?.featureCollection ?? null;
@@ -112,11 +112,11 @@ export function extractTime(ts: string): string {
 }
 
 export const SPEED_OPTIONS = [
-  { label: '0.5x', ms: 2000 },
-  { label: '1x', ms: 1000 },
-  { label: '2x', ms: 500 },
-  { label: '5x', ms: 200 },
-  { label: '10x', ms: 100 },
+  { label: "0.5x", ms: 2000 },
+  { label: "1x", ms: 1000 },
+  { label: "2x", ms: 500 },
+  { label: "5x", ms: 200 },
+  { label: "10x", ms: 100 },
 ] as const;
 
 /**
@@ -132,7 +132,8 @@ async function fetchDayGeo(date: string): Promise<void> {
     });
     if (!res.ok) return;
     const body = await res.json();
-    const entries: Record<string, { featureCollection: FeatureCollection }> = body.data?.entries ?? {};
+    const entries: Record<string, { featureCollection: FeatureCollection }> =
+      body.data?.entries ?? {};
 
     for (const [ts, entry] of Object.entries(entries)) {
       if (entry.featureCollection) {
@@ -165,20 +166,30 @@ async function fetchDayTimestamps(date: string): Promise<string[]> {
 }
 
 export function useHeatmapData(showError: (msg: string) => void) {
-  const [bounds, setBounds] = useState<{ min: string | null; max: string | null; count: number } | null>(() => getValidMetadata()?.bounds ?? null);
-  const [selected, setSelected] = useState<string | null>(() => getValidMetadata()?.selected ?? null);
+  const [bounds, setBounds] = useState<{
+    min: string | null;
+    max: string | null;
+    count: number;
+  } | null>(() => getValidMetadata()?.bounds ?? null);
+  const [selected, setSelected] = useState<string | null>(
+    () => getValidMetadata()?.selected ?? null,
+  );
   const [features, setFeatures] = useState<FeatureCollection | null>(() => {
     const meta = getValidMetadata();
-    return meta?.selected ? geoCache.get(meta.selected) ?? null : null;
+    return meta?.selected ? (geoCache.get(meta.selected) ?? null) : null;
   });
-  const [availableDates, setAvailableDates] = useState<string[]>(() => getValidMetadata()?.availableDates ?? []);
+  const [availableDates, setAvailableDates] = useState<string[]>(
+    () => getValidMetadata()?.availableDates ?? [],
+  );
   const [dayTimestamps, setDayTimestamps] = useState<string[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [sliderIndex, setSliderIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playSpeed, setPlaySpeed] = useState(1);
   const [loading, setLoading] = useState(false);
-  const hasCachedData = useRef(!!getValidMetadata()?.selected && !!geoCache.get(getValidMetadata()!.selected!));
+  const hasCachedData = useRef(
+    !!getValidMetadata()?.selected && !!geoCache.get(getValidMetadata()!.selected!),
+  );
   const lastLoadedTs = useRef<string | null>(getValidMetadata()?.selected ?? null);
 
   const readyRef = useRef(false);
@@ -217,7 +228,7 @@ export function useHeatmapData(showError: (msg: string) => void) {
     const loadData = async () => {
       setLoading(true);
       try {
-        const initRes = await fetch('/api/heatmap/init', {
+        const initRes = await fetch("/api/heatmap/init", {
           signal: AbortSignal.timeout(10000),
         });
         if (!active) return;
@@ -236,17 +247,22 @@ export function useHeatmapData(showError: (msg: string) => void) {
           if (initial) geoCache.set(initial, fc);
         }
 
-        metadataCache = { bounds: b, selected: initial, availableDates: null, fetchedAt: Date.now() };
+        metadataCache = {
+          bounds: b,
+          selected: initial,
+          availableDates: null,
+          fetchedAt: Date.now(),
+        };
       } catch (err) {
-        console.error('Failed to load heatmap data:', err);
-        showError('Failed to load heatmap data');
+        console.error("Failed to load heatmap data:", err);
+        showError("Failed to load heatmap data");
       } finally {
         if (active) setLoading(false);
       }
 
       // Load available dates (~365 entries — fast query)
       try {
-        const availRes = await fetch('/api/heatmap/available', {
+        const availRes = await fetch("/api/heatmap/available", {
           signal: AbortSignal.timeout(10000),
         });
         if (!active) return;
@@ -257,17 +273,14 @@ export function useHeatmapData(showError: (msg: string) => void) {
           if (metadataCache) metadataCache.availableDates = dates;
         }
       } catch (err) {
-        console.warn('Failed to load available dates:', err);
+        console.warn("Failed to load available dates:", err);
       }
 
       // Load timestamps + batch geo for the initial day
       const sel = metadataCache?.selected;
       if (sel && active) {
         const day = extractDate(sel);
-        const [dayTs] = await Promise.all([
-          fetchDayTimestamps(day),
-          fetchDayGeo(day),
-        ]);
+        const [dayTs] = await Promise.all([fetchDayTimestamps(day), fetchDayGeo(day)]);
         if (!active) return;
         setDayTimestamps(dayTs);
         const idx = dayTs.indexOf(sel);
@@ -277,7 +290,9 @@ export function useHeatmapData(showError: (msg: string) => void) {
       if (active) readyRef.current = true;
     };
     loadData();
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [showError]);
 
   // Load geo data when selected changes
@@ -315,15 +330,17 @@ export function useHeatmapData(showError: (msg: string) => void) {
     const loadGeo = async () => {
       setLoading(true);
       try {
-        const res = await fetch(
-          `/api/heatmap/geo?timestamp=${encodeURIComponent(selected)}`,
-          { signal: controller.signal },
-        );
+        const res = await fetch(`/api/heatmap/geo?timestamp=${encodeURIComponent(selected)}`, {
+          signal: controller.signal,
+        });
         if (!res.ok) throw new Error(`Failed to load slice (${res.status})`);
         const body = await res.json();
         if (!active) return;
         const payload = body.data ?? body;
-        const fc: FeatureCollection = payload.featureCollection ?? { type: 'FeatureCollection', features: [] };
+        const fc: FeatureCollection = payload.featureCollection ?? {
+          type: "FeatureCollection",
+          features: [],
+        };
 
         geoCache.set(selected, fc);
         setFeatures(fc);
@@ -339,9 +356,9 @@ export function useHeatmapData(showError: (msg: string) => void) {
           }
         }
       } catch (err) {
-        if ((err as Error).name === 'AbortError') return;
-        console.error('Failed to load heatmap data:', err);
-        showError('Failed to load heatmap data');
+        if ((err as Error).name === "AbortError") return;
+        console.error("Failed to load heatmap data:", err);
+        showError("Failed to load heatmap data");
       } finally {
         if (active) setLoading(false);
         geoLoadResolveRef.current?.();
@@ -350,7 +367,10 @@ export function useHeatmapData(showError: (msg: string) => void) {
     };
 
     loadGeo();
-    return () => { active = false; controller.abort(); };
+    return () => {
+      active = false;
+      controller.abort();
+    };
   }, [selected, showError]);
 
   useEffect(() => {
@@ -369,39 +389,45 @@ export function useHeatmapData(showError: (msg: string) => void) {
   }, [selected, dayTimestamps]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Navigation helpers
-  const stepByIndex = useCallback((delta: number) => {
-    const newIdx = Math.max(0, Math.min(dayTimestamps.length - 1, sliderIndex + delta));
-    setSliderIndex(newIdx);
-    setSelected(dayTimestamps[newIdx] ?? null);
-  }, [sliderIndex, dayTimestamps]);
+  const stepByIndex = useCallback(
+    (delta: number) => {
+      const newIdx = Math.max(0, Math.min(dayTimestamps.length - 1, sliderIndex + delta));
+      setSliderIndex(newIdx);
+      setSelected(dayTimestamps[newIdx] ?? null);
+    },
+    [sliderIndex, dayTimestamps],
+  );
 
-  const onSliderChange = useCallback((val: number) => {
-    const direction = val > lastSliderIdxRef.current ? 1 : -1;
-    lastSliderIdxRef.current = val;
-    setSliderIndex(val);
+  const onSliderChange = useCallback(
+    (val: number) => {
+      const direction = val > lastSliderIdxRef.current ? 1 : -1;
+      lastSliderIdxRef.current = val;
+      setSliderIndex(val);
 
-    const ts = dayTimestamps[val];
-    if (!ts) return;
+      const ts = dayTimestamps[val];
+      if (!ts) return;
 
-    const cached = geoCache.get(ts);
-    if (cached) {
+      const cached = geoCache.get(ts);
+      if (cached) {
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        setFeatures(cached);
+        lastLoadedTs.current = ts;
+        setSelected(ts);
+
+        const start = direction > 0 ? val + 1 : Math.max(0, val - 3);
+        const end = direction > 0 ? val + 4 : val;
+        const toPrefetch = dayTimestamps.slice(start, end);
+        prefetchGeo(direction > 0 ? toPrefetch : [...toPrefetch].reverse(), readyRef);
+        return;
+      }
+
       if (debounceRef.current) clearTimeout(debounceRef.current);
-      setFeatures(cached);
-      lastLoadedTs.current = ts;
-      setSelected(ts);
-
-      const start = direction > 0 ? val + 1 : Math.max(0, val - 3);
-      const end = direction > 0 ? val + 4 : val;
-      const toPrefetch = dayTimestamps.slice(start, end);
-      prefetchGeo(direction > 0 ? toPrefetch : [...toPrefetch].reverse(), readyRef);
-      return;
-    }
-
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      setSelected(ts);
-    }, 100);
-  }, [dayTimestamps]);
+      debounceRef.current = setTimeout(() => {
+        setSelected(ts);
+      }, 100);
+    },
+    [dayTimestamps],
+  );
 
   useEffect(() => {
     return () => {
@@ -413,47 +439,53 @@ export function useHeatmapData(showError: (msg: string) => void) {
 
   const switchToDay = useCallback(async (day: string) => {
     setSelectedDate(day);
-    const [newDayTs] = await Promise.all([
-      fetchDayTimestamps(day),
-      fetchDayGeo(day),
-    ]);
+    const [newDayTs] = await Promise.all([fetchDayTimestamps(day), fetchDayGeo(day)]);
     setDayTimestamps(newDayTs);
     return newDayTs;
   }, []);
 
-  const onDateChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const day = e.target.value;
-    if (!day) return;
-    const newDayTs = await switchToDay(day);
-    if (newDayTs.length > 0) {
-      setSliderIndex(0);
-      setSelected(newDayTs[0]);
-    }
-  }, [switchToDay]);
-
-  const stepByDay = useCallback(async (delta: -1 | 1) => {
-    if (availableDates.length === 0) return;
-    const idx = availableDates.indexOf(selectedDate);
-    const nextIdx = idx + delta;
-    if (nextIdx < 0 || nextIdx >= availableDates.length) return;
-    const day = availableDates[nextIdx];
-
-    const newDayTs = await switchToDay(day);
-    if (newDayTs.length === 0) return;
-
-    const currentTime = selected ? selected.slice(11) : '';
-    let bestIdx = 0;
-    if (currentTime) {
-      for (let i = 0; i < newDayTs.length; i++) {
-        const t = newDayTs[i].slice(11);
-        if (t === currentTime) { bestIdx = i; break; }
-        if (t <= currentTime) bestIdx = i;
+  const onDateChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const day = e.target.value;
+      if (!day) return;
+      const newDayTs = await switchToDay(day);
+      if (newDayTs.length > 0) {
+        setSliderIndex(0);
+        setSelected(newDayTs[0]);
       }
-    }
+    },
+    [switchToDay],
+  );
 
-    setSliderIndex(bestIdx);
-    setSelected(newDayTs[bestIdx]);
-  }, [availableDates, selectedDate, selected, switchToDay]);
+  const stepByDay = useCallback(
+    async (delta: -1 | 1) => {
+      if (availableDates.length === 0) return;
+      const idx = availableDates.indexOf(selectedDate);
+      const nextIdx = idx + delta;
+      if (nextIdx < 0 || nextIdx >= availableDates.length) return;
+      const day = availableDates[nextIdx];
+
+      const newDayTs = await switchToDay(day);
+      if (newDayTs.length === 0) return;
+
+      const currentTime = selected ? selected.slice(11) : "";
+      let bestIdx = 0;
+      if (currentTime) {
+        for (let i = 0; i < newDayTs.length; i++) {
+          const t = newDayTs[i].slice(11);
+          if (t === currentTime) {
+            bestIdx = i;
+            break;
+          }
+          if (t <= currentTime) bestIdx = i;
+        }
+      }
+
+      setSliderIndex(bestIdx);
+      setSelected(newDayTs[bestIdx]);
+    },
+    [availableDates, selectedDate, selected, switchToDay],
+  );
 
   // Playback
   const playSpeedRef = useRef(playSpeed);
@@ -520,12 +552,13 @@ export function useHeatmapData(showError: (msg: string) => void) {
     if (isPlaying) setIsPlaying(false);
   }, [isPlaying]);
 
-  const currentTs = dayTimestamps[sliderIndex] ?? selected ?? '';
-  const currentTime = currentTs ? extractTime(currentTs) : '';
-  const minDateAvail = availableDates[0] ?? '';
-  const maxDateAvail = availableDates[availableDates.length - 1] ?? '';
-  const minTime = dayTimestamps[0] ? extractTime(dayTimestamps[0]) : '';
-  const maxTime = dayTimestamps.length > 0 ? extractTime(dayTimestamps[dayTimestamps.length - 1]) : '';
+  const currentTs = dayTimestamps[sliderIndex] ?? selected ?? "";
+  const currentTime = currentTs ? extractTime(currentTs) : "";
+  const minDateAvail = availableDates[0] ?? "";
+  const maxDateAvail = availableDates[availableDates.length - 1] ?? "";
+  const minTime = dayTimestamps[0] ? extractTime(dayTimestamps[0]) : "";
+  const maxTime =
+    dayTimestamps.length > 0 ? extractTime(dayTimestamps[dayTimestamps.length - 1]) : "";
 
   return {
     // State

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from "@/components/layout/PageHeader";
 
 interface VisualizationHeaderProps {
   type: string;
@@ -11,11 +11,5 @@ interface VisualizationHeaderProps {
 export default function VisualizationHeader({ type, title, subtitle }: VisualizationHeaderProps) {
   const label = type.charAt(0).toUpperCase() + type.slice(1);
 
-  return (
-    <PageHeader
-      title={title}
-      subtitle={subtitle}
-      label={`${label} Visualization`}
-    />
-  );
+  return <PageHeader title={title} subtitle={subtitle} label={`${label} Visualization`} />;
 }

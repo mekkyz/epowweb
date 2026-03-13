@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import maplibregl from 'maplibre-gl';
-import { checkWebGLSupport } from '@/lib/webgl';
+import { useCallback, useEffect, useRef, useState } from "react";
+import maplibregl from "maplibre-gl";
+import { checkWebGLSupport } from "@/lib/webgl";
 
 /**
  * Checks WebGL support with a small delay to ensure browser readiness.
@@ -31,8 +31,8 @@ export function useFullscreen(containerId: string) {
     const handleChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
-    document.addEventListener('fullscreenchange', handleChange);
-    return () => document.removeEventListener('fullscreenchange', handleChange);
+    document.addEventListener("fullscreenchange", handleChange);
+    return () => document.removeEventListener("fullscreenchange", handleChange);
   }, []);
 
   const toggle = useCallback(async () => {
@@ -46,7 +46,7 @@ export function useFullscreen(containerId: string) {
         await document.exitFullscreen();
       }
     } catch (err) {
-      console.error('Failed to toggle fullscreen:', err);
+      console.error("Failed to toggle fullscreen:", err);
     }
   }, [containerId]);
 
@@ -78,7 +78,7 @@ export function useAltDragRotation() {
         dragging = true;
         prevX = e.clientX;
         prevY = e.clientY;
-        canvas.style.cursor = 'grabbing';
+        canvas.style.cursor = "grabbing";
         e.preventDefault();
       }
     };
@@ -96,18 +96,18 @@ export function useAltDragRotation() {
     const onMouseUp = () => {
       if (dragging) {
         dragging = false;
-        canvas.style.cursor = '';
+        canvas.style.cursor = "";
       }
     };
 
-    canvas.addEventListener('mousedown', onMouseDown);
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    canvas.addEventListener("mousedown", onMouseDown);
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
 
     cleanupRef.current = () => {
-      canvas.removeEventListener('mousedown', onMouseDown);
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+      canvas.removeEventListener("mousedown", onMouseDown);
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
     };
 
     return map;
@@ -122,7 +122,7 @@ export function useSuppressMissingImages() {
   return useCallback((ref: { getMap: () => maplibregl.Map } | null) => {
     if (!ref) return;
     const map = ref.getMap();
-    map.on('styleimagemissing', (e) => {
+    map.on("styleimagemissing", (e) => {
       const emptyImage = { width: 1, height: 1, data: new Uint8Array(4) };
       if (!map.hasImage(e.id)) {
         map.addImage(e.id, emptyImage);

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { Component, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { Button } from './Button';
+import React, { Component, ReactNode } from "react";
+import { AlertTriangle, RefreshCw } from "lucide-react";
+import { Button } from "./Button";
 
 interface Props {
   children: ReactNode;
@@ -26,7 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
     this.props.onError?.(error, errorInfo);
   }
 
@@ -46,17 +46,13 @@ export class ErrorBoundary extends Component<Props, State> {
             <AlertTriangle className="h-6 w-6 text-red-400" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-lg font-semibold text-foreground">Something went wrong</h3>
-            <p className="max-w-md text-sm text-foreground-secondary">
-              {this.state.error?.message || 'An unexpected error occurred while rendering this component.'}
+            <h3 className="text-foreground text-lg font-semibold">Something went wrong</h3>
+            <p className="text-foreground-secondary max-w-md text-sm">
+              {this.state.error?.message ||
+                "An unexpected error occurred while rendering this component."}
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={this.handleReset}
-            className="mt-2"
-          >
+          <Button variant="outline" size="sm" onClick={this.handleReset} className="mt-2">
             <RefreshCw className="mr-2 h-4 w-4" />
             Try Again
           </Button>
@@ -67,4 +63,3 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
-

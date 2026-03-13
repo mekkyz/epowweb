@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import { Suspense } from 'react';
-import { usePathname } from 'next/navigation';
-import { useIsEmbedded } from '@/hooks/useIsEmbedded';
+import { Suspense } from "react";
+import { usePathname } from "next/navigation";
+import { useIsEmbedded } from "@/hooks/useIsEmbedded";
 
 function FooterContent() {
   const currentYear = new Date().getFullYear();
   const pathname = usePathname();
   const isEmbedded = useIsEmbedded();
 
-  if (isEmbedded || pathname === '/login') return null;
+  if (isEmbedded || pathname === "/login") return null;
 
   return (
-    <footer className="border-t border-border bg-background">
+    <footer className="border-border bg-background border-t">
       <div className="p-4 text-center">
-        <p className="text-xs text-foreground-secondary">
+        <p className="text-foreground-secondary text-xs">
           © {currentYear}&nbsp;
           <a
             href="https://www.iai.kit.edu/gruppen_4104.php"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-accent"
+            className="hover:text-accent transition-colors"
           >
             Energiesystemanalyse (ESA)
           </a>
@@ -29,7 +29,7 @@ function FooterContent() {
             href="https://www.iai.kit.edu/"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-accent"
+            className="hover:text-accent transition-colors"
           >
             Institut für Automation und angewandte Informatik (IAI)
           </a>
@@ -38,7 +38,7 @@ function FooterContent() {
             href="https://www.kit.edu/"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-accent"
+            className="hover:text-accent transition-colors"
           >
             Karlsruhe Institute of Technology (KIT)
           </a>

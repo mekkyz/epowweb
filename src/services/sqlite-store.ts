@@ -1,24 +1,24 @@
-import fs from 'fs';
-import { MeterReading, SeriesBounds, SeriesOptions, StationHeatmapRow } from '@/types/smdt';
-import { dbLogger } from '@/lib/logger';
-import { queryAll, queryGet } from '@/services/sqlite-async';
+import fs from "fs";
+import { MeterReading, SeriesBounds, SeriesOptions, StationHeatmapRow } from "@/types/smdt";
+import { dbLogger } from "@/lib/logger";
+import { queryAll, queryGet } from "@/services/sqlite-async";
 
 let dbPath: string | null = null;
 
 export function hasSqlite(): boolean {
   if (dbPath) return true;
 
-  const candidate = process.env.SMDT_SQLITE_PATH ?? './data/smdt.db';
+  const candidate = process.env.SMDT_SQLITE_PATH ?? "./data/smdt.db";
   if (!fs.existsSync(candidate)) return false;
 
   dbPath = candidate;
-  dbLogger.info('SQLite database found', { path: dbPath });
+  dbLogger.info("SQLite database found", { path: dbPath });
   return true;
 }
 
 function getDbPath(): string {
   if (!hasSqlite()) {
-    throw new Error('SQLite database not available');
+    throw new Error("SQLite database not available");
   }
   return dbPath!;
 }
@@ -29,22 +29,22 @@ export async function loadMeterSeriesSqlite(
 ): Promise<MeterReading[]> {
   const path = getDbPath();
   const params: (string | number)[] = [meterId];
-  let where = 'WHERE meter_id = ?';
+  let where = "WHERE meter_id = ?";
 
   if (options.start) {
     params.push(options.start);
-    where += ' AND start_ts >= ?';
+    where += " AND start_ts >= ?";
   }
   if (options.end) {
     params.push(options.end);
-    where += ' AND end_ts <= ?';
+    where += " AND end_ts <= ?";
   }
 
   const limit = options.limit ?? 2000;
   params.push(limit);
 
   try {
-    const rows = await queryAll(
+    const rows = (await queryAll(
       path,
       `SELECT start_ts, end_ts, power_kw, power_original_kw, energy_kwh, energy_original_kwh, error_code
        FROM meter_readings
@@ -52,7 +52,7 @@ export async function loadMeterSeriesSqlite(
        ORDER BY start_ts ASC
        LIMIT ?`,
       params,
-    ) as Record<string, unknown>[];
+    )) as Record<string, unknown>[];
 
     return rows.map((r) => ({
       start: r.start_ts as string,
@@ -64,7 +64,7 @@ export async function loadMeterSeriesSqlite(
       errorCode: toNumber(r.error_code),
     }));
   } catch (error) {
-    dbLogger.error('Failed to load meter series from SQLite', error, { meterId });
+    dbLogger.error("Failed to load meter series from SQLite", error, { meterId });
     throw error;
   }
 }
@@ -76,24 +76,24 @@ export async function loadAggregatedSeriesSqlite(
   if (meterIds.length === 0) return [];
 
   const path = getDbPath();
-  const placeholders = meterIds.map(() => '?').join(',');
+  const placeholders = meterIds.map(() => "?").join(",");
   const params: (string | number)[] = [...meterIds];
-  let extraWhere = '';
+  let extraWhere = "";
 
   if (options.start) {
     params.push(options.start);
-    extraWhere += ' AND start_ts >= ?';
+    extraWhere += " AND start_ts >= ?";
   }
   if (options.end) {
     params.push(options.end);
-    extraWhere += ' AND end_ts <= ?';
+    extraWhere += " AND end_ts <= ?";
   }
 
   const limit = options.limit ?? 2000;
   params.push(limit);
 
   try {
-    const rows = await queryAll(
+    const rows = (await queryAll(
       path,
       `SELECT start_ts, end_ts,
               SUM(power_kw) AS power_kw,
@@ -107,7 +107,7 @@ export async function loadAggregatedSeriesSqlite(
        ORDER BY start_ts ASC
        LIMIT ?`,
       params,
-    ) as Record<string, unknown>[];
+    )) as Record<string, unknown>[];
 
     return rows.map((r) => ({
       start: r.start_ts as string,
@@ -119,7 +119,9 @@ export async function loadAggregatedSeriesSqlite(
       errorCode: toNumber(r.error_code),
     }));
   } catch (error) {
-    dbLogger.error('Failed to load aggregated series from SQLite', error, { meterCount: meterIds.length });
+    dbLogger.error("Failed to load aggregated series from SQLite", error, {
+      meterCount: meterIds.length,
+    });
     throw error;
   }
 }
@@ -137,18 +139,18 @@ export async function getBoundsSqlite(meterIds: string[]): Promise<SeriesBounds>
     let maxEnd: string | undefined;
 
     for (const id of meterIds) {
-      const row = await queryGet(
+      const row = (await queryGet(
         path,
         `SELECT MIN(start_ts) AS s, MAX(end_ts) AS e FROM meter_readings WHERE meter_id = ?`,
         [id],
-      ) as { s: string | null; e: string | null };
+      )) as { s: string | null; e: string | null };
       if (row.s && (!minStart || row.s < minStart)) minStart = row.s;
       if (row.e && (!maxEnd || row.e > maxEnd)) maxEnd = row.e;
     }
 
     return { start: minStart, end: maxEnd };
   } catch (error) {
-    dbLogger.error('Failed to get bounds from SQLite', error);
+    dbLogger.error("Failed to get bounds from SQLite", error);
     throw error;
   }
 }
@@ -165,7 +167,7 @@ export async function listHeatmapDatesSqlite(): Promise<string[]> {
   const path = getDbPath();
 
   try {
-    const rows = await queryAll(
+    const rows = (await queryAll(
       path,
       `WITH RECURSIVE date_walk(ts) AS (
          SELECT MIN(ts) FROM station_heatmap
@@ -175,12 +177,12 @@ export async function listHeatmapDatesSqlite(): Promise<string[]> {
          FROM date_walk WHERE ts IS NOT NULL
        )
        SELECT substr(ts, 1, 10) AS date FROM date_walk WHERE ts IS NOT NULL`,
-    ) as { date: string }[];
+    )) as { date: string }[];
 
     cachedDates = rows.map((r) => r.date);
     return cachedDates;
   } catch (error) {
-    dbLogger.error('Failed to list heatmap dates from SQLite', error);
+    dbLogger.error("Failed to list heatmap dates from SQLite", error);
     throw error;
   }
 }
@@ -192,18 +194,18 @@ export async function listDayTimestampsSqlite(date: string): Promise<string[]> {
   const path = getDbPath();
 
   try {
-    const rows = await queryAll(
+    const rows = (await queryAll(
       path,
       `SELECT DISTINCT ts
        FROM station_heatmap
        WHERE ts >= ? AND ts <= ?
        ORDER BY ts ASC`,
       [`${date} 00:00:00`, `${date} 23:59:59`],
-    ) as { ts: string }[];
+    )) as { ts: string }[];
 
     return rows.map((r) => r.ts);
   } catch (error) {
-    dbLogger.error('Failed to list day timestamps from SQLite', error, { date });
+    dbLogger.error("Failed to list day timestamps from SQLite", error, { date });
     throw error;
   }
 }
@@ -211,16 +213,24 @@ export async function listDayTimestampsSqlite(date: string): Promise<string[]> {
 /**
  * Gets heatmap timestamp bounds (uses index min/max)
  */
-export async function getHeatmapBoundsSqlite(): Promise<{ min: string | null; max: string | null; count: number }> {
+export async function getHeatmapBoundsSqlite(): Promise<{
+  min: string | null;
+  max: string | null;
+  count: number;
+}> {
   const path = getDbPath();
 
   try {
-    const minRow = await queryGet(path, `SELECT MIN(ts) AS ts FROM station_heatmap`) as { ts: string | null };
-    const maxRow = await queryGet(path, `SELECT MAX(ts) AS ts FROM station_heatmap`) as { ts: string | null };
+    const minRow = (await queryGet(path, `SELECT MIN(ts) AS ts FROM station_heatmap`)) as {
+      ts: string | null;
+    };
+    const maxRow = (await queryGet(path, `SELECT MAX(ts) AS ts FROM station_heatmap`)) as {
+      ts: string | null;
+    };
 
     return { min: minRow.ts, max: maxRow.ts, count: 0 };
   } catch (error) {
-    dbLogger.error('Failed to get heatmap bounds from SQLite', error);
+    dbLogger.error("Failed to get heatmap bounds from SQLite", error);
     throw error;
   }
 }
@@ -230,22 +240,22 @@ export async function getHeatmapBoundsSqlite(): Promise<{ min: string | null; ma
  */
 export async function getNeighborTimestampSqlite(
   current: string,
-  direction: 'prev' | 'next',
+  direction: "prev" | "next",
 ): Promise<string | null> {
   const path = getDbPath();
 
   try {
-    const op = direction === 'next' ? '>' : '<';
-    const order = direction === 'next' ? 'ASC' : 'DESC';
-    const row = await queryGet(
+    const op = direction === "next" ? ">" : "<";
+    const order = direction === "next" ? "ASC" : "DESC";
+    const row = (await queryGet(
       path,
       `SELECT DISTINCT ts FROM station_heatmap WHERE ts ${op} ? ORDER BY ts ${order} LIMIT 1`,
       [current],
-    ) as { ts: string } | undefined;
+    )) as { ts: string } | undefined;
 
     return row?.ts ?? null;
   } catch (error) {
-    dbLogger.error('Failed to get neighbor timestamp from SQLite', error);
+    dbLogger.error("Failed to get neighbor timestamp from SQLite", error);
     throw error;
   }
 }
@@ -269,14 +279,14 @@ export async function loadStationHeatmapSqlite(timestamp: string): Promise<Stati
   const p = getDbPath();
 
   try {
-    const rows = await queryAll(
+    const rows = (await queryAll(
       p,
       `SELECT station_id, total_kw, meter_count
        FROM station_heatmap
        WHERE ts = ?
        ORDER BY station_id ASC`,
       [timestamp],
-    ) as Record<string, unknown>[];
+    )) as Record<string, unknown>[];
 
     const result = rows.map((r) => ({
       stationId: r.station_id as string,
@@ -292,7 +302,7 @@ export async function loadStationHeatmapSqlite(timestamp: string): Promise<Stati
 
     return result;
   } catch (error) {
-    dbLogger.error('Failed to load station heatmap from SQLite', error, { timestamp });
+    dbLogger.error("Failed to load station heatmap from SQLite", error, { timestamp });
     throw error;
   }
 }

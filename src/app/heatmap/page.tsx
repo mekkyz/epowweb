@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import HeatmapExplorer from '@/components/HeatmapExplorer';
-import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
-import PageHeader from '@/components/layout/PageHeader';
+import HeatmapExplorer from "@/components/HeatmapExplorer";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import PageHeader from "@/components/layout/PageHeader";
 
 export default function HeatmapPage() {
   return (

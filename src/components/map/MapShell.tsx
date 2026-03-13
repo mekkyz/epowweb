@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { type ReactNode, useState, useCallback } from 'react';
-import clsx from 'clsx';
-import type { LucideIcon } from 'lucide-react';
-import MapPlaceholder from '@/components/MapPlaceholder';
-import { MapErrorBoundary } from '@/components/MapErrorBoundary';
+import { type ReactNode, useState, useCallback } from "react";
+import clsx from "clsx";
+import type { LucideIcon } from "lucide-react";
+import MapPlaceholder from "@/components/MapPlaceholder";
+import { MapErrorBoundary } from "@/components/MapErrorBoundary";
 import {
   ToggleChip,
   MapFullscreenButton,
@@ -12,10 +12,10 @@ import {
   MapWatermark,
   GridLegend,
   StationInfoPanel,
-} from './MapOverlays';
-import { useWebGLCheck, useFullscreen } from './useMapControls';
-import { useEntityMapping } from '@/hooks/useEntityMapping';
-import { useAuth } from '@/context/AuthProvider';
+} from "./MapOverlays";
+import { useWebGLCheck, useFullscreen } from "./useMapControls";
+import { useEntityMapping } from "@/hooks/useEntityMapping";
+import { useAuth } from "@/context/AuthProvider";
 
 interface StationInfo {
   id?: string;
@@ -56,9 +56,9 @@ interface MapShellProps {
 export default function MapShell({
   containerId,
   placeholderIcon,
-  loadingLabel = 'Loading map...',
-  errorTitle = 'Map Unavailable',
-  errorDescription = 'Unable to render the map. Try refreshing the page.',
+  loadingLabel = "Loading map...",
+  errorTitle = "Map Unavailable",
+  errorDescription = "Unable to render the map. Try refreshing the page.",
   showLayerToggles = true,
   showGridLegend = true,
   selectedStation,
@@ -78,20 +78,21 @@ export default function MapShell({
     setMapError(true);
   }, []);
 
-  const chipGroup = 'flex items-center gap-1 rounded-lg bg-panel/90 p-1 shadow-sm shadow-black/10 backdrop-blur';
+  const chipGroup =
+    "flex items-center gap-1 rounded-lg bg-panel/90 p-1 shadow-sm shadow-black/10 backdrop-blur";
 
   return (
     <div
       id={containerId}
       className={clsx(
-        'relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-surface to-transparent',
-        isFullscreen ? 'fixed inset-0 z-50 h-screen w-screen rounded-none' : 'h-[520px]',
-        className
+        "border-border from-surface relative overflow-hidden rounded-xl border bg-gradient-to-br to-transparent",
+        isFullscreen ? "fixed inset-0 z-50 h-screen w-screen rounded-none" : "h-[520px]",
+        className,
       )}
     >
       {/* layer toggle chips */}
       {showLayerToggles && (
-        <div className="pointer-events-auto absolute left-4 top-4 z-10 flex flex-wrap gap-2">
+        <div className="pointer-events-auto absolute top-4 left-4 z-10 flex flex-wrap gap-2">
           <div className={chipGroup}>
             <ToggleChip active={showLines} label="Grid" onChange={setShowLines} />
             <ToggleChip active={showStations} label="Stations" onChange={setShowStations} />
@@ -116,12 +117,14 @@ export default function MapShell({
       {webGLSupported === null ? (
         <MapPlaceholder icon={placeholderIcon} label={loadingLabel} animate />
       ) : webGLSupported && !mapError ? (
-        <MapErrorBoundary
-          fallbackIcon="map"
-          title={errorTitle}
-          description={errorDescription}
-        >
-          {children({ showLines, showStations, showBuildings, isFullscreen, onError: handleMapError })}
+        <MapErrorBoundary fallbackIcon="map" title={errorTitle} description={errorDescription}>
+          {children({
+            showLines,
+            showStations,
+            showBuildings,
+            isFullscreen,
+            onError: handleMapError,
+          })}
         </MapErrorBoundary>
       ) : (
         <MapPlaceholder
@@ -134,9 +137,14 @@ export default function MapShell({
       {/* station/building info panel */}
       <StationInfoPanel
         station={selectedStation ?? null}
-        hasData={!!(selectedStation?.id && mapping.loaded && (
-          mapping.stationIds.has(selectedStation.id) || mapping.buildingIds.has(selectedStation.id)
-        ))}
+        hasData={
+          !!(
+            selectedStation?.id &&
+            mapping.loaded &&
+            (mapping.stationIds.has(selectedStation.id) ||
+              mapping.buildingIds.has(selectedStation.id))
+          )
+        }
         disabled={isDemo}
       />
     </div>

@@ -1,10 +1,11 @@
-import fs from 'fs';
-import path from 'path';
-import { XMLParser } from 'fast-xml-parser';
-import { BuildingMeta, MeterMeta, SmdtConfig, StationMeta } from '@/types/smdt';
-import { configLogger } from '@/lib/logger';
+import fs from "fs";
+import path from "path";
+import { XMLParser } from "fast-xml-parser";
+import { BuildingMeta, MeterMeta, SmdtConfig, StationMeta } from "@/types/smdt";
+import { configLogger } from "@/lib/logger";
 
-const CONFIG_FILE = process.env.SMDT_CONFIG_FILE ?? path.join(process.cwd(), 'data', 'meter-mapping.xml');
+const CONFIG_FILE =
+  process.env.SMDT_CONFIG_FILE ?? path.join(process.cwd(), "data", "meter-mapping.xml");
 
 type XmlMeter = {
   name: string;
@@ -32,18 +33,18 @@ export function getSmdtConfig(): SmdtConfig {
   if (cached) return cached;
 
   const configFile = CONFIG_FILE;
-  
+
   if (!fs.existsSync(configFile)) {
-    configLogger.warn('Config file not found, returning empty config', { path: configFile });
+    configLogger.warn("Config file not found, returning empty config", { path: configFile });
     cached = { meters: [], buildings: [], stations: [] };
     return cached;
   }
 
   try {
-    const xml = fs.readFileSync(configFile, 'utf8');
+    const xml = fs.readFileSync(configFile, "utf8");
     const parser = new XMLParser({
       ignoreAttributes: false,
-      attributeNamePrefix: '',
+      attributeNamePrefix: "",
       allowBooleanAttributes: true,
     });
     const parsed = parser.parse(xml);
@@ -52,29 +53,32 @@ export function getSmdtConfig(): SmdtConfig {
     const buildings: BuildingMeta[] = [];
     const stations: StationMeta[] = [];
 
-    function walkGroup(group: XmlGroup, stationId?: string): { meters: string[]; buildings: string[] } {
+    function walkGroup(
+      group: XmlGroup,
+      stationId?: string,
+    ): { meters: string[]; buildings: string[] } {
       const type = group.type;
       const name = group.name;
 
-      if (type === 'Station') {
+      if (type === "Station") {
         const stationMeters: string[] = [];
         const stationBuildings: string[] = [];
         const childGroups = ensureArray(group.group);
-        
+
         childGroups.forEach((child) => {
           const { meters: mIds, buildings: bIds } = walkGroup(child, name);
           stationMeters.push(...mIds);
           stationBuildings.push(...bIds);
         });
-        
+
         stations.push({ id: name, meters: stationMeters, buildings: stationBuildings });
         return { meters: stationMeters, buildings: stationBuildings };
       }
 
-      if (type === 'Gebaeude') {
+      if (type === "Gebaeude") {
         const meterIds: string[] = [];
         const childMeters = ensureArray(group.meter);
-        
+
         childMeters.forEach((m) => {
           const id = m.name;
           const meta: MeterMeta = {
@@ -91,7 +95,7 @@ export function getSmdtConfig(): SmdtConfig {
           meters.push(meta);
           meterIds.push(id);
         });
-        
+
         buildings.push({ id: name, stationId, meters: meterIds });
         return { meters: meterIds, buildings: [name] };
       }
@@ -100,13 +104,13 @@ export function getSmdtConfig(): SmdtConfig {
       const childMeters: string[] = [];
       const childBuildings: string[] = [];
       const childGroups = ensureArray(group.group);
-      
+
       childGroups.forEach((child) => {
         const { meters: mIds, buildings: bIds } = walkGroup(child, stationId);
         childMeters.push(...mIds);
         childBuildings.push(...bIds);
       });
-      
+
       return { meters: childMeters, buildings: childBuildings };
     }
 
@@ -115,16 +119,16 @@ export function getSmdtConfig(): SmdtConfig {
     rootGroups.forEach((g) => walkGroup(g));
 
     cached = { meters, buildings, stations };
-    
-    configLogger.info('SMDT config loaded successfully', {
+
+    configLogger.info("SMDT config loaded successfully", {
       metersCount: meters.length,
       buildingsCount: buildings.length,
       stationsCount: stations.length,
     });
-    
+
     return cached;
   } catch (error) {
-    configLogger.error('Failed to parse SMDT config', error, { path: configFile });
+    configLogger.error("Failed to parse SMDT config", error, { path: configFile });
     cached = { meters: [], buildings: [], stations: [] };
     return cached;
   }
@@ -147,7 +151,7 @@ function asNumber(value: string | number | undefined): number | undefined {
 
 function asBool(value: string | number | boolean | undefined): boolean | undefined {
   if (value === undefined) return undefined;
-  if (typeof value === 'boolean') return value;
-  if (typeof value === 'string') return value.toLowerCase() === 'true' || value === '1';
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") return value.toLowerCase() === "true" || value === "1";
   return value === 1;
 }

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Component, ReactNode } from 'react';
-import { Map as MapIcon, Box } from 'lucide-react';
-import MapPlaceholder from './MapPlaceholder';
+import { Component, ReactNode } from "react";
+import { Map as MapIcon, Box } from "lucide-react";
+import MapPlaceholder from "./MapPlaceholder";
 
 interface Props {
   children: ReactNode;
-  fallbackIcon?: 'map' | 'box';
+  fallbackIcon?: "map" | "box";
   title?: string;
   description?: string;
 }
@@ -26,8 +26,8 @@ export class MapErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('Map rendering error:', error.message);
+    if (process.env.NODE_ENV === "development") {
+      console.warn("Map rendering error:", error.message);
     }
   }
 
@@ -35,9 +35,12 @@ export class MapErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <MapPlaceholder
-          icon={this.props.fallbackIcon === 'box' ? Box : MapIcon}
-          label={this.props.title || 'Map Unavailable'}
-          description={this.props.description || 'Unable to render the map. Try refreshing the page or using a different browser.'}
+          icon={this.props.fallbackIcon === "box" ? Box : MapIcon}
+          label={this.props.title || "Map Unavailable"}
+          description={
+            this.props.description ||
+            "Unable to render the map. Try refreshing the page or using a different browser."
+          }
         />
       );
     }

@@ -5,6 +5,7 @@ This section was removed from epowweb during a cleanup pass (Feb 2026) because t
 ## What it was
 
 A panel on the homepage displaying atmospheric weather data (Anemos) with three selectable layers:
+
 - **Solar Radiation** — Global horizontal irradiance (10 min intervals)
 - **Air Temperature** — Surface air temperature at 2m height
 - **Wind Speed & Direction** — From atmospheric models
@@ -43,6 +44,7 @@ AnemosPanel (default export, client component)
 ## Assets needed
 
 Three static preview images in `public/anemos/`:
+
 - `radiation.png`
 - `temperature.png`
 - `wind.png`
@@ -50,18 +52,18 @@ Three static preview images in `public/anemos/`:
 ## Types/constants
 
 ```typescript
-type Layer = 'radiation' | 'temperature' | 'wind';
+type Layer = "radiation" | "temperature" | "wind";
 
 const titles: Record<Layer, string> = {
-  radiation: 'Solar Radiation (10 min intervals)',
-  temperature: 'Air Temperature',
-  wind: 'Wind Speed & Direction',
+  radiation: "Solar Radiation (10 min intervals)",
+  temperature: "Air Temperature",
+  wind: "Wind Speed & Direction",
 };
 
 const descriptions: Record<Layer, string> = {
-  radiation: 'Global horizontal irradiance across the European region',
-  temperature: 'Surface air temperature measurements at 2m height',
-  wind: 'Wind speed and direction from atmospheric models',
+  radiation: "Global horizontal irradiance across the European region",
+  temperature: "Surface air temperature measurements at 2m height",
+  wind: "Wind speed and direction from atmospheric models",
 };
 ```
 

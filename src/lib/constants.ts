@@ -8,8 +8,8 @@
 // =============================================================================
 
 export const MAP_STYLES = {
-  light: 'https://tiles.openfreemap.org/styles/liberty',
-  dark: 'https://tiles.openfreemap.org/styles/fiord',
+  light: "https://tiles.openfreemap.org/styles/liberty",
+  dark: "https://tiles.openfreemap.org/styles/fiord",
 } as const;
 
 export const DEFAULT_MAP_VIEW = {
@@ -49,28 +49,28 @@ export const API_DEFAULTS = {
 export const COLORS = {
   // Primary accent colors
   accent: {
-    primary: '#64d4a3',
-    secondary: '#6ea8ff',
+    primary: "#64d4a3",
+    secondary: "#6ea8ff",
   },
   // Status colors
   status: {
-    success: '#22c55e',
-    warning: '#f59e0b',
-    error: '#ef4444',
-    info: '#3b82f6',
+    success: "#22c55e",
+    warning: "#f59e0b",
+    error: "#ef4444",
+    info: "#3b82f6",
   },
   // Heatmap scale
   heatmap: {
-    low: '#1d4ed8',
-    medium: '#22c55e',
-    high: '#f59e0b',
-    peak: '#ef4444',
+    low: "#1d4ed8",
+    medium: "#22c55e",
+    high: "#f59e0b",
+    peak: "#ef4444",
   },
   // Map layer colors
   grid: {
-    line: '#64d4a3',
-    station: '#6ea8ff',
-    stroke: '#0b1020',
+    line: "#64d4a3",
+    station: "#6ea8ff",
+    stroke: "#0b1020",
   },
 } as const;
 
@@ -78,7 +78,7 @@ export const COLORS = {
 // UI Constants
 // =============================================================================
 
-export const ENTITY_TYPES = ['station', 'building', 'meter'] as const;
+export const ENTITY_TYPES = ["station", "building", "meter"] as const;
 export type EntityType = (typeof ENTITY_TYPES)[number];
 
 // =============================================================================
@@ -86,11 +86,11 @@ export type EntityType = (typeof ENTITY_TYPES)[number];
 // =============================================================================
 
 export const ERROR_MESSAGES = {
-  generic: 'An unexpected error occurred. Please try again.',
-  notFound: 'The requested resource was not found.',
-  serverError: 'Server error. Please try again later.',
-  networkError: 'Network error. Please check your connection.',
-  invalidTimestamp: 'Invalid timestamp format.',
+  generic: "An unexpected error occurred. Please try again.",
+  notFound: "The requested resource was not found.",
+  serverError: "Server error. Please try again later.",
+  networkError: "Network error. Please check your connection.",
+  invalidTimestamp: "Invalid timestamp format.",
   missingParameter: (param: string) => `Missing required parameter: ${param}`,
 } as const;
 

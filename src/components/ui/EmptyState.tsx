@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
-import clsx from 'clsx';
-import { FolderOpen } from 'lucide-react';
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import clsx from "clsx";
+import { FolderOpen } from "lucide-react";
 
 interface EmptyStateProps extends HTMLAttributes<HTMLDivElement> {
   icon?: ReactNode;
@@ -17,25 +17,25 @@ const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
       <div
         ref={ref}
         className={clsx(
-          'flex flex-col items-center justify-center text-center p-8 rounded-2xl border border-border bg-surface',
-          className
+          "border-border bg-surface flex flex-col items-center justify-center rounded-2xl border p-8 text-center",
+          className,
         )}
         {...props}
       >
-        <div className="mb-4 text-accent">
+        <div className="text-accent mb-4">
           {icon || <FolderOpen className="h-12 w-12" aria-hidden="true" />}
         </div>
-        <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+        <h3 className="text-foreground text-lg font-semibold">{title}</h3>
         {description && (
-          <p className="mt-1 text-sm text-foreground-secondary max-w-sm">{description}</p>
+          <p className="text-foreground-secondary mt-1 max-w-sm text-sm">{description}</p>
         )}
         {action && <div className="mt-4">{action}</div>}
       </div>
     );
-  }
+  },
 );
 
-EmptyState.displayName = 'EmptyState';
+EmptyState.displayName = "EmptyState";
 
 export { EmptyState };
 export type { EmptyStateProps };

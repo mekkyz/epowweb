@@ -1,17 +1,11 @@
-'use client';
+"use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-  type ReactNode,
-} from 'react';
-import { createPortal } from 'react-dom';
-import { X, CheckCircle2, AlertCircle, AlertTriangle, Info } from 'lucide-react';
-import clsx from 'clsx';
+import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
+import { X, CheckCircle2, AlertCircle, AlertTriangle, Info } from "lucide-react";
+import clsx from "clsx";
 
-type ToastType = 'success' | 'error' | 'warning' | 'info';
+type ToastType = "success" | "error" | "warning" | "info";
 
 interface Toast {
   id: string;
@@ -23,7 +17,7 @@ interface Toast {
 
 interface ToastContextValue {
   toasts: Toast[];
-  addToast: (toast: Omit<Toast, 'id'>) => void;
+  addToast: (toast: Omit<Toast, "id">) => void;
   removeToast: (id: string) => void;
   success: (title: string, message?: string) => void;
   error: (title: string, message?: string) => void;
@@ -36,7 +30,7 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 export function useToast() {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
+    throw new Error("useToast must be used within a ToastProvider");
   }
   return context;
 }
@@ -58,7 +52,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
   }, []);
 
   const addToast = useCallback(
-    (toast: Omit<Toast, 'id'>) => {
+    (toast: Omit<Toast, "id">) => {
       const id = `toast-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
       const duration = toast.duration ?? 5000;
 
@@ -68,48 +62,43 @@ export function ToastProvider({ children }: ToastProviderProps) {
         setTimeout(() => removeToast(id), duration);
       }
     },
-    [removeToast]
+    [removeToast],
   );
 
   const success = useCallback(
     (title: string, message?: string) => {
-      addToast({ type: 'success', title, message });
+      addToast({ type: "success", title, message });
     },
-    [addToast]
+    [addToast],
   );
 
   const error = useCallback(
     (title: string, message?: string) => {
-      addToast({ type: 'error', title, message, duration: 8000 });
+      addToast({ type: "error", title, message, duration: 8000 });
     },
-    [addToast]
+    [addToast],
   );
 
   const warning = useCallback(
     (title: string, message?: string) => {
-      addToast({ type: 'warning', title, message });
+      addToast({ type: "warning", title, message });
     },
-    [addToast]
+    [addToast],
   );
 
   const info = useCallback(
     (title: string, message?: string) => {
-      addToast({ type: 'info', title, message });
+      addToast({ type: "info", title, message });
     },
-    [addToast]
+    [addToast],
   );
 
   return (
-    <ToastContext.Provider
-      value={{ toasts, addToast, removeToast, success, error, warning, info }}
-    >
+    <ToastContext.Provider value={{ toasts, addToast, removeToast, success, error, warning, info }}>
       {children}
-      {mounted && typeof document !== 'undefined' && 
-        createPortal(
-          <ToastContainer toasts={toasts} onRemove={removeToast} />,
-          document.body
-        )
-      }
+      {mounted &&
+        typeof document !== "undefined" &&
+        createPortal(<ToastContainer toasts={toasts} onRemove={removeToast} />, document.body)}
     </ToastContext.Provider>
   );
 }
@@ -124,7 +113,7 @@ function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
 
   return (
     <div
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-[100] flex flex-col items-end gap-3 p-4 sm:bottom-auto sm:right-0 sm:top-20 sm:w-auto sm:max-w-sm sm:items-end"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-[100] flex flex-col items-end gap-3 p-4 sm:top-20 sm:right-0 sm:bottom-auto sm:w-auto sm:max-w-sm sm:items-end"
       role="region"
       aria-label="Notifications"
     >
@@ -137,32 +126,32 @@ function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
 
 const toastStyles: Record<ToastType, { bg: string; border: string; icon: typeof CheckCircle2 }> = {
   success: {
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-400/30',
+    bg: "bg-emerald-500/10",
+    border: "border-emerald-400/30",
     icon: CheckCircle2,
   },
   error: {
-    bg: 'bg-red-500/10',
-    border: 'border-red-400/30',
+    bg: "bg-red-500/10",
+    border: "border-red-400/30",
     icon: AlertCircle,
   },
   warning: {
-    bg: 'bg-amber-500/10',
-    border: 'border-amber-400/30',
+    bg: "bg-amber-500/10",
+    border: "border-amber-400/30",
     icon: AlertTriangle,
   },
   info: {
-    bg: 'bg-blue-500/10',
-    border: 'border-blue-400/30',
+    bg: "bg-blue-500/10",
+    border: "border-blue-400/30",
     icon: Info,
   },
 };
 
 const iconColors: Record<ToastType, string> = {
-  success: 'text-emerald-400',
-  error: 'text-red-400',
-  warning: 'text-amber-400',
-  info: 'text-blue-400',
+  success: "text-emerald-400",
+  error: "text-red-400",
+  warning: "text-amber-400",
+  info: "text-blue-400",
 };
 
 interface ToastItemProps {
@@ -178,24 +167,22 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
     <div
       role="alert"
       className={clsx(
-        'pointer-events-auto w-full animate-in slide-in-from-right-full duration-300',
-        'rounded-xl border backdrop-blur-xl shadow-xl',
-        'flex items-start gap-3 p-4',
+        "animate-in slide-in-from-right-full pointer-events-auto w-full duration-300",
+        "rounded-xl border shadow-xl backdrop-blur-xl",
+        "flex items-start gap-3 p-4",
         style.bg,
-        style.border
+        style.border,
       )}
     >
-      <Icon className={clsx('mt-0.5 h-5 w-5 shrink-0', iconColors[toast.type])} />
+      <Icon className={clsx("mt-0.5 h-5 w-5 shrink-0", iconColors[toast.type])} />
       <div className="min-w-0 flex-1">
-        <p className="font-medium text-foreground">{toast.title}</p>
-        {toast.message && (
-          <p className="mt-1 text-sm text-foreground-secondary">{toast.message}</p>
-        )}
+        <p className="text-foreground font-medium">{toast.title}</p>
+        {toast.message && <p className="text-foreground-secondary mt-1 text-sm">{toast.message}</p>}
       </div>
       <button
         type="button"
         onClick={onClose}
-        className="shrink-0 rounded-lg p-1 text-foreground-tertiary transition-colors hover:bg-surface hover:text-foreground"
+        className="text-foreground-tertiary hover:bg-surface hover:text-foreground shrink-0 rounded-lg p-1 transition-colors"
         aria-label="Dismiss notification"
       >
         <X className="h-4 w-4" />

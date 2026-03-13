@@ -1,4 +1,4 @@
-import { getSmdtConfig } from '@/services/config-loader';
+import { getSmdtConfig } from "@/services/config-loader";
 import {
   getBoundsSqlite,
   getHeatmapBoundsSqlite,
@@ -8,7 +8,7 @@ import {
   loadAggregatedSeriesSqlite,
   loadMeterSeriesSqlite,
   loadStationHeatmapSqlite,
-} from '@/services/sqlite-store';
+} from "@/services/sqlite-store";
 import {
   BuildingMeta,
   MeterMeta,
@@ -18,7 +18,7 @@ import {
   SmdtConfig,
   StationHeatmapRow,
   StationMeta,
-} from '@/types/smdt';
+} from "@/types/smdt";
 
 export function listConfig(): SmdtConfig {
   return getSmdtConfig();
@@ -68,13 +68,17 @@ export async function loadStationHeatmap(timestamp: string): Promise<StationHeat
   return loadStationHeatmapSqlite(timestamp);
 }
 
-export async function getHeatmapBounds(): Promise<{ min: string | null; max: string | null; count: number }> {
+export async function getHeatmapBounds(): Promise<{
+  min: string | null;
+  max: string | null;
+  count: number;
+}> {
   return getHeatmapBoundsSqlite();
 }
 
 export async function getNeighborTimestamp(
   current: string,
-  direction: 'prev' | 'next',
+  direction: "prev" | "next",
 ): Promise<string | null> {
   return getNeighborTimestampSqlite(current, direction);
 }

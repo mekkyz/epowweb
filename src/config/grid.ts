@@ -1,4 +1,4 @@
-import gridRaw from '@/config/grid-data.json';
+import gridRaw from "@/config/grid-data.json";
 import type {
   BuildingFeature,
   GridCollections,
@@ -7,7 +7,7 @@ import type {
   RawBuilding,
   RawGridData,
   StationFeature,
-} from '@/types/grid';
+} from "@/types/grid";
 
 const raw = gridRaw as RawGridData;
 
@@ -22,7 +22,7 @@ const uniqueMeters = dedupe(raw.meters, (m) => m.id).map((m) => ({
 
 /** Extract the id from either a GeoJSON Feature or a plain {id} object. */
 function getBuildingId(b: RawBuilding): string {
-  return 'properties' in b && b.properties ? b.properties.id : (b as { id: string }).id;
+  return "properties" in b && b.properties ? b.properties.id : (b as { id: string }).id;
 }
 
 const dedupedBuildings = dedupe(raw.buildings, getBuildingId);
@@ -34,8 +34,10 @@ const uniqueBuildings = dedupedBuildings.map((b) => ({
 
 /** Buildings that have GeoJSON Polygon coordinates — used for map layers. */
 const buildingFeatures: BuildingFeature[] = dedupedBuildings
-  .filter((b): b is Extract<RawBuilding, { type: 'Feature'; geometry: { type: 'Polygon' } }> =>
-    'type' in b && b.type === 'Feature' && 'geometry' in b && b.geometry?.type === 'Polygon')
+  .filter(
+    (b): b is Extract<RawBuilding, { type: "Feature"; geometry: { type: "Polygon" } }> =>
+      "type" in b && b.type === "Feature" && "geometry" in b && b.geometry?.type === "Polygon",
+  )
   .map((b) => ({
     ...b,
     properties: {
@@ -74,15 +76,15 @@ export const gridData: GridData = {
  */
 export const gridCollections: GridCollections = {
   stations: {
-    type: 'FeatureCollection',
+    type: "FeatureCollection",
     features: gridData.stations,
   },
   lines: {
-    type: 'FeatureCollection',
+    type: "FeatureCollection",
     features: gridData.lines,
   },
   buildings: {
-    type: 'FeatureCollection',
+    type: "FeatureCollection",
     features: gridData.buildingFeatures,
   },
 };
@@ -102,7 +104,7 @@ export const stationById = new Map<string, StationFeature>(
 export const stationOptions = gridData.stations
   .map((station) => ({
     id: station.properties.id,
-    label: `${station.properties.id} · ${station.properties.description || 'Station'}`,
+    label: `${station.properties.id} · ${station.properties.description || "Station"}`,
   }))
   .sort((a, b) => a.id.localeCompare(b.id));
 
@@ -133,13 +135,13 @@ export const buildingFeaturesList = gridData.buildingFeatures as BuildingFeature
 // =============================================================================
 
 export const GRID_LEGEND = [
-  { color: '#aaff00', label: 'Ring 1 – Südring' },
-  { color: '#00aaff', label: 'Ring 2 – Ring B' },
-  { color: '#ffff00', label: 'Ring 3 – Ring A' },
-  { color: '#ff5500', label: 'Ring 4 – Nordring' },
-  { color: '#ff0000', label: 'Ring 5 – WAK' },
-  { color: '#ff0099', label: 'Ring 6 – Kopfstationen' },
-  { color: '#aaaaff', label: 'Ring 7 – ITU' },
+  { color: "#aaff00", label: "Ring 1 – Südring" },
+  { color: "#00aaff", label: "Ring 2 – Ring B" },
+  { color: "#ffff00", label: "Ring 3 – Ring A" },
+  { color: "#ff5500", label: "Ring 4 – Nordring" },
+  { color: "#ff0000", label: "Ring 5 – WAK" },
+  { color: "#ff0099", label: "Ring 6 – Kopfstationen" },
+  { color: "#aaaaff", label: "Ring 7 – ITU" },
 ] as const;
 
 // =============================================================================

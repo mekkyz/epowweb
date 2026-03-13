@@ -1,4 +1,4 @@
-import type { Feature, FeatureCollection, LineString, Point, Polygon } from 'geojson';
+import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 
 export interface Meter {
   id: string;
@@ -45,9 +45,9 @@ export type RawBuilding =
 
 /** Raw shape of grid-data.json (no url fields — grid.ts adds them). */
 export interface RawGridData {
-  meters: Omit<Meter, 'url'>[];
+  meters: Omit<Meter, "url">[];
   buildings: RawBuilding[];
-  stations: Feature<Point, Omit<StationProperties, 'url'>>[];
+  stations: Feature<Point, Omit<StationProperties, "url">>[];
   lines: LineFeature[];
 }
 

@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { HTTP_STATUS } from '@/lib/constants';
+import { NextResponse } from "next/server";
+import { HTTP_STATUS } from "@/lib/constants";
 
 /**
  * Creates a successful API response
@@ -7,7 +7,7 @@ import { HTTP_STATUS } from '@/lib/constants';
 export function successResponse<T>(
   data: T,
   meta?: Record<string, unknown>,
-  status: number = HTTP_STATUS.OK
+  status: number = HTTP_STATUS.OK,
 ): NextResponse {
   return NextResponse.json(
     {
@@ -18,7 +18,7 @@ export function successResponse<T>(
         ...meta,
       },
     },
-    { status }
+    { status },
   );
 }
 
@@ -28,7 +28,7 @@ export function successResponse<T>(
 export function errorResponse(
   message: string,
   status: number = HTTP_STATUS.INTERNAL_SERVER_ERROR,
-  code?: string
+  code?: string,
 ): NextResponse {
   return NextResponse.json(
     {
@@ -41,7 +41,7 @@ export function errorResponse(
         timestamp: new Date().toISOString(),
       },
     },
-    { status }
+    { status },
   );
 }
 

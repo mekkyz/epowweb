@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import clsx from 'clsx';
-import { Info, Maximize2, Minimize2 } from 'lucide-react';
-import { GRID_LEGEND } from '@/config/grid';
+import { useState } from "react";
+import clsx from "clsx";
+import { Info, Maximize2, Minimize2 } from "lucide-react";
+import { GRID_LEGEND } from "@/config/grid";
 
 /* togglechip — on/off filter chip for map layers */
 export function ToggleChip({
@@ -18,10 +18,10 @@ export function ToggleChip({
   return (
     <button
       className={clsx(
-        'rounded-xl px-3 py-1 text-sm font-semibold transition',
+        "rounded-xl px-3 py-1 text-sm font-semibold transition",
         active
-          ? 'bg-foreground text-background shadow-sm'
-          : 'text-foreground-secondary hover:text-foreground',
+          ? "bg-foreground text-background shadow-sm"
+          : "text-foreground-secondary hover:text-foreground",
       )}
       onClick={() => onChange(!active)}
     >
@@ -41,9 +41,9 @@ export function MapFullscreenButton({
   return (
     <button
       onClick={onToggle}
-      className="pointer-events-auto absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all hover:bg-panel hover:shadow-md"
-      title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-      aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+      className="bg-panel/90 text-foreground hover:bg-panel pointer-events-auto absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-lg shadow-sm shadow-black/10 backdrop-blur transition-all hover:shadow-md"
+      title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+      aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
     >
       {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
     </button>
@@ -55,23 +55,38 @@ export function MapAttribution() {
   const [show, setShow] = useState(false);
 
   return (
-    <div className="pointer-events-auto absolute bottom-4 right-[10px] z-10">
+    <div className="pointer-events-auto absolute right-[10px] bottom-4 z-10">
       <button
         onClick={() => setShow(!show)}
         className={clsx(
-          'flex h-[29px] items-center justify-center rounded-lg bg-panel/90 text-xs shadow-sm shadow-black/10 backdrop-blur transition-all',
+          "bg-panel/90 flex h-[29px] items-center justify-center rounded-lg text-xs shadow-sm shadow-black/10 backdrop-blur transition-all",
           show
-            ? 'w-auto gap-2 px-2.5 text-foreground'
-            : 'w-[29px] text-foreground-secondary hover:bg-surface'
+            ? "text-foreground w-auto gap-2 px-2.5"
+            : "text-foreground-secondary hover:bg-surface w-[29px]",
         )}
-        aria-label={show ? 'Hide attribution' : 'Show attribution'}
+        aria-label={show ? "Hide attribution" : "Show attribution"}
       >
         <Info className="h-3.5 w-3.5 flex-shrink-0" />
         {show && (
           <span>
-            © <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">OpenFreeMap</a>
-            {' '}·{' '}
-            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">OpenStreetMap</a>
+            ©{" "}
+            <a
+              href="https://openfreemap.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:underline"
+            >
+              OpenFreeMap
+            </a>{" "}
+            ·{" "}
+            <a
+              href="https://www.openstreetmap.org/copyright"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:underline"
+            >
+              OpenStreetMap
+            </a>
           </span>
         )}
       </button>
@@ -83,7 +98,7 @@ export function MapAttribution() {
 export function MapWatermark() {
   return (
     <div className="pointer-events-none absolute top-3 left-1/2 z-10 -translate-x-1/2">
-      <div className="text-md font-semibold tracking-wide text-foreground/25 drop-shadow-sm select-none">
+      <div className="text-md text-foreground/25 font-semibold tracking-wide drop-shadow-sm select-none">
         © ESA, IAI-KIT
       </div>
     </div>
@@ -99,12 +114,12 @@ export function GridLegend() {
       <button
         onClick={() => setShow(!show)}
         className={clsx(
-          'flex items-center justify-center rounded-lg bg-panel/90 text-foreground shadow-sm shadow-black/10 backdrop-blur transition-all',
+          "bg-panel/90 text-foreground flex items-center justify-center rounded-lg shadow-sm shadow-black/10 backdrop-blur transition-all",
           show
-            ? 'h-auto w-auto flex-col items-start gap-2 p-3'
-            : 'h-[29px] w-[29px] text-foreground-secondary hover:bg-surface'
+            ? "h-auto w-auto flex-col items-start gap-2 p-3"
+            : "text-foreground-secondary hover:bg-surface h-[29px] w-[29px]",
         )}
-        aria-label={show ? 'Hide legend' : 'Show legend'}
+        aria-label={show ? "Hide legend" : "Show legend"}
       >
         {show ? (
           <>
@@ -119,7 +134,7 @@ export function GridLegend() {
                     className="h-3 w-3 rounded-full ring-1 ring-black/20"
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-xs text-foreground-secondary">{item.label}</span>
+                  <span className="text-foreground-secondary text-xs">{item.label}</span>
                 </div>
               ))}
             </div>
@@ -140,53 +155,61 @@ interface StationInfo {
   group?: string;
 }
 
-export function StationInfoPanel({ station, hasData = true, showPreview = true, disabled = false }: { station: StationInfo | null; hasData?: boolean; showPreview?: boolean; disabled?: boolean }) {
+export function StationInfoPanel({
+  station,
+  hasData = true,
+  showPreview = true,
+  disabled = false,
+}: {
+  station: StationInfo | null;
+  hasData?: boolean;
+  showPreview?: boolean;
+  disabled?: boolean;
+}) {
   if (!station) return null;
 
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
-      <div className="mx-auto w-fit rounded-lg bg-panel/90 p-4 text-sm text-foreground-secondary shadow-sm shadow-black/10 backdrop-blur">
+      <div className="bg-panel/90 text-foreground-secondary mx-auto w-fit rounded-lg p-4 text-sm shadow-sm shadow-black/10 backdrop-blur">
         <div className="flex items-stretch gap-4">
           <div className="flex flex-col justify-center">
-            <p className="text-lg font-semibold text-foreground">
-              {station.id}
-            </p>
+            <p className="text-foreground text-lg font-semibold">{station.id}</p>
             <p className="text-foreground-secondary">
-              {station.description || (station.id?.startsWith('G-') ? 'Building' : 'Power node')}
+              {station.description || (station.id?.startsWith("G-") ? "Building" : "Power node")}
             </p>
-            {station.group && (
-              <p className="text-foreground-secondary">{station.group}</p>
-            )}
+            {station.group && <p className="text-foreground-secondary">{station.group}</p>}
           </div>
 
           {hasData && station.url && (
             <>
-              <div className="w-px bg-border" />
+              <div className="bg-border w-px" />
 
               <div className="flex flex-col items-center justify-center gap-2">
-                <span className="rounded-md bg-surface px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground-tertiary">
+                <span className="bg-surface text-foreground-tertiary rounded-md px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase">
                   Visualization
                 </span>
                 <div className="pointer-events-auto flex flex-col gap-2">
                   {showPreview && (
                     <button
                       onClick={() => {
-                        const el = document.getElementById('live-data');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                        window.dispatchEvent(new CustomEvent('preview-visualization', { detail: station.url }));
+                        const el = document.getElementById("live-data");
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                        window.dispatchEvent(
+                          new CustomEvent("preview-visualization", { detail: station.url }),
+                        );
                       }}
                       disabled={disabled}
-                      title={disabled ? 'Full access required' : 'Preview visualization'}
-                      className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
+                      title={disabled ? "Full access required" : "Preview visualization"}
+                      className="border-border bg-background text-foreground hover:bg-surface inline-flex items-center justify-center rounded-lg border px-4 py-1.5 text-xs font-semibold shadow-sm shadow-black/10 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Preview
                     </button>
                   )}
                   <button
-                    onClick={() => window.open(station.url, '_blank', 'noopener,noreferrer')}
+                    onClick={() => window.open(station.url, "_blank", "noopener,noreferrer")}
                     disabled={disabled}
-                    title={disabled ? 'Full access required' : 'Open visualization in new tab'}
-                    className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-4 py-1.5 text-xs font-semibold text-foreground shadow-sm shadow-black/10 hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
+                    title={disabled ? "Full access required" : "Open visualization in new tab"}
+                    className="border-border bg-background text-foreground hover:bg-surface inline-flex items-center justify-center rounded-lg border px-4 py-1.5 text-xs font-semibold shadow-sm shadow-black/10 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Open in Tab
                   </button>

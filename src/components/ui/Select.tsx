@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { forwardRef, type SelectHTMLAttributes } from 'react';
-import clsx from 'clsx';
+import { forwardRef, type SelectHTMLAttributes } from "react";
+import clsx from "clsx";
 import {
   FormField,
   fieldBaseStyles,
@@ -11,7 +11,7 @@ import {
   fieldBorderStyles,
   fieldSizeStyles,
   type FieldSize,
-} from './form-utils';
+} from "./form-utils";
 
 interface SelectOption {
   value: string;
@@ -19,7 +19,7 @@ interface SelectOption {
   disabled?: boolean;
 }
 
-interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
+interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "size"> {
   options: SelectOption[];
   placeholder?: string;
   size?: FieldSize;
@@ -33,7 +33,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
     {
       options,
       placeholder,
-      size = 'md',
+      size = "md",
       error = false,
       label,
       helperText,
@@ -41,7 +41,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       id,
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <FormField id={id} label={label} helperText={helperText} error={error}>
@@ -52,13 +52,13 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               id={fieldId}
               className={clsx(
                 fieldBaseStyles,
-                'appearance-none',
+                "appearance-none",
                 fieldFocusStyles,
                 fieldDisabledStyles,
                 error ? fieldErrorStyles : fieldBorderStyles,
                 fieldSizeStyles[size],
-                'pr-10',
-                className
+                "pr-10",
+                className,
               )}
               aria-invalid={error}
               aria-describedby={describedBy}
@@ -82,7 +82,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
               <svg
-                className="h-4 w-4 text-foreground-tertiary"
+                className="text-foreground-tertiary h-4 w-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -100,10 +100,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         )}
       </FormField>
     );
-  }
+  },
 );
 
-Select.displayName = 'Select';
+Select.displayName = "Select";
 
 export { Select };
 export type { SelectProps, SelectOption };

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { PlugZap, ExternalLink } from 'lucide-react';
-import { EmptyState, Button, ChartSkeleton } from '@/components/ui';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import { PlugZap, ExternalLink } from "lucide-react";
+import { EmptyState, Button, ChartSkeleton } from "@/components/ui";
+import Link from "next/link";
 
 interface Props {
   url?: string;
@@ -35,7 +35,7 @@ export default function TimeSeriesPreview({ url, title, disabled }: Props) {
         icon={<PlugZap className="h-10 w-10 text-emerald-400" />}
         title="Select an entity to preview"
         description="Pick a station, building, or meter above to see its time-series visualization."
-        className="h-full rounded-xl border border-border bg-surface p-8"
+        className="border-border bg-surface h-full rounded-xl border p-8"
       />
     );
   }
@@ -45,19 +45,31 @@ export default function TimeSeriesPreview({ url, title, disabled }: Props) {
       {/* Preview Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-
           <div>
-            <span className="text-xs font-medium uppercase tracking-wider text-foreground-tertiary">Preview</span>
-            <p className="font-semibold text-foreground">{title ?? 'Visualization'}</p>
+            <span className="text-foreground-tertiary text-xs font-medium tracking-wider uppercase">
+              Preview
+            </span>
+            <p className="text-foreground font-semibold">{title ?? "Visualization"}</p>
           </div>
         </div>
         {disabled ? (
-          <Button variant="outline" size="sm" disabled title="Full access required" iconRight={<ExternalLink className="h-3.5 w-3.5" />}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled
+            title="Full access required"
+            iconRight={<ExternalLink className="h-3.5 w-3.5" />}
+          >
             Open in Tab
           </Button>
         ) : (
           <Link href={url} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm" title="Open visualization in new tab" iconRight={<ExternalLink className="h-3.5 w-3.5" />}>
+            <Button
+              variant="outline"
+              size="sm"
+              title="Open visualization in new tab"
+              iconRight={<ExternalLink className="h-3.5 w-3.5" />}
+            >
               Open in Tab
             </Button>
           </Link>
@@ -65,9 +77,9 @@ export default function TimeSeriesPreview({ url, title, disabled }: Props) {
       </div>
 
       {/* Preview Content */}
-      <div className="relative overflow-hidden rounded-xl border border-border bg-panel">
+      <div className="border-border bg-panel relative overflow-hidden rounded-xl border">
         {loading && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60">
+          <div className="bg-background/60 absolute inset-0 z-10 flex items-center justify-center">
             <ChartSkeleton />
           </div>
         )}
@@ -86,7 +98,7 @@ export default function TimeSeriesPreview({ url, title, disabled }: Props) {
 
 function appendEmbed(url: string) {
   if (!url) return url;
-  const hasQuery = url.includes('?');
-  const separator = hasQuery ? '&' : '?';
+  const hasQuery = url.includes("?");
+  const separator = hasQuery ? "&" : "?";
   return `${url}${separator}embed=1`;
 }

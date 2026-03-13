@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import LookupPanel from '@/components/LookupPanel';
-import TimeSeriesPreview from '@/components/TimeSeriesPreview';
-import { meterOptions, stationOptions, buildingOptions } from '@/config/grid';
-import { useAuth } from '@/context/AuthProvider';
+import { useEffect, useMemo, useState } from "react";
+import LookupPanel from "@/components/LookupPanel";
+import TimeSeriesPreview from "@/components/TimeSeriesPreview";
+import { meterOptions, stationOptions, buildingOptions } from "@/config/grid";
+import { useAuth } from "@/context/AuthProvider";
 
 export default function LiveDataSection() {
   const { isDemo } = useAuth();
@@ -19,9 +19,9 @@ export default function LiveDataSection() {
     const handlePreview = (e: CustomEvent<string>) => {
       setPreviewUrl(e.detail);
     };
-    window.addEventListener('preview-visualization', handlePreview as EventListener);
+    window.addEventListener("preview-visualization", handlePreview as EventListener);
     return () => {
-      window.removeEventListener('preview-visualization', handlePreview as EventListener);
+      window.removeEventListener("preview-visualization", handlePreview as EventListener);
     };
   }, []);
 
@@ -31,17 +31,17 @@ export default function LiveDataSection() {
     const match = previewUrl.match(/\/visualization\/(\w+)\/(.+)/);
     if (!match) return undefined;
     const [, type, id] = match;
-    
-    if (type === 'meter') {
-      const meter = meterOptions.find(m => m.id === id);
+
+    if (type === "meter") {
+      const meter = meterOptions.find((m) => m.id === id);
       return meter?.label || id;
     }
-    if (type === 'station') {
-      const station = stationOptions.find(s => s.id === id);
+    if (type === "station") {
+      const station = stationOptions.find((s) => s.id === id);
       return station?.label || id;
     }
-    if (type === 'building') {
-      const building = buildingOptions.find(b => b.id === id);
+    if (type === "building") {
+      const building = buildingOptions.find((b) => b.id === id);
       return building?.label || id;
     }
     return id;

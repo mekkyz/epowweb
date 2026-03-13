@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 /**
  * Suppresses WebGL-related errors that can occur when:
@@ -17,23 +17,23 @@ export function WebGLErrorSuppressor() {
     const originalWarn = console.warn;
 
     const suppressedPatterns = [
-      'maxTextureDimension2D',
-      'WebGL context lost',
-      'CONTEXT_LOST_WEBGL',
-      'Cannot read properties of undefined',
-      'Failed to initialize WebGL',
-      'WebGL2RenderingContext',
-      'getContext',
-      'luma.gl',
-      '@luma.gl',
+      "maxTextureDimension2D",
+      "WebGL context lost",
+      "CONTEXT_LOST_WEBGL",
+      "Cannot read properties of undefined",
+      "Failed to initialize WebGL",
+      "WebGL2RenderingContext",
+      "getContext",
+      "luma.gl",
+      "@luma.gl",
     ];
 
     const shouldSuppress = (message: string): boolean => {
-      return suppressedPatterns.some(pattern => message.includes(pattern));
+      return suppressedPatterns.some((pattern) => message.includes(pattern));
     };
 
     console.error = (...args: unknown[]) => {
-      const message = args.map(a => String(a)).join(' ');
+      const message = args.map((a) => String(a)).join(" ");
       if (shouldSuppress(message)) {
         return;
       }
@@ -41,7 +41,7 @@ export function WebGLErrorSuppressor() {
     };
 
     console.warn = (...args: unknown[]) => {
-      const message = args.map(a => String(a)).join(' ');
+      const message = args.map((a) => String(a)).join(" ");
       if (shouldSuppress(message)) {
         return;
       }
@@ -50,7 +50,7 @@ export function WebGLErrorSuppressor() {
 
     // Handle synchronous errors
     const handleError = (event: ErrorEvent) => {
-      const message = event.message || event.error?.message || '';
+      const message = event.message || event.error?.message || "";
       if (shouldSuppress(message)) {
         event.preventDefault();
         event.stopPropagation();
@@ -60,7 +60,7 @@ export function WebGLErrorSuppressor() {
 
     // Handle unhandled promise rejections (async WebGL errors)
     const handleRejection = (event: PromiseRejectionEvent) => {
-      const message = event.reason?.message || String(event.reason) || '';
+      const message = event.reason?.message || String(event.reason) || "";
       if (shouldSuppress(message)) {
         event.preventDefault();
         event.stopPropagation();
@@ -68,14 +68,14 @@ export function WebGLErrorSuppressor() {
       }
     };
 
-    window.addEventListener('error', handleError, true);
-    window.addEventListener('unhandledrejection', handleRejection, true);
+    window.addEventListener("error", handleError, true);
+    window.addEventListener("unhandledrejection", handleRejection, true);
 
     return () => {
       console.error = originalError;
       console.warn = originalWarn;
-      window.removeEventListener('error', handleError, true);
-      window.removeEventListener('unhandledrejection', handleRejection, true);
+      window.removeEventListener("error", handleError, true);
+      window.removeEventListener("unhandledrejection", handleRejection, true);
     };
   }, []);
 

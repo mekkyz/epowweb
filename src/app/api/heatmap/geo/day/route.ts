@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { loadStationHeatmap, listDayTimestamps } from '@/services/smdt-data';
-import { stationRowsToGeoJSON, AggregatedHeatmap } from '@/app/api/_lib/aggregate-heatmap';
-import { apiLogger } from '@/lib/logger';
+import { NextRequest, NextResponse } from "next/server";
+import { loadStationHeatmap, listDayTimestamps } from "@/services/smdt-data";
+import { stationRowsToGeoJSON, AggregatedHeatmap } from "@/app/api/_lib/aggregate-heatmap";
+import { apiLogger } from "@/lib/logger";
 
 /**
  * Batch endpoint: returns aggregated geo data for every timestamp in a given day.
@@ -9,11 +9,14 @@ import { apiLogger } from '@/lib/logger';
  * Yields to the event loop between timestamps so health probes stay responsive.
  */
 export async function GET(req: NextRequest) {
-  const date = req.nextUrl.searchParams.get('date');
+  const date = req.nextUrl.searchParams.get("date");
 
   if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return NextResponse.json(
-      { success: false, error: { message: 'Missing or invalid "date" parameter (expected YYYY-MM-DD)' } },
+      {
+        success: false,
+        error: { message: 'Missing or invalid "date" parameter (expected YYYY-MM-DD)' },
+      },
       { status: 400 },
     );
   }
@@ -33,12 +36,16 @@ export async function GET(req: NextRequest) {
 
     for (const ts of timestamps) {
       const rows = await loadStationHeatmap(ts);
-      entries[ts] = rows.length === 0
-        ? { featureCollection: { type: 'FeatureCollection', features: [] }, stats: { stations: 0, meters: 0 } }
-        : stationRowsToGeoJSON(rows);
+      entries[ts] =
+        rows.length === 0
+          ? {
+              featureCollection: { type: "FeatureCollection", features: [] },
+              stats: { stations: 0, meters: 0 },
+            }
+          : stationRowsToGeoJSON(rows);
     }
 
-    apiLogger.info('GET /api/heatmap/geo/day', { date, count: timestamps.length });
+    apiLogger.info("GET /api/heatmap/geo/day", { date, count: timestamps.length });
 
     return NextResponse.json(
       {
@@ -47,13 +54,13 @@ export async function GET(req: NextRequest) {
         meta: { timestamp: new Date().toISOString(), count: timestamps.length },
       },
       {
-        headers: { 'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400' },
+        headers: { "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" },
       },
     );
   } catch (error) {
-    apiLogger.error('GET /api/heatmap/geo/day failed', error);
+    apiLogger.error("GET /api/heatmap/geo/day failed", error);
     return NextResponse.json(
-      { success: false, error: { message: 'Failed to fetch day geo data' } },
+      { success: false, error: { message: "Failed to fetch day geo data" } },
       { status: 500 },
     );
   }

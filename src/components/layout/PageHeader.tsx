@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { type ReactNode } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, type LucideIcon } from 'lucide-react';
-import clsx from 'clsx';
-import { Badge } from '@/components/ui';
+import { type ReactNode } from "react";
+import Link from "next/link";
+import { ArrowLeft, type LucideIcon } from "lucide-react";
+import clsx from "clsx";
+import { Badge } from "@/components/ui";
 
 interface BreadcrumbItem {
   label: string;
@@ -17,7 +17,7 @@ interface PageHeaderProps {
   label?: string;
   icon?: LucideIcon;
   badge?: string;
-  badgeVariant?: 'default' | 'success' | 'warning' | 'error' | 'info';
+  badgeVariant?: "default" | "success" | "warning" | "error" | "info";
   showBack?: boolean;
   backHref?: string;
   backLabel?: string;
@@ -32,22 +32,22 @@ export default function PageHeader({
   label,
   icon: Icon,
   badge,
-  badgeVariant = 'default',
+  badgeVariant = "default",
   showBack = false,
-  backHref = '/',
-  backLabel = 'Home',
+  backHref = "/",
+  backLabel = "Home",
   breadcrumbs,
   actions,
   className,
 }: PageHeaderProps) {
   return (
-    <header className={clsx('mb-6', className)}>
+    <header className={clsx("mb-6", className)}>
       {(showBack || breadcrumbs) && (
         <div className="mb-4 flex items-center gap-3">
           {showBack && (
             <Link
               href={backHref}
-              className="inline-flex h-9 items-center gap-2 rounded-full bg-surface px-3 text-sm font-semibold text-foreground ring-1 ring-border transition-all hover:bg-surface-hover hover:ring-border-strong"
+              className="bg-surface text-foreground ring-border hover:bg-surface-hover hover:ring-border-strong inline-flex h-9 items-center gap-2 rounded-full px-3 text-sm font-semibold ring-1 transition-all"
             >
               <ArrowLeft className="h-4 w-4" />
               {backLabel}
@@ -62,7 +62,7 @@ export default function PageHeader({
                   {item.href ? (
                     <Link
                       href={item.href}
-                      className="text-foreground-secondary transition-colors hover:text-foreground"
+                      className="text-foreground-secondary hover:text-foreground transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -75,10 +75,7 @@ export default function PageHeader({
           )}
 
           {badge && (
-            <Badge
-              variant={badgeVariant}
-              icon={Icon ? <Icon className="h-4 w-4" /> : undefined}
-            >
+            <Badge variant={badgeVariant} icon={Icon ? <Icon className="h-4 w-4" /> : undefined}>
               {badge}
             </Badge>
           )}
@@ -90,24 +87,18 @@ export default function PageHeader({
           {label && (
             <div className="mb-1 flex items-center gap-2">
               {Icon && <Icon className="h-4 w-4 text-emerald-400" />}
-              <p className="text-xs font-semibold uppercase tracking-widest text-foreground-tertiary">
+              <p className="text-foreground-tertiary text-xs font-semibold tracking-widest uppercase">
                 {label}
               </p>
             </div>
           )}
-          <h1 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
+          <h1 className="font-display text-foreground text-2xl font-semibold sm:text-3xl">
             {title}
           </h1>
-          {subtitle && (
-            <p className="mt-1 text-base text-foreground-secondary">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-foreground-secondary mt-1 text-base">{subtitle}</p>}
         </div>
 
-        {actions && (
-          <div className="flex shrink-0 items-center gap-2">
-            {actions}
-          </div>
-        )}
+        {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
       </div>
     </header>
   );

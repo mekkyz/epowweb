@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
-import { getHeatmapBounds, loadStationHeatmap } from '@/services/smdt-data';
-import { apiLogger } from '@/lib/logger';
-import { stationRowsToGeoJSON } from '@/app/api/_lib/aggregate-heatmap';
+import { NextResponse } from "next/server";
+import { getHeatmapBounds, loadStationHeatmap } from "@/services/smdt-data";
+import { apiLogger } from "@/lib/logger";
+import { stationRowsToGeoJSON } from "@/app/api/_lib/aggregate-heatmap";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
@@ -21,10 +21,10 @@ export async function GET() {
       stats = result.stats;
     }
 
-    apiLogger.info('GET /api/heatmap/init', {
+    apiLogger.info("GET /api/heatmap/init", {
       timestampCount: bounds.count,
       initialTimestamp,
-      stations: stats?.stations ?? 0
+      stations: stats?.stations ?? 0,
     });
 
     return NextResponse.json(
@@ -40,15 +40,15 @@ export async function GET() {
       },
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
         },
-      }
+      },
     );
   } catch (error) {
-    apiLogger.error('GET /api/heatmap/init failed', error);
+    apiLogger.error("GET /api/heatmap/init failed", error);
     return NextResponse.json(
-      { success: false, error: { message: 'Failed to initialize heatmap data' } },
-      { status: 500 }
+      { success: false, error: { message: "Failed to initialize heatmap data" } },
+      { status: 500 },
     );
   }
 }

@@ -1,12 +1,12 @@
-import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/auth';
-import AdminPanel from './AdminPanel';
-import PageHeader from '@/components/layout/PageHeader';
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
+import AdminPanel from "./AdminPanel";
+import PageHeader from "@/components/layout/PageHeader";
 
 export default async function AdminPage() {
   const session = await getSession();
-  if (!session || session.role !== 'admin') {
-    redirect('/');
+  if (!session || session.role !== "admin") {
+    redirect("/");
   }
 
   return (

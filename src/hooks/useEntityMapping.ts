@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { StationMeta, BuildingMeta } from '@/types/smdt';
+import { useEffect, useMemo, useState } from "react";
+import type { StationMeta, BuildingMeta } from "@/types/smdt";
 
 interface EntityMapping {
   stations: StationMeta[];
@@ -30,8 +30,8 @@ export function useEntityMapping(): EntityMapping {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/stations').then((r) => r.json()),
-      fetch('/api/buildings').then((r) => r.json()),
+      fetch("/api/stations").then((r) => r.json()),
+      fetch("/api/buildings").then((r) => r.json()),
     ]).then(([stationsRes, buildingsRes]) => {
       setStations(stationsRes.data?.stations ?? []);
       setBuildings(buildingsRes.data?.buildings ?? []);
@@ -59,8 +59,7 @@ export function useEntityMapping(): EntityMapping {
   const stationForBuilding = (buildingId: string) =>
     buildings.find((b) => b.id === buildingId)?.stationId;
 
-  const stationForMeter = (meterId: string) =>
-    stations.find((s) => s.meters.includes(meterId))?.id;
+  const stationForMeter = (meterId: string) => stations.find((s) => s.meters.includes(meterId))?.id;
 
   const buildingForMeter = (meterId: string) =>
     buildings.find((b) => b.meters.includes(meterId))?.id;

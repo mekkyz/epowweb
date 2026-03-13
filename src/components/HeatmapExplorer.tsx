@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { useCallback, useMemo, useRef, useState } from 'react';
-import MapGL, { Layer, LayerProps, MapRef, NavigationControl, Source } from 'react-map-gl/maplibre';
-import maplibregl from 'maplibre-gl';
-import { useTheme } from 'next-themes';
-import { Info } from 'lucide-react';
-import clsx from 'clsx';
-import { Spinner, useToast } from '@/components/ui';
-import { MAP_STYLES } from '@/lib/constants';
-import { downloadBlob } from '@/lib/download';
-import { checkWebGLSupport } from '@/lib/webgl';
-import { useAuth } from '@/context/AuthProvider';
-import { MapAttribution, MapWatermark, StationInfoPanel } from './map/MapOverlays';
-import { useAltDragRotation, useFullscreen } from './map/useMapControls';
-import { useHeatmapData } from './map/useHeatmapData';
-import HeatmapControls from './map/HeatmapControls';
-import StationRankings from './map/StationRankings';
+import { useCallback, useMemo, useRef, useState } from "react";
+import MapGL, { Layer, LayerProps, MapRef, NavigationControl, Source } from "react-map-gl/maplibre";
+import maplibregl from "maplibre-gl";
+import { useTheme } from "next-themes";
+import { Info } from "lucide-react";
+import clsx from "clsx";
+import { Spinner, useToast } from "@/components/ui";
+import { MAP_STYLES } from "@/lib/constants";
+import { downloadBlob } from "@/lib/download";
+import { checkWebGLSupport } from "@/lib/webgl";
+import { useAuth } from "@/context/AuthProvider";
+import { MapAttribution, MapWatermark, StationInfoPanel } from "./map/MapOverlays";
+import { useAltDragRotation, useFullscreen } from "./map/useMapControls";
+import { useHeatmapData } from "./map/useHeatmapData";
+import HeatmapControls from "./map/HeatmapControls";
+import StationRankings from "./map/StationRankings";
 
 export default function HeatmapExplorer() {
   const { resolvedTheme } = useTheme();
@@ -23,7 +23,7 @@ export default function HeatmapExplorer() {
   const { isDemo } = useAuth();
 
   const data = useHeatmapData(showError);
-  const { isFullscreen, toggleFullscreen } = useFullscreen('heatmap-explorer-container');
+  const { isFullscreen, toggleFullscreen } = useFullscreen("heatmap-explorer-container");
   const setupAltDrag = useAltDragRotation();
   const mapRef = useRef<MapRef | null>(null);
 
@@ -40,42 +40,77 @@ export default function HeatmapExplorer() {
   const [thresholdMax, setThresholdMax] = useState(800);
   const [canRenderMap] = useState<boolean>(() => checkWebGLSupport());
 
-  const mapStyleType = (resolvedTheme === 'light' ? 'light' : 'dark') as 'light' | 'dark';
+  const mapStyleType = (resolvedTheme === "light" ? "light" : "dark") as "light" | "dark";
   const mapStyle = useMemo(() => MAP_STYLES[mapStyleType], [mapStyleType]);
 
-  const handleMapRef = useCallback((ref: MapRef | null) => {
-    mapRef.current = ref;
-    if (ref) setupAltDrag(ref);
-  }, [setupAltDrag]);
+  const handleMapRef = useCallback(
+    (ref: MapRef | null) => {
+      mapRef.current = ref;
+      if (ref) setupAltDrag(ref);
+    },
+    [setupAltDrag],
+  );
 
   // Helper: lerp a value between min/max
-  const tFrac = useCallback((frac: number) => {
-    return thresholdMin + frac * (thresholdMax - thresholdMin);
-  }, [thresholdMin, thresholdMax]);
+  const tFrac = useCallback(
+    (frac: number) => {
+      return thresholdMin + frac * (thresholdMax - thresholdMin);
+    },
+    [thresholdMin, thresholdMax],
+  );
 
   // Map layers
   const heatmapLayer: LayerProps = useMemo(
     () => ({
-      id: 'heat-layer',
-      type: 'heatmap',
+      id: "heat-layer",
+      type: "heatmap",
       maxzoom: 17,
       paint: {
-        'heatmap-weight': [
-          'interpolate', ['exponential', 2], ['get', 'valueKw'],
-          tFrac(0), 0.1, tFrac(0.06), 0.3, tFrac(0.19), 0.5,
-          tFrac(0.38), 0.75, tFrac(0.63), 0.9, tFrac(1), 1,
+        "heatmap-weight": [
+          "interpolate",
+          ["exponential", 2],
+          ["get", "valueKw"],
+          tFrac(0),
+          0.1,
+          tFrac(0.06),
+          0.3,
+          tFrac(0.19),
+          0.5,
+          tFrac(0.38),
+          0.75,
+          tFrac(0.63),
+          0.9,
+          tFrac(1),
+          1,
         ],
-        'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 12, 2.2, 14, 2.8, 16, 3.5],
-        'heatmap-color': [
-          'interpolate', ['linear'], ['heatmap-density'],
-          0, 'rgba(0, 255, 0, 0)', 0.08, 'rgba(0, 255, 0, 0.8)',
-          0.2, 'rgba(128, 255, 0, 0.9)', 0.35, 'rgba(200, 255, 0, 0.95)',
-          0.45, 'rgba(255, 255, 0, 0.97)', 0.55, 'rgba(255, 200, 0, 1)',
-          0.65, 'rgba(255, 140, 0, 1)', 0.75, 'rgba(255, 70, 0, 1)',
-          0.88, 'rgba(255, 20, 0, 1)', 1, 'rgba(180, 0, 0, 1)',
+        "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 12, 2.2, 14, 2.8, 16, 3.5],
+        "heatmap-color": [
+          "interpolate",
+          ["linear"],
+          ["heatmap-density"],
+          0,
+          "rgba(0, 255, 0, 0)",
+          0.08,
+          "rgba(0, 255, 0, 0.8)",
+          0.2,
+          "rgba(128, 255, 0, 0.9)",
+          0.35,
+          "rgba(200, 255, 0, 0.95)",
+          0.45,
+          "rgba(255, 255, 0, 0.97)",
+          0.55,
+          "rgba(255, 200, 0, 1)",
+          0.65,
+          "rgba(255, 140, 0, 1)",
+          0.75,
+          "rgba(255, 70, 0, 1)",
+          0.88,
+          "rgba(255, 20, 0, 1)",
+          1,
+          "rgba(180, 0, 0, 1)",
         ],
-        'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 12, 25, 14, 40, 16, 60, 18, 80],
-        'heatmap-opacity': 0.85,
+        "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 12, 25, 14, 40, 16, 60, 18, 80],
+        "heatmap-opacity": 0.85,
       },
     }),
     [tFrac],
@@ -83,18 +118,26 @@ export default function HeatmapExplorer() {
 
   const circleGlowLayer: LayerProps = useMemo(
     () => ({
-      id: 'heat-circles-glow',
-      type: 'circle',
+      id: "heat-circles-glow",
+      type: "circle",
       minzoom: 14,
       paint: {
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, 12, 16, 20, 18, 30],
-        'circle-color': [
-          'interpolate', ['linear'], ['get', 'valueKw'],
-          tFrac(0), '#00ff00', tFrac(0.33), '#ffff00',
-          tFrac(0.5), '#ff9600', tFrac(0.83), '#ff1e00',
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 14, 12, 16, 20, 18, 30],
+        "circle-color": [
+          "interpolate",
+          ["linear"],
+          ["get", "valueKw"],
+          tFrac(0),
+          "#00ff00",
+          tFrac(0.33),
+          "#ffff00",
+          tFrac(0.5),
+          "#ff9600",
+          tFrac(0.83),
+          "#ff1e00",
         ],
-        'circle-opacity': 0.4,
-        'circle-blur': 1,
+        "circle-opacity": 0.4,
+        "circle-blur": 1,
       },
     }),
     [tFrac],
@@ -102,18 +145,35 @@ export default function HeatmapExplorer() {
 
   const circleLayer: LayerProps = useMemo(
     () => ({
-      id: 'heat-circles',
-      type: 'circle',
+      id: "heat-circles",
+      type: "circle",
       minzoom: 14,
       paint: {
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, 5, 16, 10, 18, 16],
-        'circle-color': [
-          'interpolate', ['linear'], ['get', 'valueKw'],
-          tFrac(0), '#00ff00', tFrac(0.07), '#80ff00', tFrac(0.13), '#c8ff00',
-          tFrac(0.19), '#ffff00', tFrac(0.25), '#ffc800', tFrac(0.38), '#ff9600',
-          tFrac(0.5), '#ff5000', tFrac(0.63), '#ff1e00', tFrac(0.88), '#c80000',
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 14, 5, 16, 10, 18, 16],
+        "circle-color": [
+          "interpolate",
+          ["linear"],
+          ["get", "valueKw"],
+          tFrac(0),
+          "#00ff00",
+          tFrac(0.07),
+          "#80ff00",
+          tFrac(0.13),
+          "#c8ff00",
+          tFrac(0.19),
+          "#ffff00",
+          tFrac(0.25),
+          "#ffc800",
+          tFrac(0.38),
+          "#ff9600",
+          tFrac(0.5),
+          "#ff5000",
+          tFrac(0.63),
+          "#ff1e00",
+          tFrac(0.88),
+          "#c80000",
         ],
-        'circle-opacity': 1,
+        "circle-opacity": 1,
       },
     }),
     [tFrac],
@@ -121,46 +181,46 @@ export default function HeatmapExplorer() {
 
   const mapView = { longitude: 8.4346, latitude: 49.099, zoom: 14.5 };
 
-  const downloadSlice = async (format: 'json' | 'csv') => {
+  const downloadSlice = async (format: "json" | "csv") => {
     if (!data.selected) return;
     try {
       const res = await fetch(`/api/heatmap?timestamp=${encodeURIComponent(data.selected)}`);
       if (!res.ok) {
-        showError('Failed to download data');
+        showError("Failed to download data");
         return;
       }
       const body = await res.json();
-      if (format === 'json') {
+      if (format === "json") {
         downloadBlob(
           JSON.stringify(body, null, 2),
           `heatmap-${data.selected}.json`,
-          'application/json',
+          "application/json",
         );
       } else {
         const stations = body.data?.stations ?? [];
-        const rows = ['stationId,totalKw,meterCount'];
+        const rows = ["stationId,totalKw,meterCount"];
         stations.forEach((s: { stationId: string; totalKw: number; meterCount: number }) => {
           rows.push(`${s.stationId},${s.totalKw},${s.meterCount}`);
         });
-        downloadBlob(rows.join('\n'), `heatmap-${data.selected}.csv`, 'text/csv');
+        downloadBlob(rows.join("\n"), `heatmap-${data.selected}.csv`, "text/csv");
       }
       success(`Downloaded heatmap data as ${format.toUpperCase()}`);
     } catch (err) {
-      console.error('Download failed:', err);
-      showError('Failed to download data');
+      console.error("Download failed:", err);
+      showError("Failed to download data");
     }
   };
 
   const downloadPng = () => {
     const map = mapRef.current?.getMap();
     if (!map) {
-      showError('Map not ready');
+      showError("Map not ready");
       return;
     }
-    map.once('render', () => {
+    map.once("render", () => {
       try {
         const mapCanvas = map.getCanvas();
-        const isDark = document.documentElement.classList.contains('dark');
+        const isDark = document.documentElement.classList.contains("dark");
         const scale = 2;
         const pad = 12 * scale;
         const headerH = 56 * scale;
@@ -168,15 +228,15 @@ export default function HeatmapExplorer() {
         const w = mapCanvas.width;
         const h = mapCanvas.height;
 
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement("canvas");
         canvas.width = w + 2 * pad;
         canvas.height = h + headerH + footerH;
-        const ctx = canvas.getContext('2d')!;
+        const ctx = canvas.getContext("2d")!;
 
-        const bg = isDark ? '#0b1020' : '#ffffff';
-        const textColor = isDark ? '#e2e8f0' : '#1a202c';
-        const mutedColor = isDark ? '#94a3b8' : '#64748b';
-        const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+        const bg = isDark ? "#0b1020" : "#ffffff";
+        const textColor = isDark ? "#e2e8f0" : "#1a202c";
+        const mutedColor = isDark ? "#94a3b8" : "#64748b";
+        const borderColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
 
         // Background
         ctx.fillStyle = bg;
@@ -185,16 +245,20 @@ export default function HeatmapExplorer() {
         // Title
         ctx.fillStyle = textColor;
         ctx.font = `600 ${14 * scale}px "Work Sans", system-ui, sans-serif`;
-        ctx.fillText('KIT-CN 20 kV Power Grid Heatmap', pad, pad + 16 * scale);
+        ctx.fillText("KIT-CN 20 kV Power Grid Heatmap", pad, pad + 16 * scale);
 
         // Timestamp next to title
         if (data.selected) {
-          const titleW = ctx.measureText('KIT-CN 20 kV Power Grid Heatmap').width;
+          const titleW = ctx.measureText("KIT-CN 20 kV Power Grid Heatmap").width;
           ctx.fillStyle = mutedColor;
           ctx.font = `${10 * scale}px "Work Sans", system-ui, sans-serif`;
-          const ts = new Date(data.selected).toLocaleString('en-US', {
-            year: 'numeric', month: 'short', day: 'numeric',
-            hour: '2-digit', minute: '2-digit', hour12: false,
+          const ts = new Date(data.selected).toLocaleString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
           });
           ctx.fillText(`  ·  ${ts}`, pad + titleW, pad + 16 * scale);
         }
@@ -216,11 +280,11 @@ export default function HeatmapExplorer() {
         const legendH = 10 * scale;
         const gradW = 180 * scale;
         const grad = ctx.createLinearGradient(pad, 0, pad + gradW, 0);
-        grad.addColorStop(0, '#00ff00');
-        grad.addColorStop(0.25, '#ffff00');
-        grad.addColorStop(0.5, '#ffa500');
-        grad.addColorStop(0.75, '#ff0000');
-        grad.addColorStop(1, '#b40000');
+        grad.addColorStop(0, "#00ff00");
+        grad.addColorStop(0.25, "#ffff00");
+        grad.addColorStop(0.5, "#ffa500");
+        grad.addColorStop(0.75, "#ff0000");
+        grad.addColorStop(1, "#b40000");
         ctx.fillStyle = grad;
         ctx.fillRect(pad, legendY, gradW, legendH);
 
@@ -229,22 +293,26 @@ export default function HeatmapExplorer() {
         ctx.font = `${8 * scale}px "Work Sans", system-ui, sans-serif`;
         ctx.fillText(`${thresholdMin} kW`, pad, legendY + legendH + 12 * scale);
         const maxLabel = `${thresholdMax} kW`;
-        ctx.fillText(maxLabel, pad + gradW - ctx.measureText(maxLabel).width, legendY + legendH + 12 * scale);
+        ctx.fillText(
+          maxLabel,
+          pad + gradW - ctx.measureText(maxLabel).width,
+          legendY + legendH + 12 * scale,
+        );
 
         // Attribution on the right
-        ctx.textAlign = 'right';
+        ctx.textAlign = "right";
         ctx.font = `${8 * scale}px "Work Sans", system-ui, sans-serif`;
-        ctx.fillText('© ESA, IAI-KIT', canvas.width - pad, legendY + legendH + 12 * scale);
-        ctx.textAlign = 'left';
+        ctx.fillText("© ESA, IAI-KIT", canvas.width - pad, legendY + legendH + 12 * scale);
+        ctx.textAlign = "left";
 
-        const a = document.createElement('a');
-        a.href = canvas.toDataURL('image/png');
-        a.download = `heatmap-${data.selected || 'snapshot'}-${Date.now()}.png`;
+        const a = document.createElement("a");
+        a.href = canvas.toDataURL("image/png");
+        a.download = `heatmap-${data.selected || "snapshot"}-${Date.now()}.png`;
         a.click();
-        success('Map downloaded as PNG');
+        success("Map downloaded as PNG");
       } catch (err) {
-        console.error('PNG export failed:', err);
-        showError('Failed to export PNG');
+        console.error("PNG export failed:", err);
+        showError("Failed to export PNG");
       }
     });
     map.triggerRepaint();
@@ -254,8 +322,8 @@ export default function HeatmapExplorer() {
     <div
       id="heatmap-explorer-container"
       className={clsx(
-        'space-y-4',
-        isFullscreen && 'fixed inset-0 z-50 flex h-screen w-screen flex-col bg-background p-4'
+        "space-y-4",
+        isFullscreen && "bg-background fixed inset-0 z-50 flex h-screen w-screen flex-col p-4",
       )}
     >
       <HeatmapControls
@@ -286,26 +354,32 @@ export default function HeatmapExplorer() {
       />
 
       {/* Map and List Grid */}
-      <div className={clsx(
-        'grid gap-6',
-        isFullscreen ? 'flex-1 lg:grid-cols-1' : 'lg:grid-cols-[1.5fr,1fr]'
-      )}>
+      <div
+        className={clsx(
+          "grid gap-6",
+          isFullscreen ? "flex-1 lg:grid-cols-1" : "lg:grid-cols-[1.5fr,1fr]",
+        )}
+      >
         {/* Map Panel */}
-        <div className={clsx(
-          'relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-surface to-transparent',
-          isFullscreen ? 'h-[calc(100vh-200px)]' : 'h-[520px]'
-        )}>
+        <div
+          className={clsx(
+            "border-border from-surface relative overflow-hidden rounded-xl border bg-gradient-to-br to-transparent",
+            isFullscreen ? "h-[calc(100vh-200px)]" : "h-[520px]",
+          )}
+        >
           {data.loading && (
             <div className="pointer-events-none absolute top-3 right-3 z-10">
-              <span className="inline-flex items-center gap-2 rounded-lg bg-panel/90 px-3 py-1.5 text-xs text-foreground-secondary shadow-sm shadow-black/10 backdrop-blur">
+              <span className="bg-panel/90 text-foreground-secondary inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs shadow-sm shadow-black/10 backdrop-blur">
                 <Spinner size="sm" /> Loading…
               </span>
             </div>
           )}
           {!canRenderMap ? (
             <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-              <div className="text-sm text-foreground-secondary">WebGL is not available</div>
-              <div className="text-xs text-foreground-tertiary">Heatmap view requires WebGL support</div>
+              <div className="text-foreground-secondary text-sm">WebGL is not available</div>
+              <div className="text-foreground-tertiary text-xs">
+                Heatmap view requires WebGL support
+              </div>
             </div>
           ) : (
             <MapGL
@@ -317,10 +391,13 @@ export default function HeatmapExplorer() {
               minZoom={12}
               maxZoom={18}
               attributionControl={false}
-              interactiveLayerIds={['heat-circles']}
+              interactiveLayerIds={["heat-circles"]}
               onClick={(evt) => {
                 const f = evt.features?.[0];
-                if (!f) { setSelected(null); return; }
+                if (!f) {
+                  setSelected(null);
+                  return;
+                }
                 const props = f.properties as { stationId: string };
                 setSelected({
                   id: props.stationId,
@@ -352,12 +429,12 @@ export default function HeatmapExplorer() {
                   <Layer {...circleLayer} />
                 </Source>
               )}
-              <NavigationControl position="bottom-right" style={{ marginBottom: '52px' }} />
+              <NavigationControl position="bottom-right" style={{ marginBottom: "52px" }} />
 
               {/* Heatmap Legend */}
               {showLegend ? (
                 <div
-                  className="pointer-events-auto absolute left-3 bottom-3 flex w-48 flex-col gap-2.5 rounded-lg bg-panel/90 p-3 text-foreground shadow-sm shadow-black/10 backdrop-blur"
+                  className="bg-panel/90 text-foreground pointer-events-auto absolute bottom-3 left-3 flex w-48 flex-col gap-2.5 rounded-lg p-3 shadow-sm shadow-black/10 backdrop-blur"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
@@ -367,22 +444,25 @@ export default function HeatmapExplorer() {
                     <Info className="h-3.5 w-3.5" />
                     Heat Intensity
                   </button>
-                  <p className="text-[10px] leading-tight text-foreground-secondary">Power consumption/generation</p>
+                  <p className="text-foreground-secondary text-[10px] leading-tight">
+                    Power consumption/generation
+                  </p>
                   <div className="flex flex-col gap-1">
                     <div
                       className="h-2.5 rounded-sm"
                       style={{
-                        background: 'linear-gradient(to right, #00ff00, #ffff00, #ffa500, #ff0000, #b40000)',
+                        background:
+                          "linear-gradient(to right, #00ff00, #ffff00, #ffa500, #ff0000, #b40000)",
                       }}
                     />
-                    <div className="flex justify-between text-[10px] font-mono text-foreground-secondary">
+                    <div className="text-foreground-secondary flex justify-between font-mono text-[10px]">
                       <span>{thresholdMin} kW</span>
                       <span>{thresholdMax} kW</span>
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-medium text-foreground-secondary">Min</span>
+                      <span className="text-foreground-secondary text-[10px] font-medium">Min</span>
                       <input
                         type="number"
                         value={thresholdMin}
@@ -393,11 +473,11 @@ export default function HeatmapExplorer() {
                         min={0}
                         max={thresholdMax - 1}
                         step={10}
-                        className="h-6 w-20 rounded border border-border bg-background px-1.5 text-right text-[11px] font-mono text-foreground outline-none focus:border-accent"
+                        className="border-border bg-background text-foreground focus:border-accent h-6 w-20 rounded border px-1.5 text-right font-mono text-[11px] outline-none"
                       />
                     </label>
                     <label className="flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-medium text-foreground-secondary">Max</span>
+                      <span className="text-foreground-secondary text-[10px] font-medium">Max</span>
                       <input
                         type="number"
                         value={thresholdMax}
@@ -407,13 +487,16 @@ export default function HeatmapExplorer() {
                         }}
                         min={thresholdMin + 1}
                         step={10}
-                        className="h-6 w-20 rounded border border-border bg-background px-1.5 text-right text-[11px] font-mono text-foreground outline-none focus:border-accent"
+                        className="border-border bg-background text-foreground focus:border-accent h-6 w-20 rounded border px-1.5 text-right font-mono text-[11px] outline-none"
                       />
                     </label>
                   </div>
                   <button
-                    onClick={() => { setThresholdMin(0); setThresholdMax(800); }}
-                    className="self-end text-[10px] font-medium text-foreground-tertiary transition-colors hover:text-foreground-secondary"
+                    onClick={() => {
+                      setThresholdMin(0);
+                      setThresholdMax(800);
+                    }}
+                    className="text-foreground-tertiary hover:text-foreground-secondary self-end text-[10px] font-medium transition-colors"
                   >
                     Reset defaults
                   </button>
@@ -421,7 +504,7 @@ export default function HeatmapExplorer() {
               ) : (
                 <button
                   onClick={() => setShowLegend(true)}
-                  className="pointer-events-auto absolute left-3 bottom-3 flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-panel/90 text-foreground-secondary shadow-sm shadow-black/10 backdrop-blur transition-all hover:bg-surface"
+                  className="bg-panel/90 text-foreground-secondary hover:bg-surface pointer-events-auto absolute bottom-3 left-3 flex h-[29px] w-[29px] items-center justify-center rounded-lg shadow-sm shadow-black/10 backdrop-blur transition-all"
                   aria-label="Show legend"
                 >
                   <Info className="h-3.5 w-3.5" />
@@ -433,29 +516,34 @@ export default function HeatmapExplorer() {
 
               {hover && (
                 <div
-                  className="pointer-events-none absolute z-10 rounded-lg bg-panel/90 p-3 text-xs text-foreground shadow-sm shadow-black/10 backdrop-blur"
-                  style={{ left: hover.x + 12, top: hover.y + 12, fontFamily: 'var(--font-sans)' }}
+                  className="bg-panel/90 text-foreground pointer-events-none absolute z-10 rounded-lg p-3 text-xs shadow-sm shadow-black/10 backdrop-blur"
+                  style={{ left: hover.x + 12, top: hover.y + 12, fontFamily: "var(--font-sans)" }}
                 >
-                  <p className="text-sm font-semibold text-foreground">{hover.stationId}</p>
+                  <p className="text-foreground text-sm font-semibold">{hover.stationId}</p>
                   <div className="mt-2 flex items-baseline gap-1">
                     <span className="text-foreground-secondary">Power:</span>
-                    <span className="font-mono font-semibold text-foreground">{hover.valueKw.toFixed(2)} kW</span>
+                    <span className="text-foreground font-mono font-semibold">
+                      {hover.valueKw.toFixed(2)} kW
+                    </span>
                   </div>
                   <div className="mt-1 flex items-baseline gap-1">
                     <span className="text-foreground-secondary">Meters:</span>
-                    <span className="font-mono text-foreground-secondary">{hover.meters}</span>
+                    <span className="text-foreground-secondary font-mono">{hover.meters}</span>
                   </div>
                 </div>
               )}
-              <StationInfoPanel station={selected} hasData={true} showPreview={false} disabled={isDemo} />
+              <StationInfoPanel
+                station={selected}
+                hasData={true}
+                showPreview={false}
+                disabled={isDemo}
+              />
             </MapGL>
           )}
         </div>
 
         {/* Station List Panel - hidden in fullscreen */}
-        {!isFullscreen && (
-          <StationRankings features={data.features} loading={data.loading} />
-        )}
+        {!isFullscreen && <StationRankings features={data.features} loading={data.loading} />}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   ChevronLeft,
@@ -9,10 +9,10 @@ import {
   Minimize2,
   Play,
   Pause,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { Button, Slider } from '@/components/ui';
-import { SPEED_OPTIONS } from './useHeatmapData';
+} from "lucide-react";
+import clsx from "clsx";
+import { Button, Slider } from "@/components/ui";
+import { SPEED_OPTIONS } from "./useHeatmapData";
 
 interface HeatmapControlsProps {
   // date navigation
@@ -37,7 +37,7 @@ interface HeatmapControlsProps {
   setPlaySpeed: (v: number) => void;
   stopPlayback: () => void;
   // actions
-  onDownload: (format: 'json' | 'csv') => void;
+  onDownload: (format: "json" | "csv") => void;
   onDownloadPng: () => void;
   isFullscreen: boolean;
   toggleFullscreen: () => void;
@@ -81,9 +81,12 @@ export default function HeatmapControls({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => { stopPlayback(); stepByDay(-1); }}
+            onClick={() => {
+              stopPlayback();
+              stepByDay(-1);
+            }}
             disabled={isDemo || availableDates.indexOf(selectedDate) <= 0}
-            title={isDemo ? 'Full access required' : 'Previous day'}
+            title={isDemo ? "Full access required" : "Previous day"}
             aria-label="Previous day"
             className="rounded-r-none border-r-0"
           >
@@ -92,18 +95,24 @@ export default function HeatmapControls({
           <input
             type="date"
             value={selectedDate}
-            onChange={(e) => { stopPlayback(); onDateChange(e); }}
+            onChange={(e) => {
+              stopPlayback();
+              onDateChange(e);
+            }}
             disabled={isDemo}
             min={minDateAvail || undefined}
             max={maxDateAvail || undefined}
-            className="h-full rounded-none border border-x-0 border-border-strong bg-white px-2.5 py-1 text-xs text-foreground outline-none focus:ring-0 dark:bg-background"
+            className="border-border-strong text-foreground dark:bg-background h-full rounded-none border border-x-0 bg-white px-2.5 py-1 text-xs outline-none focus:ring-0"
           />
           <Button
             variant="outline"
             size="sm"
-            onClick={() => { stopPlayback(); stepByDay(1); }}
+            onClick={() => {
+              stopPlayback();
+              stepByDay(1);
+            }}
             disabled={isDemo || availableDates.indexOf(selectedDate) >= availableDates.length - 1}
-            title={isDemo ? 'Full access required' : 'Next day'}
+            title={isDemo ? "Full access required" : "Next day"}
             aria-label="Next day"
             className="rounded-l-none border-l-0"
           >
@@ -116,23 +125,29 @@ export default function HeatmapControls({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => { stopPlayback(); stepByIndex(-1); }}
+            onClick={() => {
+              stopPlayback();
+              stepByIndex(-1);
+            }}
             disabled={isDemo || sliderIndex <= 0}
-            title={isDemo ? 'Full access required' : 'Previous timestamp'}
+            title={isDemo ? "Full access required" : "Previous timestamp"}
             aria-label="Previous timestamp"
             className="rounded-r-none border-r-0"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span className="flex h-full items-center border border-x-0 border-border-strong bg-white px-2.5 py-1 text-xs tabular-nums text-foreground dark:bg-background">
-            {currentTime || '—'}
+          <span className="border-border-strong text-foreground dark:bg-background flex h-full items-center border border-x-0 bg-white px-2.5 py-1 text-xs tabular-nums">
+            {currentTime || "—"}
           </span>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => { stopPlayback(); stepByIndex(1); }}
+            onClick={() => {
+              stopPlayback();
+              stepByIndex(1);
+            }}
             disabled={isDemo || sliderIndex >= dayTimestamps.length - 1}
-            title={isDemo ? 'Full access required' : 'Next timestamp'}
+            title={isDemo ? "Full access required" : "Next timestamp"}
             aria-label="Next timestamp"
             className="rounded-l-none border-l-0"
           >
@@ -143,30 +158,32 @@ export default function HeatmapControls({
         {/* playback controls */}
         <div className="flex items-center gap-1">
           <Button
-            variant={isPlaying ? 'primary' : 'outline'}
+            variant={isPlaying ? "primary" : "outline"}
             size="sm"
             onClick={() => setIsPlaying(!isPlaying)}
-            disabled={isDemo || dayTimestamps.length === 0 || sliderIndex >= dayTimestamps.length - 1}
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-            title={isPlaying ? 'Pause playback' : 'Play through day'}
+            disabled={
+              isDemo || dayTimestamps.length === 0 || sliderIndex >= dayTimestamps.length - 1
+            }
+            aria-label={isPlaying ? "Pause" : "Play"}
+            title={isPlaying ? "Pause playback" : "Play through day"}
           >
             {isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
           </Button>
         </div>
 
         {/* speed selector */}
-        <div className="flex items-center rounded-lg border border-border-strong">
+        <div className="border-border-strong flex items-center rounded-lg border">
           {SPEED_OPTIONS.map((opt, i) => (
             <button
               key={opt.label}
               onClick={() => setPlaySpeed(i)}
               className={clsx(
-                'px-2 py-1 text-xs font-medium transition-colors',
-                i === 0 && 'rounded-l-[7px]',
-                i === SPEED_OPTIONS.length - 1 && 'rounded-r-[7px]',
+                "px-2 py-1 text-xs font-medium transition-colors",
+                i === 0 && "rounded-l-[7px]",
+                i === SPEED_OPTIONS.length - 1 && "rounded-r-[7px]",
                 playSpeed === i
-                  ? 'bg-foreground text-background'
-                  : 'bg-white text-foreground-secondary hover:text-foreground dark:bg-background'
+                  ? "bg-foreground text-background"
+                  : "text-foreground-secondary hover:text-foreground dark:bg-background bg-white",
               )}
             >
               {opt.label}
@@ -181,9 +198,9 @@ export default function HeatmapControls({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => onDownload('json')}
+            onClick={() => onDownload("json")}
             disabled={isDemo || !hasSelected}
-            title={isDemo ? 'Full access required' : 'Download data as JSON'}
+            title={isDemo ? "Full access required" : "Download data as JSON"}
             icon={<ArrowDownToLine className="h-3.5 w-3.5" />}
           >
             JSON
@@ -191,9 +208,9 @@ export default function HeatmapControls({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => onDownload('csv')}
+            onClick={() => onDownload("csv")}
             disabled={isDemo || !hasSelected}
-            title={isDemo ? 'Full access required' : 'Download data as CSV'}
+            title={isDemo ? "Full access required" : "Download data as CSV"}
             icon={<ArrowDownToLine className="h-3.5 w-3.5" />}
           >
             CSV
@@ -203,7 +220,7 @@ export default function HeatmapControls({
             size="sm"
             onClick={onDownloadPng}
             disabled={isDemo}
-            title={isDemo ? 'Full access required' : 'Download as PNG'}
+            title={isDemo ? "Full access required" : "Download as PNG"}
             icon={<ImageDown className="h-3.5 w-3.5" />}
           >
             PNG
@@ -213,9 +230,21 @@ export default function HeatmapControls({
             size="sm"
             onClick={toggleFullscreen}
             disabled={isDemo}
-            title={isDemo ? 'Full access required' : isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-            aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-            icon={isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+            title={
+              isDemo
+                ? "Full access required"
+                : isFullscreen
+                  ? "Exit fullscreen"
+                  : "Enter fullscreen"
+            }
+            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            icon={
+              isFullscreen ? (
+                <Minimize2 className="h-3.5 w-3.5" />
+              ) : (
+                <Maximize2 className="h-3.5 w-3.5" />
+              )
+            }
           />
         </div>
       </div>
@@ -226,12 +255,15 @@ export default function HeatmapControls({
           min={0}
           max={Math.max(dayTimestamps.length - 1, 0)}
           value={sliderIndex}
-          onChange={(val) => { stopPlayback(); onSliderChange(val); }}
+          onChange={(val) => {
+            stopPlayback();
+            onSliderChange(val);
+          }}
           disabled={isDemo || dayTimestamps.length === 0}
         />
-        <div className="flex items-center justify-between text-[10px] text-foreground-tertiary">
+        <div className="text-foreground-tertiary flex items-center justify-between text-[10px]">
           <span>{minTime}</span>
-          <span className="font-medium text-foreground-secondary">{currentTime}</span>
+          <span className="text-foreground-secondary font-medium">{currentTime}</span>
           <span>{maxTime}</span>
         </div>
       </div>

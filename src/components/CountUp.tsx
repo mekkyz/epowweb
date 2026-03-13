@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Minimal count-up animation for stat numbers.
@@ -17,8 +17,7 @@ export default function CountUp({
   className?: string;
 }) {
   const prefersReduced =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const [value, setValue] = useState(prefersReduced ? end : 0);
   const ref = useRef<HTMLSpanElement>(null);
