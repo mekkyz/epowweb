@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:seed": "tsx scripts/seed-sqlite.ts",
-    "db:seed:append": "tsx scripts/seed-sqlite.ts --append"
+    "db:seed": "tsx seed-sqlite.ts",
+    "db:seed:append": "tsx seed-sqlite.ts --append"
   },
   "dependencies": {
     "@deck.gl/core": "^9.2.6",

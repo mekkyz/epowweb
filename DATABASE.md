@@ -175,7 +175,7 @@ All SQLite queries run in a dedicated Worker Thread via `queryAll()` / `queryGet
 
 The seed script pre-aggregates heatmap data from meter-level (~614 rows/timestamp) to station-level (~37 rows/timestamp) in-memory from CSV, then inserts directly into `station_heatmap`. API routes query `station_heatmap` directly — zero runtime aggregation.
 
-- Seed script: `scripts/seed-sqlite.ts`
+- Seed script: `seed-sqlite.ts`
 - Query function: `loadStationHeatmapSqlite()` in `src/services/sqlite-store.ts`
 - GeoJSON conversion: `stationRowsToGeoJSON()` in `src/app/api/_lib/aggregate-heatmap.ts`
 - Used by: `/api/heatmap/geo`, `/api/heatmap/geo/day`, `/api/heatmap/init`, `/api/heatmap`
@@ -281,7 +281,7 @@ Client (browser)
 
 | File | Purpose |
 |------|---------|
-| `scripts/seed-sqlite.ts` | Seeds DB from CSV + XML config, aggregates station data in-memory |
+| `seed-sqlite.ts` | Seeds DB from CSV + XML config, aggregates station data in-memory |
 | `src/services/sqlite-async.ts` | Worker Thread wrapper for better-sqlite3 |
 | `src/services/sqlite-store.ts` | All SQLite queries + LRU caching |
 | `src/services/smdt-data.ts` | Service layer (SQLite-only for heatmap) |
@@ -307,6 +307,6 @@ When deploying changes that affect the database or performance layers:
 
 ### Notes
 
-- Seed script: `scripts/seed-sqlite.ts` (runs via `npm run db:seed`)
+- Seed script: `seed-sqlite.ts` (runs via `npm run db:seed`)
 - `SMDT_DATA_DIR` is required for seeding. Defaults: `SMDT_CONFIG_FILE=./data/meter-mapping.xml`, `SMDT_SQLITE_PATH=./data/smdt.db`
 - The PVC (`smdt-data`) persists across pod restarts — no reseeding needed.
