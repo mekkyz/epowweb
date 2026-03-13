@@ -37,6 +37,7 @@ export function createSeriesHandler(config: SeriesHandlerConfig) {
         apiLogger.warn(`GET ${routePath} - ${entityType} not found`, {
           [entityType + "Id"]: entityId,
         });
+
         return NextResponse.json(
           {
             success: false,
@@ -81,6 +82,7 @@ export function createSeriesHandler(config: SeriesHandlerConfig) {
       });
     } catch (error) {
       apiLogger.error(`GET ${routePath} failed`, error, { [entityType + "Id"]: entityId });
+
       return NextResponse.json(
         { success: false, error: { message: `Failed to fetch ${entityType} series data` } },
         { status: 500 },

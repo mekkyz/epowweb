@@ -17,6 +17,7 @@ export async function GET() {
     if (initialTimestamp) {
       const rows = await loadStationHeatmap(initialTimestamp);
       const result = stationRowsToGeoJSON(rows);
+
       featureCollection = result.featureCollection;
       stats = result.stats;
     }
@@ -46,6 +47,7 @@ export async function GET() {
     );
   } catch (error) {
     apiLogger.error("GET /api/heatmap/init failed", error);
+
     return NextResponse.json(
       { success: false, error: { message: "Failed to initialize heatmap data" } },
       { status: 500 },

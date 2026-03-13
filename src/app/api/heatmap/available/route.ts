@@ -41,6 +41,7 @@ export async function GET(req: NextRequest) {
     );
   } catch (error) {
     apiLogger.error("GET /api/heatmap/available failed", error);
+
     return NextResponse.json(
       { success: false, error: { message: "Failed to fetch available heatmap data" } },
       { status: 500 },

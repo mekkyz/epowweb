@@ -26,16 +26,19 @@ export default function LookupPanel({ onPreview }: Props) {
   // Base options: only entities that exist in the config (have data)
   const baseStationOptions = useMemo(() => {
     if (!mapping.loaded) return stationOptions;
+
     return stationOptions.filter((s) => mapping.stationIds.has(s.id));
   }, [mapping]);
 
   const baseBuildingOptions = useMemo(() => {
     if (!mapping.loaded) return buildingOptions;
+
     return buildingOptions.filter((b) => mapping.buildingIds.has(b.id));
   }, [mapping]);
 
   const baseMeterOptions = useMemo(() => {
     if (!mapping.loaded) return meterOptions;
+
     return meterOptions.filter((m) => mapping.meterIds.has(m.id));
   }, [mapping]);
 
@@ -43,6 +46,7 @@ export default function LookupPanel({ onPreview }: Props) {
   const filteredBuildingOptions = useMemo(() => {
     if (!filterBuildings || !mapping.loaded) return baseBuildingOptions;
     const allowed = new Set(mapping.buildingsForStation(station));
+
     return baseBuildingOptions.filter((b) => allowed.has(b.id));
   }, [filterBuildings, station, mapping, baseBuildingOptions]);
 
@@ -51,9 +55,11 @@ export default function LookupPanel({ onPreview }: Props) {
     if (!filterMeters || !mapping.loaded) return baseMeterOptions;
     if (filterBuildings && building) {
       const allowed = new Set(mapping.metersForBuilding(building));
+
       return baseMeterOptions.filter((m) => allowed.has(m.id));
     }
     const allowed = new Set(mapping.metersForStation(station));
+
     return baseMeterOptions.filter((m) => allowed.has(m.id));
   }, [filterMeters, filterBuildings, station, building, mapping, baseMeterOptions]);
 
@@ -73,6 +79,7 @@ export default function LookupPanel({ onPreview }: Props) {
   const openTarget = (type: EntityType) => {
     const id =
       type === "station" ? station : type === "building" ? effectiveBuilding : effectiveMeter;
+
     if (!id) return;
     window.open(`/visualization/${type}/${id}`, "_blank", "noopener,noreferrer");
   };

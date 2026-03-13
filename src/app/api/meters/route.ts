@@ -15,6 +15,7 @@ export async function GET() {
     });
   } catch (error) {
     apiLogger.error("GET /api/meters failed", error);
+
     return NextResponse.json(
       { success: false, error: { message: "Failed to fetch meters" } },
       { status: 500 },

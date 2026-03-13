@@ -30,11 +30,13 @@ export function useChartZoom<T extends { start: string }>({
   // ── visible slice ──────────────────────────────────────────────
   const visibleData = useMemo(() => {
     if (zoomLeft === null || zoomRight === null) return data;
+
     return data.slice(zoomLeft, zoomRight + 1);
   }, [data, zoomLeft, zoomRight]);
 
   const zoomPercentage = useMemo(() => {
     if (!isZoomed || data.length === 0) return 100;
+
     return Math.round((visibleData.length / data.length) * 100);
   }, [isZoomed, visibleData.length, data.length]);
 
@@ -93,6 +95,7 @@ export function useChartZoom<T extends { start: string }>({
   // ── wheel → zoom ──────────────────────────────────────────────
   useEffect(() => {
     const container = chartContainerRef.current;
+
     if (!container || data.length < 3) return;
 
     const handleWheelEvent = (e: WheelEvent) => {
@@ -108,6 +111,7 @@ export function useChartZoom<T extends { start: string }>({
     };
 
     container.addEventListener("wheel", handleWheelEvent, { passive: false });
+
     return () => container.removeEventListener("wheel", handleWheelEvent);
   }, [data.length, zoomBy]);
 
@@ -129,6 +133,7 @@ export function useChartZoom<T extends { start: string }>({
       if (!isPanning || panStartX === null || !isZoomed) return;
 
       const container = chartContainerRef.current;
+
       if (!container) return;
 
       const deltaX = e.clientX - panStartX;
@@ -166,6 +171,7 @@ export function useChartZoom<T extends { start: string }>({
   const handleMouseDown = useCallback((e: ChartMouseEvent) => {
     if (e?.activeLabel !== undefined) {
       const label = String(e.activeLabel);
+
       setRefAreaLeft(label);
       setRefAreaRight(label);
       setIsDragging(true);
@@ -186,6 +192,7 @@ export function useChartZoom<T extends { start: string }>({
       setIsDragging(false);
       setRefAreaLeft(null);
       setRefAreaRight(null);
+
       return;
     }
 
@@ -197,6 +204,7 @@ export function useChartZoom<T extends { start: string }>({
     if (leftIdx === -1 || rightIdx === -1) {
       setRefAreaLeft(null);
       setRefAreaRight(null);
+
       return;
     }
 

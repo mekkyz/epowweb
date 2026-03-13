@@ -43,9 +43,11 @@ export default function SeriesExplorer({ type, id }: Props) {
   const expandRange = (direction: 1 | -1) => {
     const startDate = dayjs(start || bounds.start);
     const endDate = dayjs(end || bounds.end);
+
     if (!startDate.isValid() || !endDate.isValid()) return;
     const newStart = startDate.add(-direction, rangeUnit);
     const newEnd = endDate.add(direction, rangeUnit);
+
     if (newStart.isAfter(newEnd) || newStart.isSame(newEnd)) return;
     setStart(newStart.format("YYYY-MM-DD HH:mm:ss"));
     setEnd(newEnd.format("YYYY-MM-DD HH:mm:ss"));
@@ -64,23 +66,29 @@ export default function SeriesExplorer({ type, id }: Props) {
     const loadBounds = async () => {
       try {
         const res = await fetch(apiBase);
+
         if (!res.ok) {
           const json = await res.json().catch(() => null);
           const code = json?.error?.code;
+
           if (res.status === 404 || code === "NOT_FOUND") {
             showError("No data available for this entity");
           } else {
             showError("Failed to load data bounds");
           }
+
           return;
         }
         const raw = await res.json();
         const body: SeriesResponse = raw?.data ?? raw;
+
         if (!active) return;
         const b = body.bounds ?? {};
+
         setBounds(b);
         if (!b.start && !b.end) {
           showError("No data available for this time range");
+
           return;
         }
         if (!start && !end && b.start && b.end) {
@@ -89,6 +97,7 @@ export default function SeriesExplorer({ type, id }: Props) {
           const midpoint = boundsStart.add(boundsEnd.diff(boundsStart) / 2, "millisecond");
           const startTs = midpoint.format("YYYY-MM-DD HH:mm:ss");
           const endTs = midpoint.add(7, "day").format("YYYY-MM-DD HH:mm:ss");
+
           setStart(startTs);
           setEnd(endTs);
         }
@@ -99,7 +108,9 @@ export default function SeriesExplorer({ type, id }: Props) {
         if (active) setInitialLoading(false);
       }
     };
+
     loadBounds();
+
     return () => {
       active = false;
     };
@@ -110,20 +121,25 @@ export default function SeriesExplorer({ type, id }: Props) {
     const startParam = fromLocalInput(start);
     const endParam = fromLocalInput(end);
     const params = new URLSearchParams();
+
     if (startParam) params.set("start", startParam);
     if (endParam) params.set("end", endParam);
     params.set("limit", "2000"); // larger window for stations
+
     return `${apiBase}?${params.toString()}&nonce=${refreshNonce}`;
   }, [apiBase, start, end, refreshNonce]);
 
   const shiftRange = (direction: 1 | -1) => {
     const startDate = dayjs(start || bounds.start);
     const endDate = dayjs(end || bounds.end);
+
     if (!startDate.isValid() || !endDate.isValid()) return;
     let deltaMs = endDate.valueOf() - startDate.valueOf();
+
     if (deltaMs <= 0) deltaMs = 7 * 24 * 3600 * 1000; // default 7 days
     const newStart = startDate.add(deltaMs * direction).format("YYYY-MM-DD HH:mm:ss");
     const newEnd = endDate.add(deltaMs * direction).format("YYYY-MM-DD HH:mm:ss");
+
     setStart(newStart);
     setEnd(newEnd);
     setRefreshNonce((n) => n + 1);
@@ -132,8 +148,10 @@ export default function SeriesExplorer({ type, id }: Props) {
   const download = async (format: "json" | "csv") => {
     try {
       const res = await fetch(fetchUrl);
+
       if (!res.ok) {
         showError("Failed to download data");
+
         return;
       }
       const raw = await res.json();
@@ -147,8 +165,10 @@ export default function SeriesExplorer({ type, id }: Props) {
         );
       } else {
         const rows = ["start,end,powerKw,powerOriginalKw,energyKwh,energyOriginalKwh,errorCode"];
+
         (series as unknown[]).forEach((row) => {
           const r = row as Record<string, unknown>;
+
           rows.push(
             [
               r.start ?? "",
@@ -175,14 +195,17 @@ export default function SeriesExplorer({ type, id }: Props) {
   const downloadPng = async () => {
     const container = document.getElementById("series-chart-container");
     const svg = container?.querySelector(".recharts-wrapper svg") as SVGSVGElement | null;
+
     if (!svg) {
       showError("Chart not ready");
+
       return;
     }
     try {
       const isDark = document.documentElement.classList.contains("dark");
       const clone = svg.cloneNode(true) as SVGSVGElement;
       const { width: svgW, height: svgH } = svg.getBoundingClientRect();
+
       clone.setAttribute("width", String(svgW));
       clone.setAttribute("height", String(svgH));
       clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
@@ -190,9 +213,11 @@ export default function SeriesExplorer({ type, id }: Props) {
       // Inline computed font styles so they survive serialization
       const origTexts = svg.querySelectorAll("text, tspan");
       const cloneTexts = clone.querySelectorAll("text, tspan");
+
       origTexts.forEach((orig, i) => {
         const cs = getComputedStyle(orig);
         const el = cloneTexts[i] as SVGElement;
+
         if (el) {
           el.style.fontFamily = cs.fontFamily;
           el.style.fontSize = cs.fontSize;
@@ -211,6 +236,7 @@ export default function SeriesExplorer({ type, id }: Props) {
       const headerH = 52 * scale;
       const footerH = 22 * scale;
       const canvas = document.createElement("canvas");
+
       canvas.width = svgW * scale + 2 * pad;
       canvas.height = svgH * scale + headerH + footerH;
       const ctx = canvas.getContext("2d")!;
@@ -227,12 +253,14 @@ export default function SeriesExplorer({ type, id }: Props) {
       ctx.fillStyle = textColor;
       ctx.font = `bold ${15 * scale}px "Work Sans", system-ui, sans-serif`;
       const title = `${type.charAt(0).toUpperCase() + type.slice(1)}: ${id}`;
+
       ctx.fillText(title, pad, pad + 16 * scale);
 
       // Time range on second line
       ctx.fillStyle = mutedColor;
       ctx.font = `${10 * scale}px "Work Sans", system-ui, sans-serif`;
       const fmt = (s?: string) => (s ? dayjs(s).format("MMM D, YYYY HH:mm") : "—");
+
       ctx.fillText(
         `${fmt(start || bounds.start)}  →  ${fmt(end || bounds.end)}`,
         pad,
@@ -241,10 +269,12 @@ export default function SeriesExplorer({ type, id }: Props) {
 
       // Stats on the right — each stat as a column
       const statsEl = container?.querySelectorAll('[class*="text-right"]');
+
       if (statsEl && statsEl.length >= 4) {
         const labels = ["Min", "Avg", "Median", "Max"];
         const colors = ["#38bdf8", "#34d399", "#a78bfa", "#fbbf24"];
         let statX = canvas.width - pad;
+
         ctx.textAlign = "right";
         for (let i = labels.length - 1; i >= 0; i--) {
           const valEl = statsEl[i]?.querySelector("p:last-child");
@@ -252,6 +282,7 @@ export default function SeriesExplorer({ type, id }: Props) {
 
           ctx.font = `bold ${12 * scale}px "Work Sans", system-ui, sans-serif`;
           const valW = ctx.measureText(val).width;
+
           ctx.font = `${9 * scale}px "Work Sans", system-ui, sans-serif`;
           const labelW = ctx.measureText(labels[i]).width;
           const colW = Math.max(valW, labelW);
@@ -271,12 +302,14 @@ export default function SeriesExplorer({ type, id }: Props) {
 
       // Chart image
       const img = new Image();
+
       img.onload = () => {
         ctx.drawImage(img, pad, headerH, svgW * scale, svgH * scale);
         URL.revokeObjectURL(url);
 
         // Footer
         const footerY = headerH + svgH * scale + 14 * scale;
+
         ctx.fillStyle = accentColor;
         ctx.font = `${9 * scale}px "Work Sans", system-ui, sans-serif`;
         ctx.fillText("Power consumption (kW)", pad, footerY);
@@ -287,6 +320,7 @@ export default function SeriesExplorer({ type, id }: Props) {
         ctx.textAlign = "left";
 
         const a = document.createElement("a");
+
         a.href = canvas.toDataURL("image/png");
         a.download = `${type}-${id}-${Date.now()}.png`;
         a.click();
@@ -481,11 +515,13 @@ export default function SeriesExplorer({ type, id }: Props) {
 function toLocalInput(ts?: string) {
   if (!ts) return "";
   const d = dayjs(ts);
+
   return d.isValid() ? d.format("YYYY-MM-DDTHH:mm") : "";
 }
 
 function fromLocalInput(val?: string) {
   if (!val) return undefined;
   const d = dayjs(val);
+
   return d.isValid() ? d.format("YYYY-MM-DD HH:mm:ss") : undefined;
 }

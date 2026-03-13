@@ -14,6 +14,7 @@ export default async function VisualizationPage({ params, searchParams }: Params
   const { type, id } = await params;
   const query = (await searchParams) ?? {};
   const embed = "embed" in query;
+
   if (!id) notFound();
 
   const safeType = ["meter", "building", "station"].includes(type) ? type : "meter";

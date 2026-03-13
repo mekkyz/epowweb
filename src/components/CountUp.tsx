@@ -33,19 +33,24 @@ export default function CountUp({
       const step = (now: number) => {
         const progress = Math.min((now - start) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
+
         setValue(Math.round(eased * end));
         if (progress < 1) requestAnimationFrame(step);
       };
+
       requestAnimationFrame(step);
     }
 
     const el = ref.current;
+
     if (!el) return;
 
     // If already visible in viewport, animate immediately
     const rect = el.getBoundingClientRect();
+
     if (rect.top < window.innerHeight && rect.bottom > 0) {
       animate();
+
       return;
     }
 
@@ -61,6 +66,7 @@ export default function CountUp({
     );
 
     observer.observe(el);
+
     return () => observer.disconnect();
   }, [end, duration, prefersReduced]);
 

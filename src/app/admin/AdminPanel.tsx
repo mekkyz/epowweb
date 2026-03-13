@@ -22,13 +22,21 @@ export default function AdminPanel() {
   const fetchUsers = async () => {
     const res = await fetch("/api/admin/users");
     const body = await res.json();
+
     if (body.success) setUsers(body.data);
     setLoading(false);
   };
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data load
   useEffect(() => {
-    fetchUsers();
+    const load = async () => {
+      const res = await fetch("/api/admin/users");
+      const body = await res.json();
+
+      if (body.success) setUsers(body.data);
+      setLoading(false);
+    };
+
+    load();
   }, []);
 
   const handleAdd = async (e: FormEvent) => {
@@ -41,6 +49,7 @@ export default function AdminPanel() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ kuerzel: kuerzel.trim().toLowerCase(), role }),
     });
+
     if (res.ok) {
       success(`Added ${kuerzel.trim().toLowerCase()} as ${role}`);
     } else {
@@ -57,6 +66,7 @@ export default function AdminPanel() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ kuerzel: k }),
     });
+
     if (res.ok) {
       success(`Removed ${k}`);
     } else {

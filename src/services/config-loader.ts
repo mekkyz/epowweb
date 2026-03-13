@@ -37,6 +37,7 @@ export function getSmdtConfig(): SmdtConfig {
   if (!fs.existsSync(configFile)) {
     configLogger.warn("Config file not found, returning empty config", { path: configFile });
     cached = { meters: [], buildings: [], stations: [] };
+
     return cached;
   }
 
@@ -67,11 +68,13 @@ export function getSmdtConfig(): SmdtConfig {
 
         childGroups.forEach((child) => {
           const { meters: mIds, buildings: bIds } = walkGroup(child, name);
+
           stationMeters.push(...mIds);
           stationBuildings.push(...bIds);
         });
 
         stations.push({ id: name, meters: stationMeters, buildings: stationBuildings });
+
         return { meters: stationMeters, buildings: stationBuildings };
       }
 
@@ -92,11 +95,13 @@ export function getSmdtConfig(): SmdtConfig {
             label: m.Messstellenbezeichnung,
             notes: m.Kommentar,
           };
+
           meters.push(meta);
           meterIds.push(id);
         });
 
         buildings.push({ id: name, stationId, meters: meterIds });
+
         return { meters: meterIds, buildings: [name] };
       }
 
@@ -107,6 +112,7 @@ export function getSmdtConfig(): SmdtConfig {
 
       childGroups.forEach((child) => {
         const { meters: mIds, buildings: bIds } = walkGroup(child, stationId);
+
         childMeters.push(...mIds);
         childBuildings.push(...bIds);
       });
@@ -116,6 +122,7 @@ export function getSmdtConfig(): SmdtConfig {
 
     // Start parsing from root - XML root element is 'xml', not 'config'
     const rootGroups = ensureArray(parsed?.xml?.group ?? parsed?.config?.group ?? parsed?.group);
+
     rootGroups.forEach((g) => walkGroup(g));
 
     cached = { meters, buildings, stations };
@@ -130,6 +137,7 @@ export function getSmdtConfig(): SmdtConfig {
   } catch (error) {
     configLogger.error("Failed to parse SMDT config", error, { path: configFile });
     cached = { meters: [], buildings: [], stations: [] };
+
     return cached;
   }
 }
@@ -140,12 +148,14 @@ export function getSmdtConfig(): SmdtConfig {
 
 function ensureArray<T>(value: T | T[] | undefined): T[] {
   if (!value) return [];
+
   return Array.isArray(value) ? value : [value];
 }
 
 function asNumber(value: string | number | undefined): number | undefined {
   if (value === undefined) return undefined;
   const num = Number(value);
+
   return Number.isFinite(num) ? num : undefined;
 }
 
@@ -153,5 +163,6 @@ function asBool(value: string | number | boolean | undefined): boolean | undefin
   if (value === undefined) return undefined;
   if (typeof value === "boolean") return value;
   if (typeof value === "string") return value.toLowerCase() === "true" || value === "1";
+
   return value === 1;
 }

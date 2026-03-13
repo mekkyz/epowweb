@@ -91,10 +91,12 @@ const connectionLineLayer: LayerProps = {
 function polygonCentroid(coords: number[][]): [number, number] {
   let cx = 0,
     cy = 0;
+
   for (const [x, y] of coords) {
     cx += x;
     cy += y;
   }
+
   return [cx / coords.length, cy / coords.length];
 }
 
@@ -115,10 +117,13 @@ export default function CampusMap2D() {
   // Build a lookup from building ID to centroid of its polygon
   const buildingCentroids = useMemo(() => {
     const centroids = new globalThis.Map<string, [number, number]>();
+
     for (const f of gridCollections.buildings.features) {
       const ring = f.geometry.coordinates[0];
+
       if (ring) centroids.set(f.properties.id, polygonCentroid(ring));
     }
+
     return centroids;
   }, []);
 
@@ -126,12 +131,16 @@ export default function CampusMap2D() {
   const connectionLines = useMemo<FeatureCollection<LineString>>(() => {
     if (!mapping.loaded) return { type: "FeatureCollection", features: [] };
     const features: Feature<LineString>[] = [];
+
     for (const station of mapping.stations) {
       const sf = stationById.get(station.id);
+
       if (!sf) continue;
       const stationCoords = sf.geometry.coordinates as [number, number];
+
       for (const bid of station.buildings ?? []) {
         const centroid = buildingCentroids.get(bid);
+
         if (!centroid) continue;
         features.push({
           type: "Feature",
@@ -140,6 +149,7 @@ export default function CampusMap2D() {
         });
       }
     }
+
     return { type: "FeatureCollection", features };
   }, [mapping.loaded, mapping.stations, buildingCentroids]);
 
@@ -163,6 +173,7 @@ export default function CampusMap2D() {
     const feature = event.features?.find(
       (f) => f.layer.id === "stations" || f.layer.id === "buildings-fill",
     ) as Feature<Point> | undefined;
+
     setSelected(feature ?? null);
   }, []);
 
@@ -183,6 +194,7 @@ export default function CampusMap2D() {
     if (!f) {
       setHover(null);
       if (map) map.getCanvas().style.cursor = "";
+
       return;
     }
 
@@ -195,6 +207,7 @@ export default function CampusMap2D() {
     }
 
     const props = f.properties as { id?: string; description?: string; group?: string };
+
     setHover({
       id: props.id ?? "",
       description: props.description ?? "",
@@ -206,6 +219,7 @@ export default function CampusMap2D() {
 
   const handleMouseLeave = useCallback(() => {
     const map = mapRef.current;
+
     if (hoveredBuildingId.current !== null && map) {
       map.setFeatureState(
         { source: "grid-buildings", id: hoveredBuildingId.current },

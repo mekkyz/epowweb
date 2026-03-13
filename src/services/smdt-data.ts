@@ -25,10 +25,12 @@ export function listConfig(): SmdtConfig {
 }
 
 let meterMetaMap: Map<string, MeterMeta> | null = null;
+
 export function getMeterMeta(id: string): MeterMeta | undefined {
   if (!meterMetaMap) {
     meterMetaMap = new Map(getSmdtConfig().meters.map((m) => [m.id, m]));
   }
+
   return meterMetaMap.get(id);
 }
 

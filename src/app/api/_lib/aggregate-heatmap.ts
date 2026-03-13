@@ -24,8 +24,10 @@ export function stationRowsToGeoJSON(rows: StationHeatmapRow[]): AggregatedHeatm
   const features = rows
     .map((r) => {
       const station = stationsById.get(r.stationId);
+
       if (!station?.geometry || station.geometry.type !== "Point") return null;
       totalMeters += r.meterCount;
+
       return {
         type: "Feature" as const,
         geometry: {

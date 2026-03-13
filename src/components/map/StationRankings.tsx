@@ -16,8 +16,10 @@ export default function StationRankings({ features, loading }: StationRankingsPr
   const list = useMemo(() => {
     const feats = features?.features ?? [];
     const sorted = [...feats].sort((a, b) => b.properties.valueKw - a.properties.valueKw);
+
     if (!searchQuery.trim()) return sorted;
     const q = searchQuery.toLowerCase();
+
     return sorted.filter((f) => f.properties.stationId.toLowerCase().includes(q));
   }, [features, searchQuery]);
 

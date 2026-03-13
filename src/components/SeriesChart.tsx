@@ -78,6 +78,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
   useEffect(() => {
     const targetHeight = isExpanded ? 720 : 340;
     const timer = setTimeout(() => setChartHeight(targetHeight), 50);
+
     return () => clearTimeout(timer);
   }, [isExpanded]);
 
@@ -102,6 +103,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
       setStatus("loading");
       try {
         const res = await fetch(fetchUrl);
+
         if (!res.ok) throw new Error(`Request failed: ${res.status}`);
         const body = await res.json();
         const series = (body?.data?.series ?? body?.series ?? []) as {
@@ -109,6 +111,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
           powerKw?: number | null;
           power?: number | null;
         }[];
+
         if (!active) return;
         setData(
           series.map((row) => ({
@@ -122,7 +125,9 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
         if (active) setStatus("error");
       }
     };
+
     load();
+
     return () => {
       active = false;
     };
@@ -135,6 +140,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
   // Memoized stats from visible data
   const stats = useMemo(() => {
     const valid = visibleData.filter((d) => d.powerKw !== null);
+
     if (valid.length === 0) return { min: 0, avg: 0, median: 0, max: 0 };
 
     const values = valid.map((d) => d.powerKw || 0);
@@ -381,13 +387,17 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                         visibleData[0]?.start?.slice(0, 10) !==
                           visibleData[visibleData.length - 1]?.start?.slice(0, 10);
                       const time = value.slice(11, 16);
+
                       if (isMultiDay) {
                         const hour = parseInt(time.slice(0, 2));
+
                         if ((hour >= 0 && hour < 6) || hour === 12) {
                           return `${value.slice(5, 7)}/${value.slice(8, 10)} ${time}`;
                         }
+
                         return time;
                       }
+
                       return time;
                     }}
                     stroke={chartColors.axisStroke}
@@ -433,6 +443,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                     labelFormatter={(label) => {
                       if (!label) return "";
                       const date = new Date(label);
+
                       return date.toLocaleString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -444,6 +455,7 @@ export default function SeriesChart({ fetchUrl, title }: Props) {
                     }}
                     formatter={(value: ValueType | undefined) => {
                       const val = value ?? "–";
+
                       return [`${val} kW`, "Power Consumption"] as [string, string];
                     }}
                   />

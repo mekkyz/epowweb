@@ -9,6 +9,7 @@ export function checkWebGLSupport(): boolean {
     const gl =
       (canvas.getContext("webgl2") as WebGLRenderingContext | null) ||
       (canvas.getContext("webgl") as WebGLRenderingContext | null);
+
     if (!gl) return false;
 
     // Light probe — catch truly broken contexts but don't reject based on thresholds

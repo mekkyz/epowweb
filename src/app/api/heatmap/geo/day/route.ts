@@ -36,6 +36,7 @@ export async function GET(req: NextRequest) {
 
     for (const ts of timestamps) {
       const rows = await loadStationHeatmap(ts);
+
       entries[ts] =
         rows.length === 0
           ? {
@@ -59,6 +60,7 @@ export async function GET(req: NextRequest) {
     );
   } catch (error) {
     apiLogger.error("GET /api/heatmap/geo/day failed", error);
+
     return NextResponse.json(
       { success: false, error: { message: "Failed to fetch day geo data" } },
       { status: 500 },

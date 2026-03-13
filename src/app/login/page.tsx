@@ -8,6 +8,7 @@ export default async function LoginPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const session = await getSession();
+
   if (session) {
     redirect("/");
   }

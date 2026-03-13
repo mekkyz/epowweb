@@ -5,6 +5,7 @@ import PageHeader from "@/components/layout/PageHeader";
 
 export default async function AdminPage() {
   const session = await getSession();
+
   if (!session || session.role !== "admin") {
     redirect("/");
   }

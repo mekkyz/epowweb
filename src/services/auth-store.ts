@@ -21,6 +21,7 @@ function getDb(): Database.Database {
 
   const dbPath = process.env.AUTH_DB_PATH ?? "./data/auth.db";
   const dir = dbPath.substring(0, dbPath.lastIndexOf("/"));
+
   if (dir && !fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -47,12 +48,14 @@ function getDb(): Database.Database {
 
   seedFromEnv();
   authLogger.info("Auth database ready", { path: dbPath });
+
   return db;
 }
 
 function seedFromEnv() {
   const d = db!;
   const existing = d.prepare("SELECT COUNT(*) as cnt FROM users").get() as { cnt: number };
+
   if (existing.cnt > 0) return;
 
   const admins = (process.env.AUTH_ADMIN_USERS ?? "")
@@ -69,6 +72,7 @@ function seedFromEnv() {
     for (const k of admins) insert.run(k, "admin");
     for (const k of fulls) insert.run(k, "full");
   });
+
   tx();
 
   if (admins.length + fulls.length > 0) {
@@ -81,11 +85,13 @@ export function getUserRole(kuerzel: string): UserRole {
   const row = d.prepare("SELECT role FROM users WHERE kuerzel = ?").get(kuerzel) as
     | UserRow
     | undefined;
+
   return row?.role ?? "demo";
 }
 
 export function listUsers(): UserRow[] {
   const d = getDb();
+
   return d
     .prepare("SELECT kuerzel, role, email, affiliation FROM users ORDER BY role, kuerzel")
     .all() as UserRow[];
@@ -93,6 +99,7 @@ export function listUsers(): UserRow[] {
 
 export function setUserRole(kuerzel: string, role: "full" | "admin"): void {
   const d = getDb();
+
   d.prepare(
     "INSERT INTO users (kuerzel, role) VALUES (?, ?) ON CONFLICT(kuerzel) DO UPDATE SET role = excluded.role",
   ).run(kuerzel, role);
@@ -101,6 +108,7 @@ export function setUserRole(kuerzel: string, role: "full" | "admin"): void {
 
 export function removeUser(kuerzel: string): void {
   const d = getDb();
+
   d.prepare("DELETE FROM users WHERE kuerzel = ?").run(kuerzel);
   authLogger.info("User removed", { kuerzel });
 }
@@ -110,6 +118,7 @@ export function updateUserProfile(
   profile: { email?: string; affiliation?: string[] },
 ): void {
   const d = getDb();
+
   d.prepare("UPDATE users SET email = ?, affiliation = ? WHERE kuerzel = ?").run(
     profile.email ?? null,
     profile.affiliation?.join(", ") ?? null,

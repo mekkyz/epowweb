@@ -43,7 +43,9 @@ export function useEntityMapping(): EntityMapping {
   const buildingIds = useMemo(() => new Set(buildings.map((b) => b.id)), [buildings]);
   const meterIds = useMemo(() => {
     const ids = new Set<string>();
+
     stations.forEach((s) => s.meters.forEach((m) => ids.add(m)));
+
     return ids;
   }, [stations]);
 

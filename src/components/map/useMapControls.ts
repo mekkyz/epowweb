@@ -15,6 +15,7 @@ export function useWebGLCheck() {
     const timer = setTimeout(() => {
       setSupported(checkWebGLSupport());
     }, 50);
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -31,12 +32,15 @@ export function useFullscreen(containerId: string) {
     const handleChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
+
     document.addEventListener("fullscreenchange", handleChange);
+
     return () => document.removeEventListener("fullscreenchange", handleChange);
   }, []);
 
   const toggle = useCallback(async () => {
     const container = document.getElementById(containerId);
+
     if (!container) return;
 
     try {
@@ -87,6 +91,7 @@ export function useAltDragRotation() {
       if (!dragging) return;
       const dx = e.clientX - prevX;
       const dy = e.clientY - prevY;
+
       prevX = e.clientX;
       prevY = e.clientY;
       map.setBearing(map.getBearing() + dx * 0.5);
@@ -122,12 +127,15 @@ export function useSuppressMissingImages() {
   return useCallback((ref: { getMap: () => maplibregl.Map } | null) => {
     if (!ref) return;
     const map = ref.getMap();
+
     map.on("styleimagemissing", (e) => {
       const emptyImage = { width: 1, height: 1, data: new Uint8Array(4) };
+
       if (!map.hasImage(e.id)) {
         map.addImage(e.id, emptyImage);
       }
     });
+
     return map;
   }, []);
 }

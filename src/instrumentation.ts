@@ -9,6 +9,7 @@ export async function register() {
   if (typeof window !== "undefined") return;
 
   const p = (globalThis as Record<string, unknown>)["process"] as typeof process | undefined;
+
   if (!p?.on) return;
 
   p.on("uncaughtException", (err: Error) => {
@@ -32,6 +33,7 @@ export async function register() {
 
   setInterval(() => {
     const mem = p.memoryUsage();
+
     console.log("[MEMORY]", {
       rss: `${(mem.rss / 1024 / 1024).toFixed(1)}MB`,
       heapUsed: `${(mem.heapUsed / 1024 / 1024).toFixed(1)}MB`,

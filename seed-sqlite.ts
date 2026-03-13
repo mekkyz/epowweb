@@ -29,13 +29,16 @@ type XmlGroup = {
 
 function ensureArray<T>(value: T | T[] | undefined): T[] {
   if (!value) return [];
+
   return Array.isArray(value) ? value : [value];
 }
 
 function parseMeterStationMap(configFile: string): Map<string, string> {
   const map = new Map<string, string>();
+
   if (!fs.existsSync(configFile)) {
     console.warn(`Config file not found: ${configFile} — station_heatmap will be empty`);
+
     return map;
   }
 
@@ -50,21 +53,25 @@ function parseMeterStationMap(configFile: string): Map<string, string> {
   function walk(group: XmlGroup, stationId?: string) {
     if (group.type === "Station") {
       ensureArray(group.group).forEach((child) => walk(child, group.name));
+
       return;
     }
     if (group.type === "Gebaeude") {
       ensureArray(group.meter).forEach((m) => {
         if (stationId) map.set(m.name, stationId);
       });
+
       return;
     }
     ensureArray(group.group).forEach((child) => walk(child, stationId));
   }
 
   const rootGroups = ensureArray(parsed?.xml?.group ?? parsed?.config?.group ?? parsed?.group);
+
   rootGroups.forEach((g) => walk(g));
 
   console.log(`Loaded ${map.size} meter→station mappings from config`);
+
   return map;
 }
 
@@ -83,6 +90,7 @@ async function main() {
   }
 
   const db = new Database(DB_PATH);
+
   db.pragma("journal_mode = WAL");
   db.pragma("synchronous = OFF");
 
@@ -119,9 +127,11 @@ async function main() {
 
   // --- Seed meter readings ---
   const files = fs.readdirSync(CSV_DIR).filter((f) => f.endsWith(".csv"));
+
   for (const file of files) {
     const meterId = file.replace(".csv", "");
     const filePath = path.join(CSV_DIR, file);
+
     console.log(`Seeding meter ${meterId}...`);
 
     const rl = readline.createInterface({
@@ -157,6 +167,7 @@ async function main() {
         const tx = db.transaction((rows: unknown[][]) => {
           for (const row of rows) insertMeter.run(...row);
         });
+
         tx(batch);
         batch.length = 0;
       }
@@ -166,6 +177,7 @@ async function main() {
       const tx = db.transaction((rows: unknown[][]) => {
         for (const row of rows) insertMeter.run(...row);
       });
+
       tx(batch);
     }
   }
@@ -186,6 +198,7 @@ async function main() {
 
     const heatmapFiles = fs.readdirSync(CSV_HEATMAP_DIR).filter((f) => f.startsWith("zw_"));
     let fileIdx = 0;
+
     for (const file of heatmapFiles) {
       fileIdx++;
       if (fileIdx % 1000 === 0) {
@@ -204,11 +217,13 @@ async function main() {
         const [ts, meterId, valueKw] = parts;
 
         const stationId = meterStationMap.get(meterId);
+
         if (!stationId) continue;
 
         const key = `${ts}\0${stationId}`;
         const entry = agg.get(key);
         const val = num(valueKw) ?? 0;
+
         if (!entry) {
           agg.set(key, { totalKw: val, count: 1 });
         } else {
@@ -221,14 +236,17 @@ async function main() {
     // Flush aggregated data to SQLite in batches
     console.log(`  Writing ${agg.size} aggregated rows to station_heatmap...`);
     const batch: [string, string, number, number][] = [];
+
     for (const [key, val] of agg) {
       const idx = key.indexOf("\0");
+
       batch.push([key.slice(0, idx), key.slice(idx + 1), val.totalKw, val.count]);
 
       if (batch.length >= 5000) {
         const tx = db.transaction((rows: [string, string, number, number][]) => {
           for (const row of rows) insertStation.run(...row);
         });
+
         tx(batch);
         batch.length = 0;
       }
@@ -237,6 +255,7 @@ async function main() {
       const tx = db.transaction((rows: [string, string, number, number][]) => {
         for (const row of rows) insertStation.run(...row);
       });
+
       tx(batch);
     }
     agg.clear();
@@ -248,16 +267,19 @@ async function main() {
   const tsCount = db.prepare(`SELECT COUNT(DISTINCT ts) AS cnt FROM station_heatmap`).get() as {
     cnt: number;
   };
+
   console.log(`  Pre-aggregated: ${aggCount.cnt} rows (${tsCount.cnt} timestamps × stations)`);
 
   db.close();
   const stats = fs.statSync(DB_PATH);
+
   console.log(`Done. Database: ${DB_PATH} (${(stats.size / 1024 / 1024).toFixed(1)} MB)`);
 }
 
 function num(v: string | undefined): number | null {
   if (!v) return null;
   const n = Number(v.replace(",", "."));
+
   return Number.isFinite(n) ? n : null;
 }
 

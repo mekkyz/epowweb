@@ -23,9 +23,11 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function useAuth(): AuthContextValue {
   const context = useContext(AuthContext);
+
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
+
   return context;
 }
 
@@ -55,8 +57,10 @@ export function AuthProvider({ children, user }: AuthProviderProps) {
     // In development, allow role preview to override the role
     if (previewRole) {
       const base = user ?? { username: "preview", name: "Preview User" };
+
       return { ...base, role: previewRole };
     }
+
     return user;
   }, [user, previewRole]);
 

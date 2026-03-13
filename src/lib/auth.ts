@@ -30,6 +30,7 @@ export interface AuthUser {
 // =============================================================================
 
 const SESSION_SECRET = process.env.AUTH_SECRET || "smdt-dev-secret-change-in-production";
+
 export const SESSION_COOKIE_NAME = "smdt-session";
 export const STATE_COOKIE_NAME = "smdt-oidc-state";
 export const FROM_COOKIE_NAME = "smdt-oidc-from";
@@ -63,6 +64,7 @@ export function getOidcAuthUrl(state: string): string {
     redirect_uri: OIDC_CALLBACK_URL,
     state,
   });
+
   return `${OIDC_ENDPOINTS.authorize}?${params.toString()}`;
 }
 
@@ -83,11 +85,13 @@ export async function exchangeCodeForTokens(
 
   if (!res.ok) {
     const text = await res.text();
+
     authLogger.error("Token exchange failed", { status: res.status, body: text });
     throw new Error(`Token exchange failed: ${res.status}`);
   }
 
   const data = await res.json();
+
   return { id_token: data.id_token, access_token: data.access_token };
 }
 
@@ -104,9 +108,11 @@ export interface IdTokenClaims {
 
 export function parseIdToken(idToken: string): IdTokenClaims {
   const parts = idToken.split(".");
+
   if (parts.length !== 3) throw new Error("Invalid ID token format");
 
   const payload = JSON.parse(Buffer.from(parts[1], "base64url").toString("utf-8"));
+
   return payload as IdTokenClaims;
 }
 
@@ -134,6 +140,7 @@ export function createSessionToken(user: AuthUser): string {
 
 export function verifySessionToken(token: string): SessionPayload | null {
   const parts = token.split(".");
+
   if (parts.length !== 2) return null;
 
   const [payloadB64, signature] = parts;
@@ -157,6 +164,7 @@ export function verifySessionToken(token: string): SessionPayload | null {
 
     if (payload.exp < Math.floor(Date.now() / 1000)) {
       authLogger.debug("Session expired", { username: payload.username });
+
       return null;
     }
 
@@ -173,6 +181,8 @@ export function verifySessionToken(token: string): SessionPayload | null {
 export async function getSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+
   if (!token) return null;
+
   return verifySessionToken(token);
 }

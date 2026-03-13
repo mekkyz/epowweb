@@ -193,6 +193,7 @@ export function StationInfoPanel({
                     <button
                       onClick={() => {
                         const el = document.getElementById("live-data");
+
                         if (el) el.scrollIntoView({ behavior: "smooth" });
                         window.dispatchEvent(
                           new CustomEvent("preview-visualization", { detail: station.url }),

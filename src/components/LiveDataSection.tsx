@@ -19,7 +19,9 @@ export default function LiveDataSection() {
     const handlePreview = (e: CustomEvent<string>) => {
       setPreviewUrl(e.detail);
     };
+
     window.addEventListener("preview-visualization", handlePreview as EventListener);
+
     return () => {
       window.removeEventListener("preview-visualization", handlePreview as EventListener);
     };
@@ -29,21 +31,26 @@ export default function LiveDataSection() {
   const previewTitle = useMemo(() => {
     if (!previewUrl) return undefined;
     const match = previewUrl.match(/\/visualization\/(\w+)\/(.+)/);
+
     if (!match) return undefined;
     const [, type, id] = match;
 
     if (type === "meter") {
       const meter = meterOptions.find((m) => m.id === id);
+
       return meter?.label || id;
     }
     if (type === "station") {
       const station = stationOptions.find((s) => s.id === id);
+
       return station?.label || id;
     }
     if (type === "building") {
       const building = buildingOptions.find((b) => b.id === id);
+
       return building?.label || id;
     }
+
     return id;
   }, [previewUrl]);
 

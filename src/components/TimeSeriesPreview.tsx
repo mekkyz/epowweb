@@ -17,12 +17,14 @@ export default function TimeSeriesPreview({ url, title, disabled }: Props) {
   // Reset loader when URL changes and add a timeout safeguard
   useEffect(() => {
     let cancelled = false;
+
     // show skeleton until iframe reports ready or timeout
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     const t = setTimeout(() => {
       if (!cancelled) setLoading(false);
     }, 2000);
+
     return () => {
       cancelled = true;
       clearTimeout(t);
@@ -100,5 +102,6 @@ function appendEmbed(url: string) {
   if (!url) return url;
   const hasQuery = url.includes("?");
   const separator = hasQuery ? "&" : "?";
+
   return `${url}${separator}embed=1`;
 }

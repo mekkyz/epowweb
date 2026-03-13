@@ -19,11 +19,13 @@ export type PreviewRole = UserRole | null;
 
 function parseStored(val: string | null): PreviewRole {
   if (val === "demo" || val === "full" || val === "admin") return val;
+
   return null;
 }
 
 function subscribeToPreview(callback: () => void) {
   window.addEventListener(EVENT_NAME, callback);
+
   return () => window.removeEventListener(EVENT_NAME, callback);
 }
 
@@ -43,7 +45,9 @@ export default function RolePreview() {
   const [selected, setSelected] = useState<UserRole | "off">(() => {
     if (typeof window === "undefined") return "off";
     const stored = localStorage.getItem(STORAGE_KEY);
+
     if (stored === "demo" || stored === "full" || stored === "admin") return stored;
+
     return "off";
   });
   const [collapsed, setCollapsed] = useState(true);
@@ -72,6 +76,7 @@ export default function RolePreview() {
             {roles.map((r) => {
               const Icon = r.icon;
               const isActive = selected === r.value;
+
               return (
                 <button
                   key={r.value}

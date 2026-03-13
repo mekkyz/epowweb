@@ -59,10 +59,12 @@ function ensureWorker(dbPath: string): Worker {
   worker.on("message", (msg: { id?: number; type?: string; result?: unknown; error?: string }) => {
     if (msg.type === "ready") {
       dbLogger.info("SQLite worker thread ready", { dbPath });
+
       return;
     }
     if (msg.id == null) return;
     const p = pending.get(msg.id);
+
     if (!p) return;
     pending.delete(msg.id);
     if (msg.error) p.reject(new Error(msg.error));
@@ -91,6 +93,7 @@ function ensureWorker(dbPath: string): Worker {
 export function queryAll(dbPath: string, sql: string, params: unknown[] = []): Promise<unknown[]> {
   return new Promise((resolve, reject) => {
     const id = reqId++;
+
     pending.set(id, { resolve: resolve as (v: unknown) => void, reject });
     ensureWorker(dbPath).postMessage({ id, sql, params, method: "all" });
   });
@@ -99,6 +102,7 @@ export function queryAll(dbPath: string, sql: string, params: unknown[] = []): P
 export function queryGet(dbPath: string, sql: string, params: unknown[] = []): Promise<unknown> {
   return new Promise((resolve, reject) => {
     const id = reqId++;
+
     pending.set(id, { resolve, reject });
     ensureWorker(dbPath).postMessage({ id, sql, params, method: "get" });
   });

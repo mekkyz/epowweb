@@ -69,9 +69,11 @@ function HeaderContent() {
     (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
       if (href.includes("#")) {
         const [path, hash] = href.split("#");
+
         if (path === "/" && pathname === "/") {
           e.preventDefault();
           const element = document.getElementById(hash);
+
           if (element) {
             element.scrollIntoView({ behavior: "smooth" });
           }

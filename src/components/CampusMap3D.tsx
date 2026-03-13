@@ -31,6 +31,7 @@ function lineToPolygon(coordinates: [number, number][], width: number): [number,
     const dx = x2 - x1;
     const dy = y2 - y1;
     const len = Math.sqrt(dx * dx + dy * dy);
+
     if (len === 0) continue;
 
     const metersPerDegree = 111320 * Math.cos((y1 * Math.PI) / 180);
@@ -148,6 +149,7 @@ export default function CampusMap3D() {
 
       if (!buildingSource) {
         console.warn("No suitable building source found for 3D buildings");
+
         return;
       }
 
@@ -238,13 +240,16 @@ export default function CampusMap3D() {
     } else if (!info.object) {
       // Check MapLibre layers for campus building clicks
       const map = mapInstanceRef.current;
+
       if (map && info.pixel) {
         const features = map.queryRenderedFeatures(
           [info.pixel[0], info.pixel[1]] as [number, number],
           { layers: ["campus-buildings-fill"] },
         );
+
         if (features?.length) {
           const props = features[0].properties as { id?: string; url?: string };
+
           setSelected({ id: props.id, url: props.url });
         } else {
           setSelected(null);
@@ -258,6 +263,7 @@ export default function CampusMap3D() {
   /** Hover handler — when deck.gl has no object, check MapLibre campus buildings */
   const onDeckHover = useCallback((info: PickingInfo) => {
     const map = mapInstanceRef.current;
+
     if (!map) return;
 
     // Clear previous building hover state
@@ -272,6 +278,7 @@ export default function CampusMap3D() {
     // If deck.gl caught something (station/line), skip MapLibre query
     if (info.object) {
       map.getCanvas().style.cursor = "pointer";
+
       return;
     }
 
@@ -281,6 +288,7 @@ export default function CampusMap3D() {
         [info.pixel[0], info.pixel[1]] as [number, number],
         { layers: ["campus-buildings-fill"] },
       );
+
       if (features?.length && features[0].id !== undefined) {
         hoveredBuildingId.current = features[0].id;
         map.setFeatureState({ source: "campus-buildings", id: features[0].id }, { hover: true });
@@ -299,6 +307,7 @@ export default function CampusMap3D() {
           data: lineFeatures.flatMap((line: LineFeature) => {
             const coords = line.geometry.coordinates as [number, number][];
             const polygons = lineToPolygon(coords, 2);
+
             return polygons.map((polygon) => ({
               polygon,
               color: line.properties?.color,
@@ -351,6 +360,7 @@ export default function CampusMap3D() {
           if (!l) return false;
           if (l.id === "grid-lines-3d" && !showLines) return false;
           if (l.id === "grid-stations-3d" && !showStations) return false;
+
           return true;
         });
 
@@ -363,6 +373,7 @@ export default function CampusMap3D() {
               const id = object?.properties?.id ?? "";
               const desc = object?.properties?.description ?? "";
               const group = object?.properties?.group ?? "";
+
               return {
                 html: `<div style="font-size:14px;font-weight:600;color:var(--foreground)">${id}</div>${desc ? `<div style="color:var(--foreground-secondary)">${desc}</div>` : ""}${group ? `<div style="color:var(--foreground-secondary)">${group}</div>` : ""}`,
                 style: {

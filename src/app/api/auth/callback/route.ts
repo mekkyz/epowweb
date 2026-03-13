@@ -20,6 +20,7 @@ function getOrigin(request: NextRequest): string {
     request.headers.get("x-forwarded-proto") ||
     request.nextUrl.protocol?.replace(":", "") ||
     "http";
+
   return `${proto}://${host}`;
 }
 
@@ -36,6 +37,7 @@ export async function GET(request: NextRequest) {
       hasCode: !!code,
       stateMatch: state === storedState,
     });
+
     return NextResponse.redirect(new URL("/login?error=invalid_state", origin));
   }
 
@@ -79,6 +81,7 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (error) {
     authLogger.error("OIDC callback failed", error);
+
     return NextResponse.redirect(new URL("/login?error=auth_failed", origin));
   }
 }

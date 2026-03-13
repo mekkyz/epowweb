@@ -34,6 +34,7 @@ export function WebGLErrorSuppressor() {
 
     console.error = (...args: unknown[]) => {
       const message = args.map((a) => String(a)).join(" ");
+
       if (shouldSuppress(message)) {
         return;
       }
@@ -42,6 +43,7 @@ export function WebGLErrorSuppressor() {
 
     console.warn = (...args: unknown[]) => {
       const message = args.map((a) => String(a)).join(" ");
+
       if (shouldSuppress(message)) {
         return;
       }
@@ -51,9 +53,11 @@ export function WebGLErrorSuppressor() {
     // Handle synchronous errors
     const handleError = (event: ErrorEvent) => {
       const message = event.message || event.error?.message || "";
+
       if (shouldSuppress(message)) {
         event.preventDefault();
         event.stopPropagation();
+
         return true;
       }
     };
@@ -61,9 +65,11 @@ export function WebGLErrorSuppressor() {
     // Handle unhandled promise rejections (async WebGL errors)
     const handleRejection = (event: PromiseRejectionEvent) => {
       const message = event.reason?.message || String(event.reason) || "";
+
       if (shouldSuppress(message)) {
         event.preventDefault();
         event.stopPropagation();
+
         return true;
       }
     };

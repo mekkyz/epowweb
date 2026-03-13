@@ -16,11 +16,13 @@ export function proxy(request: NextRequest) {
   }
 
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+
   if (!token) {
     return redirectToLogin(request);
   }
 
   const session = verifySessionToken(token);
+
   if (!session) {
     return redirectToLogin(request);
   }
@@ -42,13 +44,16 @@ function getOrigin(request: NextRequest): string {
     request.headers.get("x-forwarded-proto") ||
     request.nextUrl.protocol?.replace(":", "") ||
     "http";
+
   return `${proto}://${host}`;
 }
 
 function redirectToLogin(request: NextRequest) {
   const loginUrl = new URL("/login", getOrigin(request));
+
   if (request.nextUrl.pathname !== "/") {
     loginUrl.searchParams.set("from", request.nextUrl.pathname);
   }
+
   return NextResponse.redirect(loginUrl);
 }

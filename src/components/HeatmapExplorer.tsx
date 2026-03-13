@@ -185,11 +185,14 @@ export default function HeatmapExplorer() {
     if (!data.selected) return;
     try {
       const res = await fetch(`/api/heatmap?timestamp=${encodeURIComponent(data.selected)}`);
+
       if (!res.ok) {
         showError("Failed to download data");
+
         return;
       }
       const body = await res.json();
+
       if (format === "json") {
         downloadBlob(
           JSON.stringify(body, null, 2),
@@ -199,6 +202,7 @@ export default function HeatmapExplorer() {
       } else {
         const stations = body.data?.stations ?? [];
         const rows = ["stationId,totalKw,meterCount"];
+
         stations.forEach((s: { stationId: string; totalKw: number; meterCount: number }) => {
           rows.push(`${s.stationId},${s.totalKw},${s.meterCount}`);
         });
@@ -213,8 +217,10 @@ export default function HeatmapExplorer() {
 
   const downloadPng = () => {
     const map = mapRef.current?.getMap();
+
     if (!map) {
       showError("Map not ready");
+
       return;
     }
     map.once("render", () => {
@@ -229,6 +235,7 @@ export default function HeatmapExplorer() {
         const h = mapCanvas.height;
 
         const canvas = document.createElement("canvas");
+
         canvas.width = w + 2 * pad;
         canvas.height = h + headerH + footerH;
         const ctx = canvas.getContext("2d")!;
@@ -250,6 +257,7 @@ export default function HeatmapExplorer() {
         // Timestamp next to title
         if (data.selected) {
           const titleW = ctx.measureText("KIT-CN 20 kV Power Grid Heatmap").width;
+
           ctx.fillStyle = mutedColor;
           ctx.font = `${10 * scale}px "Work Sans", system-ui, sans-serif`;
           const ts = new Date(data.selected).toLocaleString("en-US", {
@@ -260,6 +268,7 @@ export default function HeatmapExplorer() {
             minute: "2-digit",
             hour12: false,
           });
+
           ctx.fillText(`  ·  ${ts}`, pad + titleW, pad + 16 * scale);
         }
 
@@ -272,6 +281,7 @@ export default function HeatmapExplorer() {
 
         // Footer separator
         const footerTop = headerH + h;
+
         ctx.fillStyle = borderColor;
         ctx.fillRect(pad, footerTop + 4 * scale, canvas.width - 2 * pad, 1);
 
@@ -280,6 +290,7 @@ export default function HeatmapExplorer() {
         const legendH = 10 * scale;
         const gradW = 180 * scale;
         const grad = ctx.createLinearGradient(pad, 0, pad + gradW, 0);
+
         grad.addColorStop(0, "#00ff00");
         grad.addColorStop(0.25, "#ffff00");
         grad.addColorStop(0.5, "#ffa500");
@@ -293,6 +304,7 @@ export default function HeatmapExplorer() {
         ctx.font = `${8 * scale}px "Work Sans", system-ui, sans-serif`;
         ctx.fillText(`${thresholdMin} kW`, pad, legendY + legendH + 12 * scale);
         const maxLabel = `${thresholdMax} kW`;
+
         ctx.fillText(
           maxLabel,
           pad + gradW - ctx.measureText(maxLabel).width,
@@ -306,6 +318,7 @@ export default function HeatmapExplorer() {
         ctx.textAlign = "left";
 
         const a = document.createElement("a");
+
         a.href = canvas.toDataURL("image/png");
         a.download = `heatmap-${data.selected || "snapshot"}-${Date.now()}.png`;
         a.click();
@@ -394,11 +407,14 @@ export default function HeatmapExplorer() {
               interactiveLayerIds={["heat-circles"]}
               onClick={(evt) => {
                 const f = evt.features?.[0];
+
                 if (!f) {
                   setSelected(null);
+
                   return;
                 }
                 const props = f.properties as { stationId: string };
+
                 setSelected({
                   id: props.stationId,
                   url: `/visualization/station/${props.stationId}`,
@@ -406,12 +422,14 @@ export default function HeatmapExplorer() {
               }}
               onMouseMove={(evt) => {
                 const f = evt.features?.[0];
+
                 if (!f) return setHover(null);
                 const props = f.properties as {
                   stationId: string;
                   valueKw: number;
                   meters: number;
                 };
+
                 setHover({
                   stationId: props.stationId,
                   valueKw: props.valueKw,
@@ -468,6 +486,7 @@ export default function HeatmapExplorer() {
                         value={thresholdMin}
                         onChange={(e) => {
                           const v = Math.max(0, Math.min(Number(e.target.value), thresholdMax - 1));
+
                           setThresholdMin(v);
                         }}
                         min={0}
@@ -483,6 +502,7 @@ export default function HeatmapExplorer() {
                         value={thresholdMax}
                         onChange={(e) => {
                           const v = Math.max(thresholdMin + 1, Number(e.target.value));
+
                           setThresholdMax(v);
                         }}
                         min={thresholdMin + 1}

@@ -9,10 +9,12 @@ export function hasSqlite(): boolean {
   if (dbPath) return true;
 
   const candidate = process.env.SMDT_SQLITE_PATH ?? "./data/smdt.db";
+
   if (!fs.existsSync(candidate)) return false;
 
   dbPath = candidate;
   dbLogger.info("SQLite database found", { path: dbPath });
+
   return true;
 }
 
@@ -20,6 +22,7 @@ function getDbPath(): string {
   if (!hasSqlite()) {
     throw new Error("SQLite database not available");
   }
+
   return dbPath!;
 }
 
@@ -41,6 +44,7 @@ export async function loadMeterSeriesSqlite(
   }
 
   const limit = options.limit ?? 2000;
+
   params.push(limit);
 
   try {
@@ -90,6 +94,7 @@ export async function loadAggregatedSeriesSqlite(
   }
 
   const limit = options.limit ?? 2000;
+
   params.push(limit);
 
   try {
@@ -144,6 +149,7 @@ export async function getBoundsSqlite(meterIds: string[]): Promise<SeriesBounds>
         `SELECT MIN(start_ts) AS s, MAX(end_ts) AS e FROM meter_readings WHERE meter_id = ?`,
         [id],
       )) as { s: string | null; e: string | null };
+
       if (row.s && (!minStart || row.s < minStart)) minStart = row.s;
       if (row.e && (!maxEnd || row.e > maxEnd)) maxEnd = row.e;
     }
@@ -180,6 +186,7 @@ export async function listHeatmapDatesSqlite(): Promise<string[]> {
     )) as { date: string }[];
 
     cachedDates = rows.map((r) => r.date);
+
     return cachedDates;
   } catch (error) {
     dbLogger.error("Failed to list heatmap dates from SQLite", error);
@@ -270,9 +277,11 @@ const STATION_CACHE_MAX = 200;
  */
 export async function loadStationHeatmapSqlite(timestamp: string): Promise<StationHeatmapRow[]> {
   const cached = stationSliceCache.get(timestamp);
+
   if (cached) {
     stationSliceCache.delete(timestamp);
     stationSliceCache.set(timestamp, cached);
+
     return cached;
   }
 
@@ -296,6 +305,7 @@ export async function loadStationHeatmapSqlite(timestamp: string): Promise<Stati
 
     if (stationSliceCache.size >= STATION_CACHE_MAX) {
       const oldest = stationSliceCache.keys().next().value;
+
       if (oldest) stationSliceCache.delete(oldest);
     }
     stationSliceCache.set(timestamp, result);
@@ -310,5 +320,6 @@ export async function loadStationHeatmapSqlite(timestamp: string): Promise<Stati
 function toNumber(value: unknown): number | null {
   if (value == null) return null;
   const num = Number(value);
+
   return Number.isFinite(num) ? num : null;
 }

@@ -15,6 +15,7 @@ export async function GET() {
     });
   } catch (error) {
     apiLogger.error("GET /api/stations failed", error);
+
     return NextResponse.json(
       { success: false, error: { message: "Failed to fetch stations" } },
       { status: 500 },

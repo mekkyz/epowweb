@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
 
     if (!timestamp) {
       apiLogger.warn("GET /api/heatmap/geo - Missing timestamp parameter");
+
       return NextResponse.json(
         {
           success: false,
@@ -62,6 +63,7 @@ export async function GET(req: NextRequest) {
     );
   } catch (error) {
     apiLogger.error("GET /api/heatmap/geo failed", error);
+
     return NextResponse.json(
       { success: false, error: { message: "Failed to fetch heatmap geo data" } },
       { status: 500 },
